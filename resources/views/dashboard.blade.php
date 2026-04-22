@@ -1,4 +1,5 @@
-<x-app-layout>
+<title>{{env('APP_NAME')}}</title>
+    <x-app-layout>
     <x-slot name="header">
         <h2 class="font-bold text-2xl text-rose-600 leading-tight">
             {{ __('Admin Dashboard 2026') }}
