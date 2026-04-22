@@ -4,12 +4,14 @@
             <h1 class="text-3xl font-bold text-gray-800">{{ __('Products') }}</h1>
             <p class="text-gray-500 mt-2">{{ __('Manage your product catalog and inventory.') }}</p>
         </div>
+        @canany(['create products'])
         <a href="{{ route('products.create') }}" class="px-6 py-3 bg-yasmina-500 text-white rounded-2xl font-bold hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
             {{ __('Add New Product') }}
         </a>
+        @endcanany
     </div>
 
     <div class="bg-white/70 backdrop-blur-md rounded-3xl border border-yasmina-50 shadow-xl shadow-yasmina-100/50 overflow-hidden">
@@ -21,7 +23,9 @@
                     <th class="px-8 py-5 text-left text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Name') }}</th>
                     <th class="px-8 py-5 text-left text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Category') }}</th>
                     <th class="px-8 py-5 text-left text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Price') }}</th>
+                    @canany(['edit products', 'delete products'])
                     <th class="px-8 py-5 text-right text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Actions') }}</th>
+                    @endcanany
                 </tr>
             </thead>
             <tbody class="divide-y divide-yasmina-50">
@@ -53,13 +57,18 @@
                         <span class="text-lg font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
                         <span class="text-sm font-bold text-yasmina-500 ml-1">{{ $product->currency?->symbol ?? '$' }}</span>
                     </td>
+                    @canany(['edit products', 'delete products'])
                     <td class="px-8 py-5 whitespace-nowrap text-right text-sm font-bold">
                         <div class="flex justify-end gap-3">
+                            @canany(['edit products'])
                             <a href="{{ route('products.edit', $product->id) }}" class="p-2 text-yasmina-500 hover:bg-yasmina-50 rounded-xl transition-all">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                             </a>
+                            @endcanany
+
+                            @canany(['delete products'])
                             <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="inline-block">
                                 @csrf
                                 @method('DELETE')
@@ -69,8 +78,10 @@
                                     </svg>
                                 </button>
                             </form>
+                            @endcanany
                         </div>
                     </td>
+                    @endcanany
                 </tr>
                 @endforeach
             </tbody>

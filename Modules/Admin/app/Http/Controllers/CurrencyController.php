@@ -7,13 +7,26 @@ use Modules\Admin\Http\Requests\StoreCurrencyRequest;
 use Modules\Admin\Http\Requests\UpdateCurrencyRequest;
 use Modules\Admin\Services\CurrencyService;
 
-class CurrencyController extends Controller
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+class CurrencyController extends Controller implements HasMiddleware
 {
     protected $currencyService;
 
     public function __construct(CurrencyService $currencyService)
     {
         $this->currencyService = $currencyService;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:view currencies|manage currencies', only: ['index']),
+            new Middleware('permission:create currencies|manage currencies', only: ['create', 'store']),
+            new Middleware('permission:edit currencies|manage currencies', only: ['edit', 'update']),
+            new Middleware('permission:delete currencies|manage currencies', only: ['destroy']),
+        ];
     }
 
     public function index()

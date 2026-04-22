@@ -20,24 +20,54 @@
                     extend: {
                         colors: {
                             yasmina: {
-                                50: '#fdf8f7',
-                                100: '#f9eded',
-                                200: '#f2d8d5',
-                                300: '#e5bcba',
-                                400: '#d6a6a1',
-                                500: '#865d58',
-                                600: '#75514c',
-                                700: '#634541',
-                                800: '#523a37',
-                                900: '#422f2c',
+                                50: 'var(--yasmina-50)',
+                                100: 'var(--yasmina-100)',
+                                200: 'var(--yasmina-200)',
+                                300: 'var(--yasmina-300)',
+                                400: 'var(--yasmina-400)',
+                                500: 'var(--yasmina-500)',
+                                600: 'var(--yasmina-600)',
+                                700: 'var(--yasmina-700)',
+                                800: 'var(--yasmina-800)',
+                                900: 'var(--yasmina-900)',
                             }
                         }
                     }
                 }
             }
         </script>
+
         <style>
-            body { font-family: 'Outfit', sans-serif; }
+            :root {
+                /* Yasmina Rose (Default) */
+                --yasmina-50: #fdf8f7;
+                --yasmina-100: #f9eded;
+                --yasmina-200: #f2d8d5;
+                --yasmina-300: #e5bcba;
+                --yasmina-400: #d6a6a1;
+                --yasmina-500: #865d58;
+                --yasmina-600: #75514c;
+                --yasmina-700: #634541;
+                --yasmina-800: #523a37;
+                --yasmina-900: #422f2c;
+            }
+
+            [data-theme="barbie"] {
+                --yasmina-50: #fff0f7;
+                --yasmina-100: #ffe4f2;
+                --yasmina-200: #ffc9e7;
+                --yasmina-300: #ff9ed1;
+                --yasmina-400: #ff64b1;
+                --yasmina-500: #e0218a;
+                --yasmina-600: #c2146e;
+                --yasmina-700: #a20e58;
+                --yasmina-800: #86104a;
+                --yasmina-900: #701140;
+            }
+
+            body {
+                font-family: 'Outfit', sans-serif;
+            }
         </style>
     </head>
 
@@ -55,24 +85,42 @@
                         </svg>
                         {{ __('Dashboard') }}
                     </a>
+                    
+                    @canany([ 'manage categories'])
                     <a href="{{ route('categories.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('categories.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                         {{ __('Categories') }}
                     </a>
+                    @endcanany
+
+                    @canany([ 'manage products'])
                     <a href="{{ route('products.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('products.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
                         {{ __('Products') }}
                     </a>
+                    @endcanany
+
+                    @canany([ 'manage currencies'])
                     <a href="{{ route('currencies.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('currencies.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         {{ __('Currencies') }}
                     </a>
+                    @endcanany
+
+                    @can('manage permissions')
+                    <a href="{{ route('roles.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('roles.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        {{ __('Roles & Permissions') }}
+                    </a>
+                    @endcan
                 </nav>
 
                 <div class="p-4 border-t border-yasmina-50">
@@ -93,6 +141,16 @@
                     </div>
                     
                     <div class="flex items-center gap-6">
+                        <!-- Theme Switcher -->
+                        <div class="flex items-center bg-yasmina-50 rounded-2xl p-1 shadow-sm border border-yasmina-100">
+                            <button onclick="changeTheme('yasmina')" class="p-1.5 rounded-xl transition-all hover:bg-white group" title="Yasmina Rose">
+                                <div class="w-4 h-4 rounded-lg" style="background: linear-gradient(to right, #865d58, #d6a6a1);"></div>
+                            </button>
+                            <button onclick="changeTheme('barbie')" class="p-1.5 rounded-xl transition-all hover:bg-white group" title="Barbie Pink">
+                                <div class="w-4 h-4 rounded-lg" style="background: linear-gradient(to right, #e0218a, #ff64b1);"></div>
+                            </button>
+                        </div>
+
                         <!-- Language Switcher -->
                         <div class="flex items-center bg-yasmina-50 rounded-2xl p-1 shadow-sm border border-yasmina-100">
                             <a href="{{ route('lang.switch', 'en') }}" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all {{ app()->getLocale() == 'en' ? 'bg-white text-yasmina-600 shadow-sm' : 'text-gray-500 hover:text-yasmina-500' }}">EN</a>
@@ -127,9 +185,14 @@
             </div>
         </div>
         <script>
+            function changeTheme(themeName) {
+                document.documentElement.setAttribute('data-theme', themeName);
+                localStorage.setItem('selectedTheme', themeName);
+            }
+
             // Load saved theme
             const savedTheme = localStorage.getItem('selectedTheme') || 'yasmina';
-            document.documentElement.setAttribute('data-theme', savedTheme === 'barbie' ? 'barbie' : 'yasmina');
+            document.documentElement.setAttribute('data-theme', savedTheme);
         </script>
     </body>
 </html>

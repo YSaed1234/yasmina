@@ -9,7 +9,10 @@ use Modules\Admin\Services\CategoryService;
 use Modules\Admin\Services\CurrencyService;
 use Modules\Admin\Services\ProductService;
 
-class ProductController extends Controller
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+class ProductController extends Controller implements HasMiddleware
 {
     protected $productService;
     protected $categoryService;
@@ -20,6 +23,16 @@ class ProductController extends Controller
         $this->productService = $productService;
         $this->categoryService = $categoryService;
         $this->currencyService = $currencyService;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:view products|manage products', only: ['index', 'show']),
+            new Middleware('permission:create products|manage products', only: ['create', 'store']),
+            new Middleware('permission:edit products|manage products', only: ['edit', 'update']),
+            new Middleware('permission:delete products|manage products', only: ['destroy']),
+        ];
     }
 
     /**

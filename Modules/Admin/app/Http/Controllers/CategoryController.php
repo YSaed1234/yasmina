@@ -7,13 +7,26 @@ use Modules\Admin\Http\Requests\StoreCategoryRequest;
 use Modules\Admin\Http\Requests\UpdateCategoryRequest;
 use Modules\Admin\Services\CategoryService;
 
-class CategoryController extends Controller
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+class CategoryController extends Controller implements HasMiddleware
 {
     protected $categoryService;
 
     public function __construct(CategoryService $categoryService)
     {
         $this->categoryService = $categoryService;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:view categories|manage categories', only: ['index', 'show']),
+            new Middleware('permission:create categories|manage categories', only: ['create', 'store']),
+            new Middleware('permission:edit categories|manage categories', only: ['edit', 'update']),
+            new Middleware('permission:delete categories|manage categories', only: ['destroy']),
+        ];
     }
 
     /**

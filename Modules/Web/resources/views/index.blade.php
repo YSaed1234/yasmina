@@ -8,8 +8,42 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
         <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            yasmina: {
+                                50: 'var(--yasmina-50)',
+                                100: 'var(--yasmina-100)',
+                                200: 'var(--yasmina-200)',
+                                300: 'var(--yasmina-300)',
+                                400: 'var(--yasmina-400)',
+                                500: 'var(--yasmina-500)',
+                                600: 'var(--yasmina-600)',
+                                700: 'var(--yasmina-700)',
+                                800: 'var(--yasmina-800)',
+                                900: 'var(--yasmina-900)',
+                            }
+                        }
+                    }
+                }
+            }
+        </script>
         <style>
             :root {
+                /* Yasmina Rose (Default) */
+                --yasmina-50: #fdf8f7;
+                --yasmina-100: #f9eded;
+                --yasmina-200: #f2d8d5;
+                --yasmina-300: #e5bcba;
+                --yasmina-400: #d6a6a1;
+                --yasmina-500: #865d58;
+                --yasmina-600: #75514c;
+                --yasmina-700: #634541;
+                --yasmina-800: #523a37;
+                --yasmina-900: #422f2c;
+
                 --primary: #865d58;
                 --primary-hover: #75514c;
                 --secondary: #d6a6a1;
@@ -295,6 +329,31 @@
                 root.style.setProperty('--bg-soft', theme['bg-soft']);
                 root.style.setProperty('--shadow-color', theme['shadow-color']);
                 
+                // Update yasmina palette variables
+                if (themeName === 'barbie') {
+                    root.style.setProperty('--yasmina-50', '#fff0f7');
+                    root.style.setProperty('--yasmina-100', '#ffe4f2');
+                    root.style.setProperty('--yasmina-200', '#ffc9e7');
+                    root.style.setProperty('--yasmina-300', '#ff9ed1');
+                    root.style.setProperty('--yasmina-400', '#ff64b1');
+                    root.style.setProperty('--yasmina-500', '#e0218a');
+                    root.style.setProperty('--yasmina-600', '#c2146e');
+                    root.style.setProperty('--yasmina-700', '#a20e58');
+                    root.style.setProperty('--yasmina-800', '#86104a');
+                    root.style.setProperty('--yasmina-900', '#701140');
+                } else if (themeName === 'yasmina') {
+                    root.style.setProperty('--yasmina-50', '#fdf8f7');
+                    root.style.setProperty('--yasmina-100', '#f9eded');
+                    root.style.setProperty('--yasmina-200', '#f2d8d5');
+                    root.style.setProperty('--yasmina-300', '#e5bcba');
+                    root.style.setProperty('--yasmina-400', '#d6a6a1');
+                    root.style.setProperty('--yasmina-500', '#865d58');
+                    root.style.setProperty('--yasmina-600', '#75514c');
+                    root.style.setProperty('--yasmina-700', '#634541');
+                    root.style.setProperty('--yasmina-800', '#523a37');
+                    root.style.setProperty('--yasmina-900', '#422f2c');
+                }
+
                 // Set data-theme for global styles (Admin/Nav)
                 root.setAttribute('data-theme', themeName === 'barbie' ? 'barbie' : 'yasmina');
                 
