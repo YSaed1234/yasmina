@@ -10,12 +10,12 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
             :root {
-                --primary: #f43f5e;
-                --primary-hover: #e11d48;
-                --secondary: #ec4899;
+                --primary: #e0218a;
+                --primary-hover: #c2146e;
+                --secondary: #ff64b1;
                 --bg-soft: #fffafb;
-                --accent-light: rgba(244, 63, 94, 0.1);
-                --shadow-color: rgba(244, 63, 94, 0.2);
+                --accent-light: rgba(224, 33, 138, 0.1);
+                --shadow-color: rgba(224, 33, 138, 0.2);
             }
 
             body { font-family: 'Outfit', sans-serif; background-color: var(--bg-soft); transition: background-color 0.3s ease; }
@@ -39,10 +39,10 @@
         <!-- Theme Switcher -->
         <div class="fixed bottom-8 right-8 z-[100]">
             <div id="theme-panel" class="hidden absolute bottom-16 right-0 bg-white p-4 rounded-2xl shadow-2xl border border-gray-100 flex-col space-y-3 min-w-[150px]">
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Pick a Theme</p>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">{{ __('Pick a Theme') }}</p>
                 <div class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors" onclick="setTheme('classic')">
-                    <div class="theme-dot" style="background: linear-gradient(to right, #f43f5e, #ec4899);"></div>
-                    <span class="text-sm font-medium">Classic Pink</span>
+                    <div class="theme-dot" style="background: linear-gradient(to right, #e0218a, #ff64b1);"></div>
+                    <span class="text-sm font-medium">Barbie Pink</span>
                 </div>
                 <div class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors" onclick="setTheme('peach')">
                     <div class="theme-dot" style="background: linear-gradient(to right, #fb923c, #f43f5e);"></div>
@@ -57,7 +57,7 @@
                     <span class="text-sm font-medium">Sakura</span>
                 </div>
             </div>
-            <button onclick="toggleThemePanel()" class="w-14 h-14 bg-white rounded-full shadow-2xl flex items-center justify-center text-rose-500 hover:scale-110 transition-all border border-rose-100">
+            <button onclick="toggleThemePanel()" class="w-14 h-14 bg-white rounded-full shadow-2xl flex items-center justify-center text-primary hover:scale-110 transition-all border border-rose-100">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.172-1.172a4 4 0 115.656 5.656l-1.172 1.172" />
                 </svg>
@@ -75,12 +75,12 @@
                         <div class="ml-10 flex items-baseline space-x-4">
                             <a href="#" class="px-3 py-2 rounded-md text-sm font-bold text-gray-900 hover:text-primary transition-colors">{{ __('Home') }}</a>
                             @foreach($categories as $category)
-                                <a href="#category-{{ $category->id }}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-primary transition-colors">{{ $category->name }}</a>
+                                <a href="#category-{{ $category->id }}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-primary transition-colors">{{ $category->translate(app()->getLocale())->name ?? $category->name }}</a>
                             @endforeach
                         </div>
                     </div>
                     <div class="flex items-center gap-4">
-                        <a href="{{ route('lang.switch', app()->getLocale() == 'ar' ? 'en' : 'ar') }}" class="px-4 py-2 bg-rose-50 border border-rose-100 rounded-full text-xs font-bold text-rose-500 hover:bg-rose-500 hover:text-white transition-all shadow-sm">
+                        <a href="{{ route('lang.switch', app()->getLocale() == 'ar' ? 'en' : 'ar') }}" class="px-4 py-2 bg-rose-50 border border-rose-100 rounded-full text-xs font-bold text-primary hover:bg-primary hover:text-white transition-all shadow-sm">
                             {{ app()->getLocale() == 'ar' ? 'English' : 'عربي' }}
                         </a>
                         @guest
@@ -101,7 +101,7 @@
         <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div class="lg:w-1/2">
-                    <div class="inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide text-primary uppercase bg-rose-50 rounded-full" id="new-tag">{{ __('New Collection 2024') }}</div>
+                    <div class="inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide text-primary uppercase bg-rose-50 rounded-full" id="new-tag">{{ __('New Collection 2026') }}</div>
                     <h1 class="text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-tight">
                         {{ __('Elegance in') }} <br>
                         <span class="text-primary">{{ __('Every Detail') }}</span>
@@ -145,12 +145,12 @@
                                 @endif
                             </div>
                             <div class="p-6">
-                                <span class="text-xs font-bold text-primary uppercase tracking-widest">{{ $product->category->name }}</span>
-                                <h3 class="mt-2 text-lg font-bold text-gray-900">{{ $product->name }}</h3>
+                                <span class="text-xs font-bold text-primary uppercase tracking-widest">{{ $product->category->translate(app()->getLocale())->name ?? $product->category->name }}</span>
+                                <h3 class="mt-2 text-lg font-bold text-gray-900">{{ $product->translate(app()->getLocale())->name ?? $product->name }}</h3>
                                 <div class="mt-4 flex justify-between items-center">
                                     <div class="flex items-baseline gap-1">
                                         <span class="text-xl font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
-                                        <span class="text-sm font-bold text-rose-500">{{ $product->currency?->symbol ?? '$' }}</span>
+                                        <span class="text-sm font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
                                     </div>
                                     <button class="p-2.5 rounded-full bg-rose-50 text-primary hover:bg-primary hover:text-white transition-all duration-300">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -176,7 +176,7 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="flex justify-between items-end mb-10">
                             <div>
-                                <h2 class="text-3xl font-bold text-gray-900">{{ $category->name }}</h2>
+                                <h2 class="text-3xl font-bold text-gray-900">{{ $category->translate(app()->getLocale())->name ?? $category->name }}</h2>
                                 <p class="mt-2 text-gray-600">{{ __('Explore items in this category') }}</p>
                             </div>
                             <a href="#" class="text-primary font-bold hover:text-primary transition-colors">{{ __('View All') }}</a>
@@ -194,10 +194,10 @@
                                         <div class="absolute inset-0 bg-black/0 group-hover:bg-primary/5 transition-all duration-500"></div>
                                     </div>
                                     <div class="mt-4">
-                                        <h3 class="text-sm font-bold text-gray-700 group-hover:text-primary transition-colors">{{ $product->name }}</h3>
+                                        <h3 class="text-sm font-bold text-gray-700 group-hover:text-primary transition-colors">{{ $product->translate(app()->getLocale())->name ?? $product->name }}</h3>
                                         <div class="flex items-baseline gap-1">
                                             <span class="text-lg font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
-                                            <span class="text-xs font-bold text-rose-500">{{ $product->currency?->symbol ?? '$' }}</span>
+                                            <span class="text-xs font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -215,15 +215,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
                     <div>
                         <span class="text-2xl font-bold text-white">{{ __('Yasmina') }}</span>
-                        <p class="mt-6 text-gray-400">Defining elegance and quality since 2024.</p>
+                        <p class="mt-6 text-gray-400">{{ __('Defining elegance and quality since 2026.') }}</p>
                     </div>
                     <div>
                         <h4 class="text-lg font-bold mb-6">{{ __('Quick Links') }}</h4>
                         <ul class="space-y-4 text-gray-400">
-                            <li><a href="#" class="hover:text-primary transition-colors">Shop</a></li>
-                            <li><a href="#" class="hover:text-primary transition-colors">Categories</a></li>
-                            <li><a href="#" class="hover:text-primary transition-colors">About Us</a></li>
-                            <li><a href="#" class="hover:text-primary transition-colors">Contact</a></li>
+                            <li><a href="#" class="hover:text-primary transition-colors">{{ __('Shop') }}</a></li>
+                            <li><a href="#" class="hover:text-primary transition-colors">{{ __('Categories') }}</a></li>
+                            <li><a href="#" class="hover:text-primary transition-colors">{{ __('About Us') }}</a></li>
+                            <li><a href="#" class="hover:text-primary transition-colors">{{ __('Contact') }}</a></li>
                         </ul>
                     </div>
                     <div>
@@ -236,7 +236,7 @@
                     </div>
                 </div>
                 <div class="mt-20 pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
-                    &copy; 2024 {{ __('Yasmina Website') }}. All rights reserved.
+                    &copy; 2026 {{ __('Yasmina Website') }}. All rights reserved.
                 </div>
             </div>
         </footer>
@@ -244,11 +244,11 @@
         <script>
             const themes = {
                 classic: {
-                    primary: '#f43f5e',
-                    'primary-hover': '#e11d48',
-                    secondary: '#ec4899',
+                    primary: '#e0218a',
+                    'primary-hover': '#c2146e',
+                    secondary: '#ff64b1',
                     'bg-soft': '#fffafb',
-                    'shadow-color': 'rgba(244, 63, 94, 0.2)'
+                    'shadow-color': 'rgba(224, 33, 138, 0.2)'
                 },
                 peach: {
                     primary: '#fb923c',

@@ -15,8 +15,11 @@ class UpdateProductRequest extends FormRequest
     {
         return [
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'currency_id' => 'required|exists:currencies,id',
+            'ar.name' => 'required|string|max:255',
+            'en.name' => 'required|string|max:255',
+            'ar.description' => 'nullable|string',
+            'en.description' => 'nullable|string',
             'price' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'rank' => 'nullable|integer',
