@@ -3,96 +3,69 @@
 namespace Modules\Admin\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Modules\Admin\Http\Requests\StoreProductRequest;
+use Modules\Admin\Http\Requests\UpdateProductRequest;
+use Modules\Admin\Services\CategoryService;
+use Modules\Admin\Services\ProductService;
 
 class ProductController extends Controller
 {
+    protected $productService;
+    protected $categoryService;
+
+    public function __construct(ProductService $productService, CategoryService $categoryService)
+    {
+        $this->productService = $productService;
+        $this->categoryService = $categoryService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $products = \App\Models\Product::with('category')->orderBy('rank')->get();
+        $products = $this->productService->getAllProducts();
         return view('admin::products.index', compact('products'));
     }
 
     public function create()
     {
-        $categories = \App\Models\Category::all();
+        $categories = $this->categoryService->getAllCategories();
         return view('admin::products.create', compact('categories'));
     }
 
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'rank' => 'nullable|integer',
-        ]);
-
-        $data = $request->all();
-
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-            $data['image'] = $imagePath;
-        }
-
-        \App\Models\Product::create($data);
+        $this->productService->storeProduct($request->validated());
 
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
     public function show(string $id)
     {
-        $product = \App\Models\Product::with('category')->findOrFail($id);
+        $product = $this->productService->findProduct($id);
         return view('admin::products.show', compact('product'));
     }
 
     public function edit(string $id)
     {
-        $product = \App\Models\Product::findOrFail($id);
-        $categories = \App\Models\Category::all();
+        $product = $this->productService->findProduct($id);
+        $categories = $this->categoryService->getAllCategories();
         return view('admin::products.edit', compact('product', 'categories'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateProductRequest $request, string $id)
     {
-        $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'rank' => 'nullable|integer',
-        ]);
-
-        $product = \App\Models\Product::findOrFail($id);
-        $data = $request->all();
-
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($product->image) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
-            }
-            $imagePath = $request->file('image')->store('products', 'public');
-            $data['image'] = $imagePath;
-        }
-
-        $product->update($data);
+        $product = $this->productService->findProduct($id);
+        $this->productService->updateProduct($product, $request->validated());
 
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 
     public function destroy(string $id)
     {
-        $product = \App\Models\Product::findOrFail($id);
-        if ($product->image) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
-        }
-        $product->delete();
+        $product = $this->productService->findProduct($id);
+        $this->productService->deleteProduct($product);
 
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }

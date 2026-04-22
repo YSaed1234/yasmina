@@ -7,24 +7,40 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-        <title>Admin Module - {{ config('app.name', 'Laravel') }}</title>
+        <title>Admin Dashboard - Yasmina</title>
 
         <meta name="description" content="{{ $description ?? '' }}">
         <meta name="keywords" content="{{ $keywords ?? '' }}">
         <meta name="author" content="{{ $author ?? '' }}">
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        {{-- Vite CSS --}}
-        {{-- {{ module_vite('build-admin', 'resources/assets/sass/app.scss') }} --}}
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            body { font-family: 'Outfit', sans-serif; }
+        </style>
     </head>
 
-    <body>
-        {{ $slot }}
+    <body class="bg-[#fffafb]">
+        <div class="min-h-screen flex">
+            <!-- Sidebar -->
+            <aside class="w-64 bg-white border-r border-rose-100 shadow-sm">
+                <div class="p-6">
+                    <span class="text-2xl font-bold text-rose-500">Yasmina Admin</span>
+                </div>
+                <nav class="mt-6 px-4 space-y-2">
+                    <a href="{{ route('admin.index') }}" class="block px-4 py-3 rounded-xl text-gray-600 hover:bg-rose-50 hover:text-rose-500 transition-all {{ request()->routeIs('admin.index') ? 'bg-rose-50 text-rose-500' : '' }}">Dashboard</a>
+                    <a href="{{ route('categories.index') }}" class="block px-4 py-3 rounded-xl text-gray-600 hover:bg-rose-50 hover:text-rose-500 transition-all {{ request()->routeIs('categories.*') ? 'bg-rose-50 text-rose-500' : '' }}">Categories</a>
+                    <a href="{{ route('products.index') }}" class="block px-4 py-3 rounded-xl text-gray-600 hover:bg-rose-50 hover:text-rose-500 transition-all {{ request()->routeIs('products.*') ? 'bg-rose-50 text-rose-500' : '' }}">Products</a>
+                </nav>
+            </aside>
 
-        {{-- Vite JS --}}
-        {{-- {{ module_vite('build-admin', 'resources/assets/js/app.js') }} --}}
+            <!-- Main Content -->
+            <main class="flex-1 p-10">
+                {{ $slot }}
+            </main>
+        </div>
     </body>
 </html>

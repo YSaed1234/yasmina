@@ -3,16 +3,25 @@
 namespace Modules\Admin\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Modules\Admin\Http\Requests\StoreCategoryRequest;
+use Modules\Admin\Http\Requests\UpdateCategoryRequest;
+use Modules\Admin\Services\CategoryService;
 
 class CategoryController extends Controller
 {
+    protected $categoryService;
+
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $categories = \App\Models\Category::orderBy('rank')->get();
+        $categories = $this->categoryService->getAllCategories();
         return view('admin::categories.index', compact('categories'));
     }
 
@@ -21,47 +30,37 @@ class CategoryController extends Controller
         return view('admin::categories.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'rank' => 'nullable|integer',
-        ]);
-
-        \App\Models\Category::create($request->all());
+        $this->categoryService->storeCategory($request->validated());
 
         return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
 
     public function show(string $id)
     {
-        $category = \App\Models\Category::findOrFail($id);
+        $category = $this->categoryService->findCategory($id);
         return view('admin::categories.show', compact('category'));
     }
 
     public function edit(string $id)
     {
-        $category = \App\Models\Category::findOrFail($id);
+        $category = $this->categoryService->findCategory($id);
         return view('admin::categories.edit', compact('category'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateCategoryRequest $request, string $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'rank' => 'nullable|integer',
-        ]);
-
-        $category = \App\Models\Category::findOrFail($id);
-        $category->update($request->all());
+        $category = $this->categoryService->findCategory($id);
+        $this->categoryService->updateCategory($category, $request->validated());
 
         return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
 
     public function destroy(string $id)
     {
-        $category = \App\Models\Category::findOrFail($id);
-        $category->delete();
+        $category = $this->categoryService->findCategory($id);
+        $this->categoryService->deleteCategory($category);
 
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
     }
