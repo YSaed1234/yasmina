@@ -8,17 +8,35 @@ class CategoryService
 {
     public function getAllCategories()
     {
-        return Category::orderBy('rank')->get();
+        return Category::with('translations')->orderBy('rank')->get();
     }
 
     public function storeCategory(array $data)
     {
-        return Category::create($data);
+        $category = new Category();
+        $category->rank = $data['rank'] ?? 0;
+        
+        foreach (['ar', 'en'] as $locale) {
+            if (isset($data[$locale]['name'])) {
+                $category->translateOrNew($locale)->name = $data[$locale]['name'];
+            }
+        }
+        
+        $category->save();
+        return $category;
     }
 
     public function updateCategory(Category $category, array $data)
     {
-        $category->update($data);
+        $category->rank = $data['rank'] ?? $category->rank;
+        
+        foreach (['ar', 'en'] as $locale) {
+            if (isset($data[$locale]['name'])) {
+                $category->translateOrNew($locale)->name = $data[$locale]['name'];
+            }
+        }
+        
+        $category->save();
         return $category;
     }
 

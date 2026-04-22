@@ -10,12 +10,12 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
             :root {
-                --primary: #e0218a;
-                --primary-hover: #c2146e;
-                --secondary: #ff64b1;
-                --bg-soft: #fffafb;
-                --accent-light: rgba(224, 33, 138, 0.1);
-                --shadow-color: rgba(224, 33, 138, 0.2);
+                --primary: #865d58;
+                --primary-hover: #75514c;
+                --secondary: #d6a6a1;
+                --bg-soft: #fdf8f7;
+                --accent-light: rgba(134, 93, 88, 0.1);
+                --shadow-color: rgba(134, 93, 88, 0.2);
             }
 
             body { font-family: 'Outfit', sans-serif; background-color: var(--bg-soft); transition: background-color 0.3s ease; }
@@ -40,7 +40,11 @@
         <div class="fixed bottom-8 right-8 z-[100]">
             <div id="theme-panel" class="hidden absolute bottom-16 right-0 bg-white p-4 rounded-2xl shadow-2xl border border-gray-100 flex-col space-y-3 min-w-[150px]">
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">{{ __('Pick a Theme') }}</p>
-                <div class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors" onclick="setTheme('classic')">
+                <div class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors" onclick="setTheme('yasmina')">
+                    <div class="theme-dot" style="background: linear-gradient(to right, #865d58, #d6a6a1);"></div>
+                    <span class="text-sm font-medium">Yasmina Rose</span>
+                </div>
+                <div class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors" onclick="setTheme('barbie')">
                     <div class="theme-dot" style="background: linear-gradient(to right, #e0218a, #ff64b1);"></div>
                     <span class="text-sm font-medium">Barbie Pink</span>
                 </div>
@@ -69,13 +73,15 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-20 items-center">
                     <div class="flex-shrink-0 flex items-center">
-                        <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">{{ __('Yasmina') }}</span>
+                        <a href="/">
+                            <img src="{{ asset('assets/logo.png') }}" alt="{{ __('Yasmina') }}" class="h-16 w-auto transition-transform hover:scale-105">
+                        </a>
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
                             <a href="#" class="px-3 py-2 rounded-md text-sm font-bold text-gray-900 hover:text-primary transition-colors">{{ __('Home') }}</a>
                             @foreach($categories as $category)
-                                <a href="#category-{{ $category->id }}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-primary transition-colors">{{ $category->translate(app()->getLocale())->name ?? $category->name }}</a>
+                                <a href="#category-{{ $category->id }}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-primary transition-colors">{{ $category->name }}</a>
                             @endforeach
                         </div>
                     </div>
@@ -145,8 +151,8 @@
                                 @endif
                             </div>
                             <div class="p-6">
-                                <span class="text-xs font-bold text-primary uppercase tracking-widest">{{ $product->category->translate(app()->getLocale())->name ?? $product->category->name }}</span>
-                                <h3 class="mt-2 text-lg font-bold text-gray-900">{{ $product->translate(app()->getLocale())->name ?? $product->name }}</h3>
+                                <span class="text-xs font-bold text-primary uppercase tracking-widest">{{ $product->category->name }}</span>
+                                <h3 class="mt-2 text-lg font-bold text-gray-900">{{ $product->name }}</h3>
                                 <div class="mt-4 flex justify-between items-center">
                                     <div class="flex items-baseline gap-1">
                                         <span class="text-xl font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
@@ -176,7 +182,7 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="flex justify-between items-end mb-10">
                             <div>
-                                <h2 class="text-3xl font-bold text-gray-900">{{ $category->translate(app()->getLocale())->name ?? $category->name }}</h2>
+                                <h2 class="text-3xl font-bold text-gray-900">{{ $category->name }}</h2>
                                 <p class="mt-2 text-gray-600">{{ __('Explore items in this category') }}</p>
                             </div>
                             <a href="#" class="text-primary font-bold hover:text-primary transition-colors">{{ __('View All') }}</a>
@@ -194,7 +200,7 @@
                                         <div class="absolute inset-0 bg-black/0 group-hover:bg-primary/5 transition-all duration-500"></div>
                                     </div>
                                     <div class="mt-4">
-                                        <h3 class="text-sm font-bold text-gray-700 group-hover:text-primary transition-colors">{{ $product->translate(app()->getLocale())->name ?? $product->name }}</h3>
+                                        <h3 class="text-sm font-bold text-gray-700 group-hover:text-primary transition-colors">{{ $product->name }}</h3>
                                         <div class="flex items-baseline gap-1">
                                             <span class="text-lg font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
                                             <span class="text-xs font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
@@ -243,7 +249,14 @@
 
         <script>
             const themes = {
-                classic: {
+                yasmina: {
+                    primary: '#865d58',
+                    'primary-hover': '#75514c',
+                    secondary: '#d6a6a1',
+                    'bg-soft': '#fdf8f7',
+                    'shadow-color': 'rgba(134, 93, 88, 0.2)'
+                },
+                barbie: {
                     primary: '#e0218a',
                     'primary-hover': '#c2146e',
                     secondary: '#ff64b1',
@@ -276,30 +289,29 @@
             function setTheme(themeName) {
                 const theme = themes[themeName];
                 const root = document.documentElement;
+                root.style.setProperty('--primary', theme.primary);
+                root.style.setProperty('--primary-hover', theme['primary-hover']);
+                root.style.setProperty('--secondary', theme.secondary);
+                root.style.setProperty('--bg-soft', theme['bg-soft']);
+                root.style.setProperty('--shadow-color', theme['shadow-color']);
                 
-                Object.keys(theme).forEach(key => {
-                    root.style.setProperty('--' + key, theme[key]);
-                });
+                // Set data-theme for global styles (Admin/Nav)
+                root.setAttribute('data-theme', themeName === 'barbie' ? 'barbie' : 'yasmina');
                 
-                localStorage.setItem('yasmina-theme', themeName);
-                toggleThemePanel();
+                // Save preference
+                localStorage.setItem('selectedTheme', themeName);
             }
+
+            // Load saved theme
+            document.addEventListener('DOMContentLoaded', () => {
+                const savedTheme = localStorage.getItem('selectedTheme') || 'yasmina';
+                setTheme(savedTheme);
+            });
 
             function toggleThemePanel() {
                 const panel = document.getElementById('theme-panel');
                 panel.classList.toggle('hidden');
                 panel.classList.toggle('flex');
-            }
-
-            // Load saved theme
-            const savedTheme = localStorage.getItem('yasmina-theme');
-            if (savedTheme && themes[savedTheme]) {
-                // Apply theme without closing panel (since it's hidden by default)
-                const theme = themes[savedTheme];
-                const root = document.documentElement;
-                Object.keys(theme).forEach(key => {
-                    root.style.setProperty('--' + key, theme[key]);
-                });
             }
         </script>
     </body>

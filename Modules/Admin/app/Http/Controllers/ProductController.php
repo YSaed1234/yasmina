@@ -42,7 +42,7 @@ class ProductController extends Controller
     {
         $this->productService->storeProduct($request->validated());
 
-        return redirect()->route('products.index')->with('success', 'Product created successfully.');
+        return redirect()->route('products.index')->with('success', __('Product created successfully.'));
     }
 
     public function show(string $id)
@@ -64,7 +64,7 @@ class ProductController extends Controller
         $product = $this->productService->findProduct($id);
         $this->productService->updateProduct($product, $request->validated());
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
+        return redirect()->route('products.index')->with('success', __('Product updated successfully.'));
     }
 
     public function destroy(string $id)
@@ -72,6 +72,6 @@ class ProductController extends Controller
         $product = $this->productService->findProduct($id);
         $this->productService->deleteProduct($product);
 
-        return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
+        return redirect()->route('products.index')->with('success', __('Product deleted successfully.'));
     }
 }

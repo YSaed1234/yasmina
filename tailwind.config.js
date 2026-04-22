@@ -15,17 +15,17 @@ export default {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                barbie: {
-                    50: '#fff0f7',
-                    100: '#ffe4f2',
-                    200: '#ffc9e7',
-                    300: '#ff9ed1',
-                    400: '#ff64b1',
-                    500: '#e0218a',
-                    600: '#c2146e',
-                    700: '#a20e58',
-                    800: '#86104a',
-                    900: '#701140',
+                yasmina: {
+                    50: 'var(--yasmina-50)',
+                    100: 'var(--yasmina-100)',
+                    200: 'var(--yasmina-200)',
+                    300: 'var(--yasmina-300)',
+                    400: 'var(--yasmina-400)',
+                    500: 'var(--yasmina-500)',
+                    600: 'var(--yasmina-600)',
+                    700: 'var(--yasmina-700)',
+                    800: 'var(--yasmina-800)',
+                    900: 'var(--yasmina-900)',
                 }
             }
         },

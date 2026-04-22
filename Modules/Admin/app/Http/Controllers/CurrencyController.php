@@ -30,7 +30,7 @@ class CurrencyController extends Controller
     public function store(StoreCurrencyRequest $request)
     {
         $this->currencyService->storeCurrency($request->validated());
-        return redirect()->route('currencies.index')->with('success', 'Currency created successfully.');
+        return redirect()->route('currencies.index')->with('success', __('Currency created successfully.'));
     }
 
     public function edit(string $id)
@@ -43,13 +43,13 @@ class CurrencyController extends Controller
     {
         $currency = $this->currencyService->findCurrency($id);
         $this->currencyService->updateCurrency($currency, $request->validated());
-        return redirect()->route('currencies.index')->with('success', 'Currency updated successfully.');
+        return redirect()->route('currencies.index')->with('success', __('Currency updated successfully.'));
     }
 
     public function destroy(string $id)
     {
         $currency = $this->currencyService->findCurrency($id);
         $this->currencyService->deleteCurrency($currency);
-        return redirect()->route('currencies.index')->with('success', 'Currency deleted successfully.');
+        return redirect()->route('currencies.index')->with('success', __('Currency deleted successfully.'));
     }
 }

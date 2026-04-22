@@ -34,7 +34,7 @@ class CategoryController extends Controller
     {
         $this->categoryService->storeCategory($request->validated());
 
-        return redirect()->route('categories.index')->with('success', 'Category created successfully.');
+        return redirect()->route('categories.index')->with('success', __('Category created successfully.'));
     }
 
     public function show(string $id)
@@ -54,7 +54,7 @@ class CategoryController extends Controller
         $category = $this->categoryService->findCategory($id);
         $this->categoryService->updateCategory($category, $request->validated());
 
-        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
+        return redirect()->route('categories.index')->with('success', __('Category updated successfully.'));
     }
 
     public function destroy(string $id)
@@ -62,6 +62,6 @@ class CategoryController extends Controller
         $category = $this->categoryService->findCategory($id);
         $this->categoryService->deleteCategory($category);
 
-        return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
+        return redirect()->route('categories.index')->with('success', __('Category deleted successfully.'));
     }
 }

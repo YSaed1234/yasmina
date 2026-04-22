@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('currencies', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('code')->unique(); // USD, EUR, EGP
             $table->string('symbol'); // $, €, £
             $table->timestamps();

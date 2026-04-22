@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    /* Yasmina Rose (Default) */
+    --yasmina-50: #fdf8f7;
+    --yasmina-100: #f9eded;
+    --yasmina-200: #f2d8d5;
+    --yasmina-300: #e5bcba;
+    --yasmina-400: #d6a6a1;
+    --yasmina-500: #865d58;
+    --yasmina-600: #75514c;
+    --yasmina-700: #634541;
+    --yasmina-800: #523a37;
+    --yasmina-900: #422f2c;
+}
+
+[data-theme="barbie"] {
+    --yasmina-50: #fff0f7;
+    --yasmina-100: #ffe4f2;
+    --yasmina-200: #ffc9e7;
+    --yasmina-300: #ff9ed1;
+    --yasmina-400: #ff64b1;
+    --yasmina-500: #e0218a;
+    --yasmina-600: #c2146e;
+    --yasmina-700: #a20e58;
+    --yasmina-800: #86104a;
+    --yasmina-900: #701140;
+}

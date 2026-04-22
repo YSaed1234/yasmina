@@ -8,17 +8,37 @@ class CurrencyService
 {
     public function getAllCurrencies()
     {
-        return Currency::all();
+        return Currency::with('translations')->get();
     }
 
     public function storeCurrency(array $data)
     {
-        return Currency::create($data);
+        $currency = new Currency();
+        $currency->code = $data['code'];
+        $currency->symbol = $data['symbol'];
+        
+        foreach (['ar', 'en'] as $locale) {
+            if (isset($data[$locale]['name'])) {
+                $currency->translateOrNew($locale)->name = $data[$locale]['name'];
+            }
+        }
+        
+        $currency->save();
+        return $currency;
     }
 
     public function updateCurrency(Currency $currency, array $data)
     {
-        $currency->update($data);
+        $currency->code = $data['code'] ?? $currency->code;
+        $currency->symbol = $data['symbol'] ?? $currency->symbol;
+        
+        foreach (['ar', 'en'] as $locale) {
+            if (isset($data[$locale]['name'])) {
+                $currency->translateOrNew($locale)->name = $data[$locale]['name'];
+            }
+        }
+        
+        $currency->save();
         return $currency;
     }
 

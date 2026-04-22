@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white/80 backdrop-blur-md border-b border-rose-50 relative z-50">
+<nav x-data="{ open: false }" class="bg-white/80 backdrop-blur-md border-b border-yasmina-50 relative z-50">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-20">
@@ -6,29 +6,29 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
-                         <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-pink-600">Yasmina</span>
+                         <img src="{{ asset('assets/logo.png') }}" alt="{{ __('Yasmina') }}" class="h-12 w-auto">
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-600 hover:text-rose-500 font-bold border-transparent hover:border-rose-200 transition-all">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-600 hover:text-yasmina-500 font-bold border-transparent hover:border-yasmina-200 transition-all">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')" class="text-gray-600 hover:text-rose-500 font-bold border-transparent hover:border-rose-200 transition-all">
+                    <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')" class="text-gray-600 hover:text-yasmina-500 font-bold border-transparent hover:border-yasmina-200 transition-all">
                         {{ __('Categories') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')" class="text-gray-600 hover:text-rose-500 font-bold border-transparent hover:border-rose-200 transition-all">
+                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')" class="text-gray-600 hover:text-yasmina-500 font-bold border-transparent hover:border-yasmina-200 transition-all">
                         {{ __('Products') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('currencies.index')" :active="request()->routeIs('currencies.*')" class="text-gray-600 hover:text-rose-500 font-bold border-transparent hover:border-rose-200 transition-all">
+                    <x-nav-link :href="route('currencies.index')" :active="request()->routeIs('currencies.*')" class="text-gray-600 hover:text-yasmina-500 font-bold border-transparent hover:border-yasmina-200 transition-all">
                         {{ __('Currencies') }}
                     </x-nav-link>
                 </div>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6 gap-4">
-                <a href="{{ url('/') }}" class="px-4 py-2 bg-rose-500 text-white rounded-full text-xs font-bold hover:bg-rose-600 transition-all shadow-lg shadow-rose-100 flex items-center gap-2">
+                <a href="{{ url('/') }}" class="px-4 py-2 bg-yasmina-500 text-white rounded-full text-xs font-bold hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
@@ -36,7 +36,7 @@
                 </a>
                 <x-dropdown align="{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-4 py-2 border border-rose-50 text-sm leading-4 font-bold rounded-full text-gray-600 bg-rose-50/30 hover:bg-rose-50 hover:text-rose-600 focus:outline-none transition ease-in-out duration-150">
+                        <button class="inline-flex items-center px-4 py-2 border border-yasmina-50 text-sm leading-4 font-bold rounded-full text-gray-600 bg-yasmina-50/30 hover:bg-yasmina-50 hover:text-yasmina-600 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
 
                             <div class="ms-1">
@@ -68,7 +68,7 @@
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-xl text-rose-400 hover:text-rose-500 hover:bg-rose-50 focus:outline-none transition duration-150 ease-in-out">
+                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-xl text-yasmina-400 hover:text-yasmina-500 hover:bg-yasmina-50 focus:outline-none transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -92,16 +92,16 @@
             <x-responsive-nav-link :href="route('currencies.index')" :active="request()->routeIs('currencies.*')">
                 {{ __('Currencies') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="url('/')" class="text-rose-600 font-bold bg-rose-50">
+            <x-responsive-nav-link :href="url('/')" class="text-yasmina-600 font-bold bg-yasmina-50">
                 {{ __('Back to Site') }}
             </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-rose-50">
+        <div class="pt-4 pb-1 border-t border-yasmina-50">
             <div class="px-4">
                 <div class="font-bold text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-rose-500">{{ Auth::user()->email }}</div>
+                <div class="font-medium text-sm text-yasmina-500">{{ Auth::user()->email }}</div>
             </div>
 
             <div class="mt-3 space-y-1">

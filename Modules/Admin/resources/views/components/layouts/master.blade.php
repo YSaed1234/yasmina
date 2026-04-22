@@ -19,17 +19,17 @@
                 theme: {
                     extend: {
                         colors: {
-                            barbie: {
-                                50: '#fff0f7',
-                                100: '#ffe4f2',
-                                200: '#ffc9e7',
-                                300: '#ff9ed1',
-                                400: '#ff64b1',
-                                500: '#e0218a',
-                                600: '#c2146e',
-                                700: '#a20e58',
-                                800: '#86104a',
-                                900: '#701140',
+                            yasmina: {
+                                50: '#fdf8f7',
+                                100: '#f9eded',
+                                200: '#f2d8d5',
+                                300: '#e5bcba',
+                                400: '#d6a6a1',
+                                500: '#865d58',
+                                600: '#75514c',
+                                700: '#634541',
+                                800: '#523a37',
+                                900: '#422f2c',
                             }
                         }
                     }
@@ -41,33 +41,33 @@
         </style>
     </head>
 
-    <body class="bg-barbie-50/30">
+    <body class="bg-yasmina-50/30">
         <div class="min-h-screen flex">
             <!-- Sidebar -->
-            <aside class="w-64 bg-white border-x border-barbie-100 shadow-sm flex flex-col h-screen sticky top-0">
-                <div class="p-6 border-b border-barbie-50">
-                    <span class="text-2xl font-bold text-barbie-500">Yasmina Admin</span>
+            <aside class="w-64 bg-white border-x border-yasmina-100 shadow-sm flex flex-col h-screen sticky top-0">
+                <div class="p-6 border-b border-yasmina-50 flex items-center justify-center">
+                    <img src="{{ asset('assets/logo.png') }}" alt="{{ __('Yasmina Admin') }}" class="h-12 w-auto">
                 </div>
                 <nav class="mt-6 px-4 space-y-2 flex-1">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('dashboard') ? 'bg-barbie-50 text-barbie-600 font-bold' : 'text-gray-600 hover:bg-barbie-50/50' }}">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('dashboard') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
                         {{ __('Dashboard') }}
                     </a>
-                    <a href="{{ route('categories.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('categories.*') ? 'bg-barbie-50 text-barbie-600 font-bold' : 'text-gray-600 hover:bg-barbie-50/50' }}">
+                    <a href="{{ route('categories.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('categories.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                         {{ __('Categories') }}
                     </a>
-                    <a href="{{ route('products.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('products.*') ? 'bg-barbie-50 text-barbie-600 font-bold' : 'text-gray-600 hover:bg-barbie-50/50' }}">
+                    <a href="{{ route('products.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('products.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
                         {{ __('Products') }}
                     </a>
-                    <a href="{{ route('currencies.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('currencies.*') ? 'bg-barbie-50 text-barbie-600 font-bold' : 'text-gray-600 hover:bg-barbie-50/50' }}">
+                    <a href="{{ route('currencies.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('currencies.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -75,8 +75,8 @@
                     </a>
                 </nav>
 
-                <div class="p-4 border-t border-barbie-50">
-                    <a href="{{ url('/') }}" class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-white bg-barbie-500 hover:bg-barbie-600 transition-all shadow-lg shadow-barbie-100 font-bold w-full">
+                <div class="p-4 border-t border-yasmina-50">
+                    <a href="{{ url('/') }}" class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-white bg-yasmina-500 hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100 font-bold w-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
@@ -87,26 +87,26 @@
 
             <!-- Main Content -->
             <div class="flex-1 flex flex-col h-screen overflow-hidden">
-                <header class="bg-white border-b border-barbie-50 h-20 flex items-center justify-between px-10 sticky top-0 z-50 backdrop-blur-md bg-white/80 shrink-0">
+                <header class="bg-white border-b border-yasmina-50 h-20 flex items-center justify-between px-10 sticky top-0 z-50 backdrop-blur-md bg-white/80 shrink-0">
                     <div class="flex items-center gap-4">
                         <h2 class="text-xl font-bold text-gray-800">{{ __('Admin Dashboard 2026') }}</h2>
                     </div>
                     
                     <div class="flex items-center gap-6">
                         <!-- Language Switcher -->
-                        <div class="flex items-center bg-barbie-50 rounded-2xl p-1 shadow-sm border border-barbie-100">
-                            <a href="{{ route('lang.switch', 'en') }}" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all {{ app()->getLocale() == 'en' ? 'bg-white text-barbie-600 shadow-sm' : 'text-gray-500 hover:text-barbie-500' }}">EN</a>
-                            <a href="{{ route('lang.switch', 'ar') }}" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all {{ app()->getLocale() == 'ar' ? 'bg-white text-barbie-600 shadow-sm' : 'text-gray-500 hover:text-barbie-500' }}">AR</a>
+                        <div class="flex items-center bg-yasmina-50 rounded-2xl p-1 shadow-sm border border-yasmina-100">
+                            <a href="{{ route('lang.switch', 'en') }}" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all {{ app()->getLocale() == 'en' ? 'bg-white text-yasmina-600 shadow-sm' : 'text-gray-500 hover:text-yasmina-500' }}">EN</a>
+                            <a href="{{ route('lang.switch', 'ar') }}" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all {{ app()->getLocale() == 'ar' ? 'bg-white text-yasmina-600 shadow-sm' : 'text-gray-500 hover:text-yasmina-500' }}">AR</a>
                         </div>
 
-                        <div class="flex items-center gap-3 border-s border-barbie-100 ps-6">
+                        <div class="flex items-center gap-3 border-s border-yasmina-100 ps-6">
                             <div class="flex flex-col items-end">
                                 <span class="text-sm font-bold text-gray-800">{{ Auth::user()->name }}</span>
                                 <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">{{ __('Administrator') }}</span>
                             </div>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="p-2 rounded-xl text-gray-400 hover:text-barbie-500 hover:bg-barbie-50 transition-all" title="{{ __('Log Out') }}">
+                                <button type="submit" class="p-2 rounded-xl text-gray-400 hover:text-yasmina-500 hover:bg-yasmina-50 transition-all" title="{{ __('Log Out') }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                     </svg>
@@ -117,8 +117,8 @@
                 </header>
                 
                 <main class="flex-1 overflow-y-auto p-10 relative">
-                    <div class="absolute top-0 right-0 w-64 h-64 bg-barbie-100 rounded-full opacity-10 blur-3xl -mr-32 -mt-32"></div>
-                    <div class="absolute bottom-0 left-0 w-64 h-64 bg-barbie-200 rounded-full opacity-10 blur-3xl -ml-32 -mb-32"></div>
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-yasmina-100 rounded-full opacity-10 blur-3xl -mr-32 -mt-32"></div>
+                    <div class="absolute bottom-0 left-0 w-64 h-64 bg-yasmina-200 rounded-full opacity-10 blur-3xl -ml-32 -mb-32"></div>
                     
                     <div class="relative z-10">
                         {{ $slot }}
@@ -126,5 +126,10 @@
                 </main>
             </div>
         </div>
+        <script>
+            // Load saved theme
+            const savedTheme = localStorage.getItem('selectedTheme') || 'yasmina';
+            document.documentElement.setAttribute('data-theme', savedTheme === 'barbie' ? 'barbie' : 'yasmina');
+        </script>
     </body>
 </html>

@@ -1,96 +1,83 @@
-<title>{{env('APP_NAME')}}</title>
-    <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-bold text-2xl text-rose-600 leading-tight">
-            {{ __('Admin Dashboard 2026') }}
-        </h2>
-    </x-slot>
+<x-admin::layouts.master>
+    <div class="mb-10">
+        <h1 class="text-3xl font-bold text-gray-800">{{ __('Dashboard') }}</h1>
+        <p class="text-gray-500 mt-2">{{ __('Welcome back! Here is an overview of your store.') }}</p>
+    </div>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row gap-8">
-                <!-- Sidebar Menu -->
-                <aside class="w-full md:w-64 shrink-0">
-                    <div class="bg-white/70 backdrop-blur-md p-6 shadow-xl shadow-rose-100/50 rounded-3xl border border-rose-50 sticky top-24">
-                        <h3 class="text-xs font-bold text-rose-400 uppercase tracking-widest mb-6">{{ __('Main Menu') }}</h3>
-                        <nav class="space-y-2">
-                            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-rose-600 bg-rose-50 font-bold transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                </svg>
-                                {{ __('Dashboard') }}
-                            </a>
-                            <a href="{{ route('categories.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-gray-600 hover:bg-rose-50 hover:text-rose-500 transition-all font-medium">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
-                                {{ __('Categories') }}
-                            </a>
-                            <a href="{{ route('products.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-gray-600 hover:bg-rose-50 hover:text-rose-500 transition-all font-medium">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                </svg>
-                                {{ __('Products') }}
-                            </a>
-                            <a href="{{ route('currencies.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-gray-600 hover:bg-rose-50 hover:text-rose-500 transition-all font-medium">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                {{ __('Currencies') }}
-                            </a>
-                            
-                            <div class="pt-4 mt-4 border-t border-rose-50">
-                                <a href="{{ url('/') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-white bg-rose-500 hover:bg-rose-600 transition-all shadow-lg shadow-rose-100 font-bold">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                                    </svg>
-                                    {{ __('Back to Site') }}
-                                </a>
-                            </div>
-                        </nav>
-                    </div>
-                </aside>
-
-                <!-- Main Dashboard Content -->
-                <div class="flex-1">
-                    <div class="bg-white/70 backdrop-blur-md overflow-hidden shadow-xl shadow-rose-100/50 rounded-3xl border border-rose-50">
-                        <div class="p-8 text-gray-900">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-6">{{ __('Overview') }}</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <a href="{{ route('categories.index') }}" class="p-6 bg-rose-50 rounded-3xl border border-rose-100 hover:border-rose-300 transition-all group text-center">
-                                    <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-rose-500 mb-4 mx-auto shadow-sm group-hover:scale-110 transition-transform">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                        </svg>
-                                    </div>
-                                    <span class="block font-bold text-rose-700">{{ __('Categories') }}</span>
-                                </a>
-                                <a href="{{ route('products.index') }}" class="p-6 bg-pink-50 rounded-3xl border border-pink-100 hover:border-pink-300 transition-all group text-center">
-                                    <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-pink-500 mb-4 mx-auto shadow-sm group-hover:scale-110 transition-transform">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                        </svg>
-                                    </div>
-                                    <span class="block font-bold text-pink-700">{{ __('Products') }}</span>
-                                </a>
-                                <a href="{{ route('currencies.index') }}" class="p-6 bg-rose-50 rounded-3xl border border-rose-100 hover:border-rose-300 transition-all group text-center">
-                                    <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-rose-500 mb-4 mx-auto shadow-sm group-hover:scale-110 transition-transform">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </div>
-                                    <span class="block font-bold text-rose-700">{{ __('Currencies') }}</span>
-                                </a>
-                            </div>
-
-                            <div class="mt-12 bg-rose-50/50 p-8 rounded-3xl border border-dashed border-rose-200 text-center">
-                                <h4 class="text-lg font-bold text-rose-800">{{ __('Welcome to your new Admin Dashboard!') }}</h4>
-                                <p class="text-rose-600 mt-2">{{ __('From here you can manage all aspects of your store with ease.') }}</p>
-                            </div>
-                        </div>
-                    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+        <!-- Stats Card: Categories -->
+        <div class="bg-white/70 backdrop-blur-md p-8 rounded-3xl border border-yasmina-50 shadow-xl shadow-yasmina-100/50 hover:border-yasmina-200 transition-all group">
+            <div class="flex items-center justify-between mb-6">
+                <div class="w-14 h-14 bg-yasmina-50 rounded-2xl flex items-center justify-center text-yasmina-500 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
                 </div>
+                <span class="text-xs font-bold text-yasmina-400 uppercase tracking-widest">{{ __('Categories') }}</span>
             </div>
+            <h3 class="text-4xl font-black text-gray-800 mb-2">{{ \App\Models\Category::count() }}</h3>
+            <a href="{{ route('categories.index') }}" class="text-sm font-bold text-yasmina-500 hover:text-yasmina-600 flex items-center gap-1">
+                {{ __('Manage Categories') }}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
+
+        <!-- Stats Card: Products -->
+        <div class="bg-white/70 backdrop-blur-md p-8 rounded-3xl border border-yasmina-50 shadow-xl shadow-yasmina-100/50 hover:border-yasmina-200 transition-all group">
+            <div class="flex items-center justify-between mb-6">
+                <div class="w-14 h-14 bg-yasmina-50 rounded-2xl flex items-center justify-center text-yasmina-500 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                </div>
+                <span class="text-xs font-bold text-yasmina-400 uppercase tracking-widest">{{ __('Products') }}</span>
+            </div>
+            <h3 class="text-4xl font-black text-gray-800 mb-2">{{ \App\Models\Product::count() }}</h3>
+            <a href="{{ route('products.index') }}" class="text-sm font-bold text-yasmina-500 hover:text-yasmina-600 flex items-center gap-1">
+                {{ __('Manage Products') }}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
+
+        <!-- Stats Card: Currencies -->
+        <div class="bg-white/70 backdrop-blur-md p-8 rounded-3xl border border-yasmina-50 shadow-xl shadow-yasmina-100/50 hover:border-yasmina-200 transition-all group">
+            <div class="flex items-center justify-between mb-6">
+                <div class="w-14 h-14 bg-yasmina-50 rounded-2xl flex items-center justify-center text-yasmina-500 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <span class="text-xs font-bold text-yasmina-400 uppercase tracking-widest">{{ __('Currencies') }}</span>
+            </div>
+            <h3 class="text-4xl font-black text-gray-800 mb-2">{{ \App\Models\Currency::count() }}</h3>
+            <a href="{{ route('currencies.index') }}" class="text-sm font-bold text-yasmina-500 hover:text-yasmina-600 flex items-center gap-1">
+                {{ __('Manage Currencies') }}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
         </div>
     </div>
-</x-app-layout>
+
+    <div class="bg-yasmina-50/50 p-10 rounded-[3rem] border-2 border-dashed border-yasmina-100 text-center relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-yasmina-100/50 rounded-full blur-3xl"></div>
+        <div class="absolute -left-10 -top-10 w-40 h-40 bg-yasmina-100/50 rounded-full blur-3xl"></div>
+        
+        <h4 class="text-2xl font-black text-yasmina-800 relative z-10">{{ __('Welcome to Yasmina Storefront!') }}</h4>
+        <p class="text-yasmina-600 mt-3 text-lg relative z-10">{{ __('Everything you need to manage your luxury brand is right here at your fingertips.') }}</p>
+        
+        <div class="mt-8 relative z-10">
+            <a href="{{ url('/') }}" target="_blank" class="inline-flex items-center gap-2 px-8 py-4 bg-yasmina-500 text-white rounded-2xl font-bold hover:bg-yasmina-600 transition-all shadow-xl shadow-yasmina-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                {{ __('Preview Live Store') }}
+            </a>
+        </div>
+    </div>
+</x-admin::layouts.master>
