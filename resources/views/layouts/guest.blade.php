@@ -5,24 +5,34 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'Yasmina') }}</title>
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+        
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            body { font-family: 'Outfit', sans-serif; }
+            .gradient-bg { background: linear-gradient(135deg, #fb7185 0%, #db2777 100%); }
+        </style>
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
+    <body class="text-gray-900 antialiased bg-[#fffafb]">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 relative overflow-hidden">
+            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 gradient-bg rounded-full opacity-10 blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-pink-300 rounded-full opacity-10 blur-3xl"></div>
+            
+            <div class="z-10">
                 <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                    <span class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-pink-600">Yasmina</span>
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <div class="w-full sm:max-w-md mt-6 px-8 py-8 bg-white shadow-xl shadow-rose-100/50 overflow-hidden sm:rounded-3xl border border-rose-50 z-10">
                 {{ $slot }}
             </div>
         </div>

@@ -1,55 +1,61 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Add Product') }}
-        </h2>
-    </x-slot>
+<x-admin::layouts.master>
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Add New Product</h1>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="mb-4">
-                                <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
-                                <select name="category_id" id="category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                    <option value="">Select Category</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                                <input type="text" name="name" id="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                            </div>
-                            <div class="mb-4 md:col-span-2">
-                                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                                <textarea name="description" id="description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
-                            </div>
-                            <div class="mb-4">
-                                <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-                                <input type="number" step="0.01" name="price" id="price" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                            </div>
-                            <div class="mb-4">
-                                <label for="rank" class="block text-sm font-medium text-gray-700">Rank</label>
-                                <input type="number" name="rank" id="rank" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" value="0">
-                            </div>
-                            <div class="mb-4">
-                                <label for="image" class="block text-sm font-medium text-gray-700">Image</label>
-                                <input type="file" name="image" id="image" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-end mt-4">
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
-                                Save
-                            </button>
-                        </div>
-                    </form>
+        <div class="bg-white rounded-3xl shadow-sm border border-rose-50 p-8">
+            <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Product Name</label>
+                        <input type="text" name="name" class="w-full px-4 py-3 rounded-2xl border-rose-100 focus:border-rose-500 focus:ring-rose-500 bg-rose-50/20" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Category</label>
+                        <select name="category_id" class="w-full px-4 py-3 rounded-2xl border-rose-100 focus:border-rose-500 focus:ring-rose-500 bg-rose-50/20" required>
+                            <option value="">Select Category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Currency</label>
+                        <select name="currency_id" class="w-full px-4 py-3 rounded-2xl border-rose-100 focus:border-rose-500 focus:ring-rose-500 bg-rose-50/20" required>
+                            <option value="">Select Currency</option>
+                            @foreach($currencies as $currency)
+                                <option value="{{ $currency->id }}">{{ $currency->name }} ({{ $currency->symbol }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Price</label>
+                        <input type="number" step="0.01" name="price" class="w-full px-4 py-3 rounded-2xl border-rose-100 focus:border-rose-500 focus:ring-rose-500 bg-rose-50/20" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Rank</label>
+                        <input type="number" name="rank" value="0" class="w-full px-4 py-3 rounded-2xl border-rose-100 focus:border-rose-500 focus:ring-rose-500 bg-rose-50/20">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                        <textarea name="description" rows="4" class="w-full px-4 py-3 rounded-2xl border-rose-100 focus:border-rose-500 focus:ring-rose-500 bg-rose-50/20"></textarea>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Product Image</label>
+                        <input type="file" name="image" class="w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100 transition-all cursor-pointer">
+                    </div>
                 </div>
-            </div>
+
+                <div class="pt-6">
+                    <button type="submit" class="w-full py-4 bg-rose-500 text-white rounded-full font-bold hover:bg-rose-600 transition-all shadow-lg shadow-rose-100">Save Product</button>
+                </div>
+            </form>
         </div>
     </div>
-</x-app-layout>
+</x-admin::layouts.master>

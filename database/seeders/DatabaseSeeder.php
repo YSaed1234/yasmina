@@ -23,6 +23,18 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
 
+        $currencies = [
+            ['name' => 'US Dollar', 'code' => 'USD', 'symbol' => '$'],
+            ['name' => 'Euro', 'code' => 'EUR', 'symbol' => '€'],
+            ['name' => 'Egyptian Pound', 'code' => 'EGP', 'symbol' => 'LE'],
+        ];
+
+        foreach ($currencies as $curr) {
+            \App\Models\Currency::create($curr);
+        }
+
+        $usd = \App\Models\Currency::where('code', 'USD')->first();
+
         $categories = [
             ['name' => 'Electronics', 'rank' => 1],
             ['name' => 'Fashion', 'rank' => 2],
@@ -35,6 +47,7 @@ class DatabaseSeeder extends Seeder
             for ($i = 1; $i <= 3; $i++) {
                 \App\Models\Product::create([
                     'category_id' => $category->id,
+                    'currency_id' => $usd->id,
                     'name' => $cat['name'] . " Product " . $i,
                     'description' => "This is a description for " . $cat['name'] . " Product " . $i,
                     'price' => rand(100, 1000),

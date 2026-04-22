@@ -12,11 +12,13 @@ class ProductController extends Controller
 {
     protected $productService;
     protected $categoryService;
+    protected $currencyService;
 
-    public function __construct(ProductService $productService, CategoryService $categoryService)
+    public function __construct(ProductService $productService, CategoryService $categoryService, CurrencyService $currencyService)
     {
         $this->productService = $productService;
         $this->categoryService = $categoryService;
+        $this->currencyService = $currencyService;
     }
 
     /**
@@ -31,7 +33,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = $this->categoryService->getAllCategories();
-        return view('admin::products.create', compact('categories'));
+        $currencies = $this->currencyService->getAllCurrencies();
+        return view('admin::products.create', compact('categories', 'currencies'));
     }
 
     public function store(StoreProductRequest $request)
@@ -51,7 +54,8 @@ class ProductController extends Controller
     {
         $product = $this->productService->findProduct($id);
         $categories = $this->categoryService->getAllCategories();
-        return view('admin::products.edit', compact('product', 'categories'));
+        $currencies = $this->currencyService->getAllCurrencies();
+        return view('admin::products.edit', compact('product', 'categories', 'currencies'));
     }
 
     public function update(UpdateProductRequest $request, string $id)
