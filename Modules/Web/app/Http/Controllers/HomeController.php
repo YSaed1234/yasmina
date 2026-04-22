@@ -17,6 +17,30 @@ class HomeController extends Controller
         return view('web::index', compact('categories', 'featuredProducts'));
     }
 
+    public function about()
+    {
+        return view('web::about');
+    }
+
+    public function contact()
+    {
+        return view('web::contact');
+    }
+
+    public function submitContact(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'subject' => 'nullable|string|max:255',
+            'message' => 'required|string',
+        ]);
+
+        \App\Models\ContactRequest::create($validated);
+
+        return back()->with('success', __('Your message has been sent successfully!'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */

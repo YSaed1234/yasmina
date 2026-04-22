@@ -30,6 +30,7 @@ class RoleController extends Controller implements HasMiddleware
             if (str_contains($perm->name, 'categories')) return 'Categories';
             if (str_contains($perm->name, 'products')) return 'Products';
             if (str_contains($perm->name, 'currencies')) return 'Currencies';
+            if (str_contains($perm->name, 'contact requests')) return 'Contact Requests';
             if (str_contains($perm->name, 'permissions')) return 'System';
             return 'Other';
         });
@@ -55,6 +56,7 @@ class RoleController extends Controller implements HasMiddleware
             if (str_contains($perm->name, 'categories')) return 'Categories';
             if (str_contains($perm->name, 'products')) return 'Products';
             if (str_contains($perm->name, 'currencies')) return 'Currencies';
+            if (str_contains($perm->name, 'contact requests')) return 'Contact Requests';
             if (str_contains($perm->name, 'permissions')) return 'System';
             return 'Other';
         });

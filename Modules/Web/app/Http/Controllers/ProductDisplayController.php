@@ -10,9 +10,38 @@ class ProductDisplayController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('web::index');
+        $query = \App\Models\Product::with(['category', 'currency']);
+
+        // Search by name
+        if ($request->has('search') && $request->search != '') {
+            $query->whereTranslationLike('name', '%' . $request->search . '%');
+        }
+
+        // Filter by category
+        if ($request->has('category_id') && $request->category_id != '') {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Filter by currency
+        if ($request->has('currency_id') && $request->currency_id != '') {
+            $query->where('currency_id', $request->currency_id);
+        }
+
+        // Price range
+        if ($request->has('min_price') && $request->min_price != '') {
+            $query->where('price', '>=', $request->min_price);
+        }
+        if ($request->has('max_price') && $request->max_price != '') {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        $products = $query->orderBy('rank')->paginate(12)->withQueryString();
+        $categories = \App\Models\Category::all();
+        $currencies = \App\Models\Currency::all();
+
+        return view('web::shop', compact('products', 'categories', 'currencies'));
     }
 
     /**
@@ -33,7 +62,8 @@ class ProductDisplayController extends Controller
      */
     public function show($id)
     {
-        return view('web::show');
+        $product = \App\Models\Product::with(['category', 'currency'])->findOrFail($id);
+        return view('web::show', compact('product'));
     }
 
     /**

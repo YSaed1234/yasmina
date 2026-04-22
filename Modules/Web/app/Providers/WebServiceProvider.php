@@ -34,13 +34,12 @@ class WebServiceProvider extends ModuleServiceProvider
         RouteServiceProvider::class,
     ];
 
-    /**
-     * Define module schedules.
-     * 
-     * @param $schedule
-     */
-    // protected function configureSchedules(Schedule $schedule): void
-    // {
-    //     $schedule->command('inspire')->hourly();
-    // }
+    public function boot(): void
+    {
+        parent::boot();
+        
+        \Illuminate\Support\Facades\View::composer(['web::*'], function ($view) {
+            $view->with('globalCategories', \App\Models\Category::orderBy('rank')->get());
+        });
+    }
 }

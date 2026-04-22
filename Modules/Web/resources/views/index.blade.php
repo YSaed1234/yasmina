@@ -1,178 +1,54 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ __('Yasmina') }} - {{ __('Premium Products') }}</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script>
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        colors: {
-                            yasmina: {
-                                50: 'var(--yasmina-50)',
-                                100: 'var(--yasmina-100)',
-                                200: 'var(--yasmina-200)',
-                                300: 'var(--yasmina-300)',
-                                400: 'var(--yasmina-400)',
-                                500: 'var(--yasmina-500)',
-                                600: 'var(--yasmina-600)',
-                                700: 'var(--yasmina-700)',
-                                800: 'var(--yasmina-800)',
-                                900: 'var(--yasmina-900)',
-                            }
-                        }
-                    }
-                }
-            }
-        </script>
-        <style>
-            :root {
-                /* Yasmina Rose (Default) */
-                --yasmina-50: #fdf8f7;
-                --yasmina-100: #f9eded;
-                --yasmina-200: #f2d8d5;
-                --yasmina-300: #e5bcba;
-                --yasmina-400: #d6a6a1;
-                --yasmina-500: #865d58;
-                --yasmina-600: #75514c;
-                --yasmina-700: #634541;
-                --yasmina-800: #523a37;
-                --yasmina-900: #422f2c;
-
-                --primary: #865d58;
-                --primary-hover: #75514c;
-                --secondary: #d6a6a1;
-                --bg-soft: #fdf8f7;
-                --accent-light: rgba(134, 93, 88, 0.1);
-                --shadow-color: rgba(134, 93, 88, 0.2);
-            }
-
-            body { font-family: 'Outfit', sans-serif; background-color: var(--bg-soft); transition: background-color 0.3s ease; }
-            .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
-            .gradient-bg { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); }
-            .soft-shadow { box-shadow: 0 10px 30px -10px var(--shadow-color); }
-            
-            .text-primary { color: var(--primary); }
-            .bg-primary { background-color: var(--primary); }
-            .border-primary { border-color: var(--primary); }
-            .hover-bg-primary:hover { background-color: var(--primary-hover); }
-            .from-primary { --tw-gradient-from: var(--primary) !important; --tw-gradient-to: rgb(255 255 255 / 0) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
-            .to-secondary { --tw-gradient-to: var(--secondary) !important; }
-            
-            .theme-dot { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid white; transition: transform 0.2s; }
-            .theme-dot:hover { transform: scale(1.2); }
-            .theme-dot.active { transform: scale(1.3); border-color: #333; }
-        </style>
-    </head>
-    <body class="text-gray-900">
-        <!-- Theme Switcher -->
-        <div class="fixed bottom-8 right-8 z-[100]">
-            <div id="theme-panel" class="hidden absolute bottom-16 right-0 bg-white p-4 rounded-2xl shadow-2xl border border-gray-100 flex-col space-y-3 min-w-[150px]">
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">{{ __('Pick a Theme') }}</p>
-                <div class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors" onclick="setTheme('yasmina')">
-                    <div class="theme-dot" style="background: linear-gradient(to right, #865d58, #d6a6a1);"></div>
-                    <span class="text-sm font-medium">Yasmina Rose</span>
-                </div>
-                <div class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors" onclick="setTheme('barbie')">
-                    <div class="theme-dot" style="background: linear-gradient(to right, #e0218a, #ff64b1);"></div>
-                    <span class="text-sm font-medium">Barbie Pink</span>
-                </div>
-                <div class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors" onclick="setTheme('peach')">
-                    <div class="theme-dot" style="background: linear-gradient(to right, #fb923c, #f43f5e);"></div>
-                    <span class="text-sm font-medium">Soft Peach</span>
-                </div>
-                <div class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors" onclick="setTheme('lavender')">
-                    <div class="theme-dot" style="background: linear-gradient(to right, #a855f7, #ec4899);"></div>
-                    <span class="text-sm font-medium">Lavender</span>
-                </div>
-                <div class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors" onclick="setTheme('sakura')">
-                    <div class="theme-dot" style="background: linear-gradient(to right, #fbcfe8, #f472b6);"></div>
-                    <span class="text-sm font-medium">Sakura</span>
-                </div>
-            </div>
-            <button onclick="toggleThemePanel()" class="w-14 h-14 bg-white rounded-full shadow-2xl flex items-center justify-center text-primary hover:scale-110 transition-all border border-rose-100">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.172-1.172a4 4 0 115.656 5.656l-1.172 1.172" />
-                </svg>
-            </button>
-        </div>
-
-        <!-- Navigation -->
-        <nav class="fixed w-full z-50 glass border-b border-rose-100">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-20 items-center">
-                    <div class="flex-shrink-0 flex items-center">
-                        <a href="/">
-                            <img src="{{ asset('assets/logo.png') }}" alt="{{ __('Yasmina') }}" class="h-16 w-auto transition-transform hover:scale-105">
-                        </a>
-                    </div>
-                    <div class="hidden md:block">
-                        <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="#" class="px-3 py-2 rounded-md text-sm font-bold text-gray-900 hover:text-primary transition-colors">{{ __('Home') }}</a>
-                            @foreach($categories as $category)
-                                <a href="#category-{{ $category->id }}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-primary transition-colors">{{ $category->name }}</a>
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <a href="{{ route('lang.switch', app()->getLocale() == 'ar' ? 'en' : 'ar') }}" class="px-4 py-2 bg-rose-50 border border-rose-100 rounded-full text-xs font-bold text-primary hover:bg-primary hover:text-white transition-all shadow-sm">
-                            {{ app()->getLocale() == 'ar' ? 'English' : 'عربي' }}
-                        </a>
-                        @guest
-                            <a href="{{ route('login') }}" class="text-sm font-bold text-gray-700 hover:text-primary mr-4">{{ __('Login') }}</a>
-                            <a href="{{ route('register') }}" class="inline-flex items-center px-6 py-2.5 border border-transparent text-sm font-bold rounded-full text-white bg-primary hover-bg-primary shadow-lg shadow-rose-200 transition-all">{{ __('Register') }}</a>
-                        @else
-                            <form method="POST" action="{{ route('logout') }}" class="inline">
-                                @csrf
-                                <button type="submit" class="text-sm font-bold text-gray-700 hover:text-primary">{{ __('Logout') }}</button>
-                            </form>
-                        @endguest
-                    </div>
-                </div>
-            </div>
-        </nav>
-
+<x-web::layouts.master>
+    <div class="relative overflow-hidden">
         <!-- Hero Section -->
-        <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div class="lg:w-1/2">
-                    <div class="inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide text-primary uppercase bg-rose-50 rounded-full" id="new-tag">{{ __('New Collection 2026') }}</div>
-                    <h1 class="text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-tight">
-                        {{ __('Elegance in') }} <br>
-                        <span class="text-primary">{{ __('Every Detail') }}</span>
+        <header class="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <div class="absolute inset-0 bg-gradient-to-r from-bg-soft via-bg-soft/80 to-transparent z-10"></div>
+                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=2000" alt="Luxury Interior" class="w-full h-full object-cover">
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full">
+                <div class="max-w-2xl">
+                    <span class="inline-block px-4 py-1.5 bg-primary/10 text-primary text-xs font-bold uppercase tracking-[0.3em] rounded-full mb-6">
+                        {{ __('Established 2026') }}
+                    </span>
+                    <h1 class="text-7xl font-bold text-gray-900 leading-tight mb-8">
+                        {{ __('Redefining') }} <br>
+                        <span class="text-primary">{{ __('Luxury') }}</span> {{ __('Lifestyles') }}
                     </h1>
-                    <p class="mt-6 text-xl text-gray-600 leading-relaxed">
-                        {{ __('Discover our curated collection of premium products, designed for those who appreciate quality and style.') }}
+                    <p class="text-xl text-gray-600 mb-10 leading-relaxed max-w-lg">
+                        {{ __('Discover our curated collection of premium products, designed for those who appreciate the finer things in life.') }}
                     </p>
-                    <div class="mt-10 flex space-x-4">
-                        <a href="#products" class="px-8 py-4 bg-primary text-white rounded-full font-bold shadow-lg shadow-rose-200 hover-bg-primary transition-all hover:-translate-y-1">{{ __('Shop Now') }}</a>
-                        <a href="#" class="px-8 py-4 bg-white text-primary border border-rose-100 rounded-full font-bold shadow-sm hover:shadow-md transition-all hover:-translate-y-1">{{ __('Learn More') }}</a>
+                    <div class="flex items-center gap-6">
+                        <a href="{{ route('web.shop') }}" class="px-10 py-5 bg-primary text-white rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20 flex items-center gap-3">
+                            {{ __('Explore Shop') }}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-3/4 h-full gradient-bg rounded-full opacity-10 blur-3xl"></div>
-            <div class="absolute bottom-0 left-0 -ml-20 w-1/2 h-1/2 bg-secondary rounded-full opacity-10 blur-3xl"></div>
-        </section>
+        </header>
 
-        <!-- Products Section -->
-        <section id="products" class="py-20 bg-white">
+        <!-- Top Picks Section -->
+        <section class="py-32 bg-white relative z-10">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl lg:text-4xl font-bold text-gray-900">{{ __('Featured Products') }}</h2>
-                    <p class="mt-4 text-gray-600 italic">{{ __('Handpicked items just for you') }}</p>
-                    <div class="mt-4 flex justify-center">
-                        <div class="h-1 w-20 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-6">
+                    <div>
+                        <h2 class="text-4xl font-bold text-gray-900">{{ __('Our Top Picks') }}</h2>
+                        <p class="mt-4 text-gray-600 text-lg">{{ __('Hand-selected pieces from our latest collections.') }}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{{ route('web.shop') }}" class="px-6 py-3 bg-rose-50 text-primary rounded-xl font-bold hover:bg-primary hover:text-white transition-all duration-300">
+                            {{ __('View All Products') }}
+                        </a>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     @forelse($featuredProducts as $product)
-                        <div class="group relative bg-white rounded-3xl overflow-hidden soft-shadow transition-all duration-500 border border-rose-50">
+                        <a href="{{ route('web.products.show', $product->id) }}" class="group relative bg-white rounded-3xl overflow-hidden soft-shadow transition-all duration-500 border border-rose-50 hover:-translate-y-2">
                             <div class="aspect-square w-full overflow-hidden bg-rose-50">
                                 @if($product->image)
                                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -192,14 +68,14 @@
                                         <span class="text-xl font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
                                         <span class="text-sm font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
                                     </div>
-                                    <button class="p-2.5 rounded-full bg-rose-50 text-primary hover:bg-primary hover:text-white transition-all duration-300">
+                                    <div class="p-2.5 rounded-full bg-rose-50 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                         </svg>
-                                    </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     @empty
                         <div class="col-span-full text-center py-20 bg-rose-50/30 rounded-3xl border-2 border-dashed border-rose-100">
                             <p class="text-primary opacity-60">{{ __('No products available yet.') }}</p>
@@ -210,168 +86,44 @@
         </section>
 
         <!-- Categories Section -->
-        @foreach($categories as $category)
-            @if($category->products->count() > 0)
-                <section id="category-{{ $category->id }}" class="py-20 border-t border-rose-50">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="flex justify-between items-end mb-10">
-                            <div>
-                                <h2 class="text-3xl font-bold text-gray-900">{{ $category->name }}</h2>
-                                <p class="mt-2 text-gray-600">{{ __('Explore items in this category') }}</p>
-                            </div>
-                            <a href="#" class="text-primary font-bold hover:text-primary transition-colors">{{ __('View All') }}</a>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                            @foreach($category->products->sortBy('rank')->take(4) as $product)
-                                <div class="group relative">
-                                    <div class="aspect-square w-full rounded-2xl overflow-hidden bg-rose-50 shadow-sm">
-                                        @if($product->image)
-                                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
-                                        @else
-                                            <div class="h-full w-full flex items-center justify-center text-primary opacity-20 text-4xl font-light">?</div>
-                                        @endif
-                                        <div class="absolute inset-0 bg-black/0 group-hover:bg-primary/5 transition-all duration-500"></div>
-                                    </div>
-                                    <div class="mt-4">
-                                        <h3 class="text-sm font-bold text-gray-700 group-hover:text-primary transition-colors">{{ $product->name }}</h3>
-                                        <div class="flex items-baseline gap-1">
-                                            <span class="text-lg font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
-                                            <span class="text-xs font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
-                                        </div>
-                                    </div>
+        <div id="categories">
+            @foreach($categories as $category)
+                @if($category->products->count() > 0)
+                    <section id="category-{{ $category->id }}" class="py-20 border-t border-rose-50">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="flex justify-between items-end mb-10">
+                                <div>
+                                    <h2 class="text-3xl font-bold text-gray-900">{{ $category->name }}</h2>
+                                    <p class="mt-2 text-gray-600">{{ __('Explore items in this category') }}</p>
                                 </div>
-                            @endforeach
+                                <a href="{{ route('web.shop', ['category_id' => $category->id]) }}" class="text-primary font-bold hover:text-primary transition-colors">{{ __('View All') }}</a>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                                @foreach($category->products->sortBy('rank')->take(4) as $product)
+                                    <a href="{{ route('web.products.show', $product->id) }}" class="group relative">
+                                        <div class="aspect-square w-full rounded-2xl overflow-hidden bg-rose-50 shadow-sm transition-all duration-500 hover:-translate-y-1">
+                                            @if($product->image)
+                                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
+                                            @else
+                                                <div class="h-full w-full flex items-center justify-center text-primary opacity-20 text-4xl font-light">?</div>
+                                            @endif
+                                            <div class="absolute inset-0 bg-black/0 group-hover:bg-primary/5 transition-all duration-500"></div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <h3 class="text-sm font-bold text-gray-700 group-hover:text-primary transition-colors">{{ $product->name }}</h3>
+                                            <div class="flex items-baseline gap-1">
+                                                <span class="text-lg font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
+                                                <span class="text-xs font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
                         </div>
-                    </div>
-                </section>
-            @endif
-        @endforeach
-
-        <!-- Footer -->
-        <footer class="bg-gray-900 text-white py-20 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-primary rounded-full opacity-10 blur-3xl -mr-32 -mt-32"></div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
-                    <div>
-                        <span class="text-2xl font-bold text-white">{{ __('Yasmina') }}</span>
-                        <p class="mt-6 text-gray-400">{{ __('Defining elegance and quality since 2026.') }}</p>
-                    </div>
-                    <div>
-                        <h4 class="text-lg font-bold mb-6">{{ __('Quick Links') }}</h4>
-                        <ul class="space-y-4 text-gray-400">
-                            <li><a href="#" class="hover:text-primary transition-colors">{{ __('Shop') }}</a></li>
-                            <li><a href="#" class="hover:text-primary transition-colors">{{ __('Categories') }}</a></li>
-                            <li><a href="#" class="hover:text-primary transition-colors">{{ __('About Us') }}</a></li>
-                            <li><a href="#" class="hover:text-primary transition-colors">{{ __('Contact') }}</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-lg font-bold mb-6">{{ __('Newsletter') }}</h4>
-                        <p class="text-gray-400 mb-6">{{ __('Subscribe to get special offers and updates.') }}</p>
-                        <form class="flex">
-                            <input type="email" placeholder="{{ __('Email address') }}" class="bg-gray-800 border-none rounded-l-full px-6 py-3 w-full focus:ring-2 focus:ring-primary outline-none">
-                            <button class="bg-primary rounded-r-full px-6 py-3 font-bold hover:opacity-90 transition-colors">{{ __('Join') }}</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="mt-20 pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
-                    &copy; 2026 {{ __('Yasmina Website') }}. All rights reserved.
-                </div>
-            </div>
-        </footer>
-
-        <script>
-            const themes = {
-                yasmina: {
-                    primary: '#865d58',
-                    'primary-hover': '#75514c',
-                    secondary: '#d6a6a1',
-                    'bg-soft': '#fdf8f7',
-                    'shadow-color': 'rgba(134, 93, 88, 0.2)'
-                },
-                barbie: {
-                    primary: '#e0218a',
-                    'primary-hover': '#c2146e',
-                    secondary: '#ff64b1',
-                    'bg-soft': '#fffafb',
-                    'shadow-color': 'rgba(224, 33, 138, 0.2)'
-                },
-                peach: {
-                    primary: '#fb923c',
-                    'primary-hover': '#ea580c',
-                    secondary: '#f43f5e',
-                    'bg-soft': '#fffcf9',
-                    'shadow-color': 'rgba(251, 146, 60, 0.2)'
-                },
-                lavender: {
-                    primary: '#a855f7',
-                    'primary-hover': '#9333ea',
-                    secondary: '#ec4899',
-                    'bg-soft': '#faf9ff',
-                    'shadow-color': 'rgba(168, 85, 247, 0.2)'
-                },
-                sakura: {
-                    primary: '#f472b6',
-                    'primary-hover': '#db2777',
-                    secondary: '#fbcfe8',
-                    'bg-soft': '#fffafd',
-                    'shadow-color': 'rgba(244, 114, 182, 0.2)'
-                }
-            };
-
-            function setTheme(themeName) {
-                const theme = themes[themeName];
-                const root = document.documentElement;
-                root.style.setProperty('--primary', theme.primary);
-                root.style.setProperty('--primary-hover', theme['primary-hover']);
-                root.style.setProperty('--secondary', theme.secondary);
-                root.style.setProperty('--bg-soft', theme['bg-soft']);
-                root.style.setProperty('--shadow-color', theme['shadow-color']);
-                
-                // Update yasmina palette variables
-                if (themeName === 'barbie') {
-                    root.style.setProperty('--yasmina-50', '#fff0f7');
-                    root.style.setProperty('--yasmina-100', '#ffe4f2');
-                    root.style.setProperty('--yasmina-200', '#ffc9e7');
-                    root.style.setProperty('--yasmina-300', '#ff9ed1');
-                    root.style.setProperty('--yasmina-400', '#ff64b1');
-                    root.style.setProperty('--yasmina-500', '#e0218a');
-                    root.style.setProperty('--yasmina-600', '#c2146e');
-                    root.style.setProperty('--yasmina-700', '#a20e58');
-                    root.style.setProperty('--yasmina-800', '#86104a');
-                    root.style.setProperty('--yasmina-900', '#701140');
-                } else if (themeName === 'yasmina') {
-                    root.style.setProperty('--yasmina-50', '#fdf8f7');
-                    root.style.setProperty('--yasmina-100', '#f9eded');
-                    root.style.setProperty('--yasmina-200', '#f2d8d5');
-                    root.style.setProperty('--yasmina-300', '#e5bcba');
-                    root.style.setProperty('--yasmina-400', '#d6a6a1');
-                    root.style.setProperty('--yasmina-500', '#865d58');
-                    root.style.setProperty('--yasmina-600', '#75514c');
-                    root.style.setProperty('--yasmina-700', '#634541');
-                    root.style.setProperty('--yasmina-800', '#523a37');
-                    root.style.setProperty('--yasmina-900', '#422f2c');
-                }
-
-                // Set data-theme for global styles (Admin/Nav)
-                root.setAttribute('data-theme', themeName === 'barbie' ? 'barbie' : 'yasmina');
-                
-                // Save preference
-                localStorage.setItem('selectedTheme', themeName);
-            }
-
-            // Load saved theme
-            document.addEventListener('DOMContentLoaded', () => {
-                const savedTheme = localStorage.getItem('selectedTheme') || 'yasmina';
-                setTheme(savedTheme);
-            });
-
-            function toggleThemePanel() {
-                const panel = document.getElementById('theme-panel');
-                panel.classList.toggle('hidden');
-                panel.classList.toggle('flex');
-            }
-        </script>
-    </body>
-</html>
+                    </section>
+                @endif
+            @endforeach
+        </div>
+    </div>
+</x-web::layouts.master>

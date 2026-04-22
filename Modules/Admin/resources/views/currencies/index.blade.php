@@ -18,25 +18,25 @@
         <table class="min-w-full divide-y divide-yasmina-50">
             <thead>
                 <tr class="bg-yasmina-50/50">
-                    <th class="px-8 py-5 text-left text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Name') }}</th>
-                    <th class="px-8 py-5 text-left text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Code') }}</th>
-                    <th class="px-8 py-5 text-left text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Symbol') }}</th>
+                    <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Name') }}</th>
+                    <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Code') }}</th>
+                    <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Symbol') }}</th>
                     @canany(['edit currencies', 'delete currencies'])
-                    <th class="px-8 py-5 text-right text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Actions') }}</th>
+                    <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Actions') }}</th>
                     @endcanany
                 </tr>
             </thead>
             <tbody class="divide-y divide-yasmina-50">
                 @foreach($currencies as $currency)
                     <tr class="hover:bg-yasmina-50/30 transition-colors">
-                        <td class="px-8 py-5 whitespace-nowrap text-sm font-bold text-gray-800">
+                        <td class="px-8 py-5 whitespace-nowrap text-sm font-bold text-gray-800 text-center">
                             {{ $currency->name }}
                         </td>
-                        <td class="px-8 py-5 whitespace-nowrap font-mono text-yasmina-500 font-bold tracking-wider">{{ $currency->code }}</td>
-                        <td class="px-8 py-5 whitespace-nowrap text-gray-700 text-xl font-bold">{{ $currency->symbol }}</td>
+                        <td class="px-8 py-5 whitespace-nowrap font-mono text-yasmina-500 font-bold tracking-wider text-center">{{ $currency->code }}</td>
+                        <td class="px-8 py-5 whitespace-nowrap text-gray-700 text-xl font-bold text-center">{{ $currency->symbol }}</td>
                         @canany(['edit currencies', 'delete currencies'])
-                        <td class="px-8 py-5 whitespace-nowrap text-right text-sm font-bold">
-                            <div class="flex justify-end gap-3">
+                        <td class="px-8 py-5 whitespace-nowrap text-center text-sm font-bold">
+                            <div class="flex justify-center gap-3">
                                 @canany(['edit currencies'])
                                 <a href="{{ route('currencies.edit', $currency->id) }}" class="p-2 text-yasmina-500 hover:bg-yasmina-50 rounded-xl transition-all">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
