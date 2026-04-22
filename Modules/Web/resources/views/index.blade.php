@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Yasmina Website - Premium Products</title>
+        <title>{{ __('Yasmina') }} - {{ __('Premium Products') }}</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -67,25 +67,31 @@
         <!-- Navigation -->
         <nav class="fixed w-full z-50 glass border-b border-rose-100">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16 items-center">
+                <div class="flex justify-between h-20 items-center">
                     <div class="flex-shrink-0 flex items-center">
-                        <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Yasmina</span>
+                        <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">{{ __('Yasmina') }}</span>
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-gray-900 hover:text-primary transition-colors">Home</a>
+                            <a href="#" class="px-3 py-2 rounded-md text-sm font-bold text-gray-900 hover:text-primary transition-colors">{{ __('Home') }}</a>
                             @foreach($categories as $category)
                                 <a href="#category-{{ $category->id }}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-primary transition-colors">{{ $category->name }}</a>
                             @endforeach
                         </div>
                     </div>
-                    <div class="flex items-center">
-                        @auth
-                            <a href="{{ route('dashboard') }}" class="text-sm font-medium text-gray-700 hover:text-primary">Dashboard</a>
+                    <div class="flex items-center gap-4">
+                        <a href="{{ route('lang.switch', app()->getLocale() == 'ar' ? 'en' : 'ar') }}" class="px-4 py-2 bg-rose-50 border border-rose-100 rounded-full text-xs font-bold text-rose-500 hover:bg-rose-500 hover:text-white transition-all shadow-sm">
+                            {{ app()->getLocale() == 'ar' ? 'English' : 'عربي' }}
+                        </a>
+                        @guest
+                            <a href="{{ route('login') }}" class="text-sm font-bold text-gray-700 hover:text-primary mr-4">{{ __('Login') }}</a>
+                            <a href="{{ route('register') }}" class="inline-flex items-center px-6 py-2.5 border border-transparent text-sm font-bold rounded-full text-white bg-primary hover-bg-primary shadow-lg shadow-rose-200 transition-all">{{ __('Register') }}</a>
                         @else
-                            <a href="{{ route('login') }}" class="text-sm font-medium text-gray-700 hover:text-primary mr-4">Login</a>
-                            <a href="{{ route('register') }}" class="inline-flex items-center px-6 py-2.5 border border-transparent text-sm font-medium rounded-full text-white bg-primary hover-bg-primary shadow-lg shadow-rose-200 transition-all">Get Started</a>
-                        @endauth
+                            <form method="POST" action="{{ route('logout') }}" class="inline">
+                                @csrf
+                                <button type="submit" class="text-sm font-bold text-gray-700 hover:text-primary">{{ __('Logout') }}</button>
+                            </form>
+                        @endguest
                     </div>
                 </div>
             </div>
@@ -95,17 +101,17 @@
         <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div class="lg:w-1/2">
-                    <div class="inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide text-primary uppercase bg-rose-50 rounded-full" id="new-tag">New Collection 2024</div>
+                    <div class="inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide text-primary uppercase bg-rose-50 rounded-full" id="new-tag">{{ __('New Collection 2024') }}</div>
                     <h1 class="text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-tight">
-                        Elegance in <br>
-                        <span class="text-primary">Every Detail</span>
+                        {{ __('Elegance in') }} <br>
+                        <span class="text-primary">{{ __('Every Detail') }}</span>
                     </h1>
                     <p class="mt-6 text-xl text-gray-600 leading-relaxed">
-                        Discover our curated collection of premium products, designed for those who appreciate quality and style.
+                        {{ __('Discover our curated collection of premium products, designed for those who appreciate quality and style.') }}
                     </p>
                     <div class="mt-10 flex space-x-4">
-                        <a href="#products" class="px-8 py-4 bg-primary text-white rounded-full font-semibold shadow-lg shadow-rose-200 hover-bg-primary transition-all hover:-translate-y-1">Shop Now</a>
-                        <a href="#" class="px-8 py-4 bg-white text-primary border border-rose-100 rounded-full font-semibold shadow-sm hover:shadow-md transition-all hover:-translate-y-1">Learn More</a>
+                        <a href="#products" class="px-8 py-4 bg-primary text-white rounded-full font-bold shadow-lg shadow-rose-200 hover-bg-primary transition-all hover:-translate-y-1">{{ __('Shop Now') }}</a>
+                        <a href="#" class="px-8 py-4 bg-white text-primary border border-rose-100 rounded-full font-bold shadow-sm hover:shadow-md transition-all hover:-translate-y-1">{{ __('Learn More') }}</a>
                     </div>
                 </div>
             </div>
@@ -117,8 +123,8 @@
         <section id="products" class="py-20 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
-                    <h2 class="text-3xl lg:text-4xl font-bold text-gray-900">Featured Products</h2>
-                    <p class="mt-4 text-gray-600 italic">Handpicked items just for you</p>
+                    <h2 class="text-3xl lg:text-4xl font-bold text-gray-900">{{ __('Featured Products') }}</h2>
+                    <p class="mt-4 text-gray-600 italic">{{ __('Handpicked items just for you') }}</p>
                     <div class="mt-4 flex justify-center">
                         <div class="h-1 w-20 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
                     </div>
@@ -139,10 +145,13 @@
                                 @endif
                             </div>
                             <div class="p-6">
-                                <span class="text-xs font-semibold text-primary uppercase tracking-widest">{{ $product->category->name }}</span>
+                                <span class="text-xs font-bold text-primary uppercase tracking-widest">{{ $product->category->name }}</span>
                                 <h3 class="mt-2 text-lg font-bold text-gray-900">{{ $product->name }}</h3>
                                 <div class="mt-4 flex justify-between items-center">
-                                    <span class="text-xl font-bold text-gray-900">${{ number_format($product->price, 2) }}</span>
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-xl font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
+                                        <span class="text-sm font-bold text-rose-500">{{ $product->currency?->symbol ?? '$' }}</span>
+                                    </div>
                                     <button class="p-2.5 rounded-full bg-rose-50 text-primary hover:bg-primary hover:text-white transition-all duration-300">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -153,7 +162,7 @@
                         </div>
                     @empty
                         <div class="col-span-full text-center py-20 bg-rose-50/30 rounded-3xl border-2 border-dashed border-rose-100">
-                            <p class="text-primary opacity-60">No products available yet.</p>
+                            <p class="text-primary opacity-60">{{ __('No products available yet.') }}</p>
                         </div>
                     @endforelse
                 </div>
@@ -168,9 +177,9 @@
                         <div class="flex justify-between items-end mb-10">
                             <div>
                                 <h2 class="text-3xl font-bold text-gray-900">{{ $category->name }}</h2>
-                                <p class="mt-2 text-gray-600">Explore items in this category</p>
+                                <p class="mt-2 text-gray-600">{{ __('Explore items in this category') }}</p>
                             </div>
-                            <a href="#" class="text-primary font-semibold hover:text-primary transition-colors">View All</a>
+                            <a href="#" class="text-primary font-bold hover:text-primary transition-colors">{{ __('View All') }}</a>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -185,8 +194,11 @@
                                         <div class="absolute inset-0 bg-black/0 group-hover:bg-primary/5 transition-all duration-500"></div>
                                     </div>
                                     <div class="mt-4">
-                                        <h3 class="text-sm text-gray-700 group-hover:text-primary transition-colors">{{ $product->name }}</h3>
-                                        <p class="text-lg font-bold text-gray-900">${{ number_format($product->price, 2) }}</p>
+                                        <h3 class="text-sm font-bold text-gray-700 group-hover:text-primary transition-colors">{{ $product->name }}</h3>
+                                        <div class="flex items-baseline gap-1">
+                                            <span class="text-lg font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
+                                            <span class="text-xs font-bold text-rose-500">{{ $product->currency?->symbol ?? '$' }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
@@ -200,13 +212,13 @@
         <footer class="bg-gray-900 text-white py-20 relative overflow-hidden">
             <div class="absolute top-0 right-0 w-64 h-64 bg-primary rounded-full opacity-10 blur-3xl -mr-32 -mt-32"></div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
                     <div>
-                        <span class="text-2xl font-bold text-white">Yasmina</span>
+                        <span class="text-2xl font-bold text-white">{{ __('Yasmina') }}</span>
                         <p class="mt-6 text-gray-400">Defining elegance and quality since 2024.</p>
                     </div>
                     <div>
-                        <h4 class="text-lg font-semibold mb-6">Quick Links</h4>
+                        <h4 class="text-lg font-bold mb-6">{{ __('Quick Links') }}</h4>
                         <ul class="space-y-4 text-gray-400">
                             <li><a href="#" class="hover:text-primary transition-colors">Shop</a></li>
                             <li><a href="#" class="hover:text-primary transition-colors">Categories</a></li>
@@ -215,16 +227,16 @@
                         </ul>
                     </div>
                     <div>
-                        <h4 class="text-lg font-semibold mb-6">Newsletter</h4>
-                        <p class="text-gray-400 mb-6">Subscribe to get special offers and updates.</p>
+                        <h4 class="text-lg font-bold mb-6">{{ __('Newsletter') }}</h4>
+                        <p class="text-gray-400 mb-6">{{ __('Subscribe to get special offers and updates.') }}</p>
                         <form class="flex">
-                            <input type="email" placeholder="Email address" class="bg-gray-800 border-none rounded-l-full px-6 py-3 w-full focus:ring-2 focus:ring-primary outline-none">
-                            <button class="bg-primary rounded-r-full px-6 py-3 font-semibold hover:opacity-90 transition-colors">Join</button>
+                            <input type="email" placeholder="{{ __('Email address') }}" class="bg-gray-800 border-none rounded-l-full px-6 py-3 w-full focus:ring-2 focus:ring-primary outline-none">
+                            <button class="bg-primary rounded-r-full px-6 py-3 font-bold hover:opacity-90 transition-colors">{{ __('Join') }}</button>
                         </form>
                     </div>
                 </div>
                 <div class="mt-20 pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
-                    &copy; 2024 Yasmina Website. All rights reserved.
+                    &copy; 2024 {{ __('Yasmina Website') }}. All rights reserved.
                 </div>
             </div>
         </footer>

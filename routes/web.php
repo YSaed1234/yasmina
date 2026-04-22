@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LanguageController;
 
+Route::get('lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 
-
-Route::get('/dashboard', function () {
+Route::get('/admin-dashboard-2026', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 

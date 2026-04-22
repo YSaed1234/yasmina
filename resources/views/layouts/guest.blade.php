@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,6 +22,11 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="text-gray-900 antialiased bg-[#fffafb]">
+        <div class="absolute top-4 right-4 z-50">
+            <a href="{{ route('lang.switch', app()->getLocale() == 'ar' ? 'en' : 'ar') }}" class="px-4 py-2 bg-white/80 backdrop-blur-sm border border-rose-100 rounded-full text-sm font-bold text-rose-500 hover:bg-rose-50 transition-all shadow-sm">
+                {{ app()->getLocale() == 'ar' ? 'English' : 'عربي' }}
+            </a>
+        </div>
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 relative overflow-hidden">
             <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 gradient-bg rounded-full opacity-10 blur-3xl"></div>
             <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-pink-300 rounded-full opacity-10 blur-3xl"></div>
