@@ -48,8 +48,8 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     @forelse($featuredProducts as $product)
-                        <a href="{{ route('web.products.show', $product->id) }}" class="group relative bg-white rounded-3xl overflow-hidden soft-shadow transition-all duration-500 border border-rose-50 hover:-translate-y-2">
-                            <div class="aspect-square w-full overflow-hidden bg-rose-50">
+                        <div class="group relative bg-white rounded-3xl overflow-hidden soft-shadow transition-all duration-500 border border-rose-50 hover:-translate-y-2 flex flex-col h-full">
+                            <a href="{{ route('web.products.show', $product->id) }}" class="aspect-square w-full overflow-hidden bg-rose-50 block">
                                 @if($product->image)
                                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
                                 @else
@@ -59,23 +59,31 @@
                                         </svg>
                                     </div>
                                 @endif
-                            </div>
-                            <div class="p-6">
-                                <span class="text-xs font-bold text-primary uppercase tracking-widest">{{ $product->category->name }}</span>
-                                <h3 class="mt-2 text-lg font-bold text-gray-900">{{ $product->name }}</h3>
-                                <div class="mt-4 flex justify-between items-center">
+                            </a>
+                            <div class="p-6 flex-1 flex flex-col justify-between">
+                                <div>
+                                    <span class="text-xs font-bold text-primary uppercase tracking-widest">{{ $product->category->name }}</span>
+                                    <a href="{{ route('web.products.show', $product->id) }}">
+                                        <h3 class="mt-2 text-lg font-bold text-gray-900 group-hover:text-primary transition-colors line-clamp-1">{{ $product->name }}</h3>
+                                    </a>
+                                </div>
+                                <div class="mt-6 flex flex-col gap-4">
                                     <div class="flex items-baseline gap-1">
-                                        <span class="text-xl font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
+                                        <span class="text-2xl font-black text-gray-900">{{ number_format($product->price, 2) }}</span>
                                         <span class="text-sm font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
                                     </div>
-                                    <div class="p-2.5 rounded-full bg-rose-50 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                        </svg>
-                                    </div>
+                                    <form action="{{ route('web.cart.add', $product->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="w-full py-3 bg-gray-50 text-gray-700 rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-primary hover:text-white hover:shadow-lg hover:shadow-primary/20 transition-all flex items-center justify-center gap-2 group/btn">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                            </svg>
+                                            {{ __('Add to Bag') }}
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     @empty
                         <div class="col-span-full text-center py-20 bg-rose-50/30 rounded-3xl border-2 border-dashed border-rose-100">
                             <p class="text-primary opacity-60">{{ __('No products available yet.') }}</p>

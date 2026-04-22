@@ -15,14 +15,20 @@
             </div>
 
             <div>
-                <label class="block text-sm font-bold text-yasmina-500 mb-6 uppercase tracking-widest">{{ __('Assign Permissions') }}</label>
+                <div class="flex items-center justify-between mb-6">
+                    <label class="block text-sm font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Assign Permissions') }}</label>
+                    <button type="button" onclick="toggleAllPermissions(this)" class="text-xs font-bold text-primary hover:underline uppercase tracking-widest">{{ __('Select All') }}</button>
+                </div>
                 <div class="space-y-8">
                     @foreach($permissions as $group => $groupPermissions)
-                    <div class="bg-yasmina-50/30 p-6 rounded-3xl border border-yasmina-50">
-                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-yasmina-300"></span>
-                            {{ __($group) }}
-                        </h3>
+                    <div class="bg-yasmina-50/30 p-6 rounded-3xl border border-yasmina-50 permission-group">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-yasmina-300"></span>
+                                {{ __($group) }}
+                            </h3>
+                            <button type="button" onclick="toggleGroupPermissions(this)" class="text-[10px] font-bold text-gray-400 hover:text-primary uppercase tracking-widest">{{ __('Toggle Group') }}</button>
+                        </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             @foreach($groupPermissions as $permission)
                             <label class="flex items-center gap-3 p-4 bg-white border border-yasmina-50 rounded-2xl hover:bg-yasmina-50 transition-all cursor-pointer group shadow-sm">
@@ -48,3 +54,29 @@
         </form>
     </div>
 </x-admin::layouts.master>
+
+<script>
+    window.toggleAllPermissions = function(btn) {
+        console.log('Toggling all permissions...');
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="permissions[]"]');
+        console.log('Found ' + checkboxes.length + ' checkboxes');
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+        checkboxes.forEach(cb => {
+            cb.checked = !allChecked;
+            cb.dispatchEvent(new Event('change'));
+        });
+        btn.innerText = !allChecked ? "{{ __('Deselect All') }}" : "{{ __('Select All') }}";
+    }
+
+    window.toggleGroupPermissions = function(btn) {
+        console.log('Toggling group permissions...');
+        const group = btn.closest('.permission-group');
+        const checkboxes = group.querySelectorAll('input[type="checkbox"][name="permissions[]"]');
+        console.log('Found ' + checkboxes.length + ' group checkboxes');
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+        checkboxes.forEach(cb => {
+            cb.checked = !allChecked;
+            cb.dispatchEvent(new Event('change'));
+        });
+    }
+</script>

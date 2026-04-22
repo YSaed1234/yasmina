@@ -97,16 +97,89 @@
                         
                         <a href="{{ route('web.contact') }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.contact') ? 'text-primary' : '' }}">{{ __('Contact Us') }}</a>
                         
+                        <!-- Cart Icon -->
+                        <a href="{{ route('web.cart') }}" class="relative group p-2 hover:bg-rose-50 rounded-xl transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                            @php $cartCount = count(session()->get('cart', [])); @endphp
+                            @if($cartCount > 0)
+                                <span class="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-lg shadow-primary/20 border-2 border-white">
+                                    {{ $cartCount }}
+                                </span>
+                            @endif
+                        </a>
+
                         @guest
                             <a href="{{ route('login') }}" class="hover:text-primary transition-colors">{{ __('Login') }}</a>
                         @else
-                            @if(auth()->user()->isAdmin())
-                                <a href="{{ route('dashboard') }}" class="px-5 py-2 bg-primary text-white rounded-xl hover:opacity-90 transition-all shadow-lg shadow-primary/20">{{ __('Dashboard') }}</a>
-                            @endif
-                            <form method="POST" action="{{ route('logout') }}" class="inline">
-                                @csrf
-                                <button type="submit" class="hover:text-primary transition-colors">{{ __('Logout') }}</button>
-                            </form>
+                            <div class="relative group">
+                                <button class="flex items-center gap-2 hover:text-primary transition-colors py-2">
+                                    <div class="w-8 h-8 rounded-full bg-rose-50 flex items-center justify-center text-primary font-bold text-xs border border-rose-100 uppercase">
+                                        {{ substr(auth()->user()->name, 0, 2) }}
+                                    </div>
+                                    <span class="text-xs font-bold text-gray-700">{{ auth()->user()->name }}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                <div class="absolute right-0 top-full w-56 bg-white rounded-2xl shadow-2xl border border-rose-50 p-2 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
+                                    <div class="grid gap-1">
+                                        @if(auth()->user()->isAdmin())
+                                            <a href="{{ route('dashboard') }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
+                                                <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                                                    </svg>
+                                                </div>
+                                                <span class="font-bold text-gray-700 text-xs">{{ __('Admin Dashboard') }}</span>
+                                            </a>
+                                        @endif
+                                        
+                                        <a href="{{ route('web.profile') }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
+                                            <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover/item:text-primary transition-colors">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                </svg>
+                                            </div>
+                                            <span class="font-bold text-gray-700 text-xs">{{ __('My Account') }}</span>
+                                        </a>
+
+                                        <a href="{{ route('web.profile.orders') }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
+                                            <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover/item:text-primary transition-colors">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                                </svg>
+                                            </div>
+                                            <span class="font-bold text-gray-700 text-xs">{{ __('My Orders') }}</span>
+                                        </a>
+
+                                        <a href="{{ route('web.profile.addresses') }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
+                                            <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover/item:text-primary transition-colors">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                            </div>
+                                            <span class="font-bold text-gray-700 text-xs">{{ __('My Addresses') }}</span>
+                                        </a>
+
+                                        <div class="border-t border-rose-50 my-1"></div>
+
+                                        <form method="POST" action="{{ route('logout') }}" class="block">
+                                            @csrf
+                                            <button type="submit" class="w-full px-4 py-2.5 hover:bg-red-50 text-red-500 rounded-xl transition-all flex items-center gap-3 group/item">
+                                                <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-400">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4-4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                    </svg>
+                                                </div>
+                                                <span class="font-bold text-xs text-left">{{ __('Logout') }}</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         @endguest
 
                         <!-- Theme Switcher -->
@@ -171,5 +244,6 @@
             const savedTheme = localStorage.getItem('yasmina-theme') || 'yasmina';
             document.documentElement.setAttribute('data-theme', savedTheme);
         </script>
+        @stack('scripts')
     </body>
 </html>

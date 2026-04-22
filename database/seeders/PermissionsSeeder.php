@@ -36,17 +36,21 @@ class PermissionsSeeder extends Seeder
             'delete currencies',
 
             'manage permissions',
+            'manage users',
+            'manage orders',
+            'manage contact requests',
+            'manage addresses',
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission]);
         }
 
         // Create Roles and Assign Permissions
-        $adminRole = Role::create(['name' => 'admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $adminRole->givePermissionTo(Permission::all());
 
-        $editorRole = Role::create(['name' => 'editor']);
+        $editorRole = Role::firstOrCreate(['name' => 'editor']);
         $editorRole->givePermissionTo([
             'view categories',
             'edit categories',
@@ -56,12 +60,14 @@ class PermissionsSeeder extends Seeder
         ]);
 
         // Create Admin User
-        $admin = User::create([
-            'name' => 'Admin Yasmina',
-            'email' => 'admin@yasmina.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin', // for the custom column we added earlier
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@yasmina.com'],
+            [
+                'name' => 'Admin Yasmina',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+            ]
+        );
         $admin->assignRole($adminRole);
     }
 }
