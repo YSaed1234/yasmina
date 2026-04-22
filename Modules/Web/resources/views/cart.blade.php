@@ -1,0 +1,125 @@
+<x-web::layouts.master>
+    <div class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex items-center gap-4 mb-12">
+                    <h1 class="text-4xl font-bold text-gray-900 tracking-tight">{{ __('Your Shopping Bag') }}</h1>
+                    <span class="px-4 py-1.5 bg-primary/10 text-primary rounded-full text-xs font-bold uppercase tracking-widest">
+                        {{ count($cart) }} {{ __('Items') }}
+                    </span>
+                </div>
+
+                @if(count($cart) > 0)
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                        <div class="lg:col-span-2 space-y-6">
+                            @foreach($cart as $id => $details)
+                                <div class="bg-white p-8 rounded-3xl shadow-sm border border-rose-50 flex gap-8 items-center group">
+                                    <div class="w-32 h-32 rounded-2xl overflow-hidden bg-gray-50 flex-shrink-0">
+                                        @if($details['image'])
+                                            <img src="{{ asset('storage/' . $details['image']) }}" alt="{{ $details['name'] }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                        @else
+                                            <div class="w-full h-full flex items-center justify-center text-gray-300">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex justify-between mb-2">
+                                            <h3 class="text-xl font-bold text-gray-900">{{ $details['name'] }}</h3>
+                                            <button onclick="removeFromCart({{ $id }})" class="text-gray-400 hover:text-red-500 transition-colors">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="flex items-center justify-between mt-6">
+                                            <div class="flex items-center bg-gray-50 rounded-xl p-1 border border-gray-100">
+                                                <button onclick="updateQuantity({{ $id }}, {{ $details['quantity'] - 1 }})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary transition-colors">-</button>
+                                                <span class="w-10 text-center font-bold text-sm">{{ $details['quantity'] }}</span>
+                                                <button onclick="updateQuantity({{ $id }}, {{ $details['quantity'] + 1 }})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary transition-colors">+</button>
+                                            </div>
+                                            <div class="text-lg font-bold text-primary">
+                                                {{ $details['currency'] }}{{ number_format($details['price'] * $details['quantity'], 2) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div class="lg:col-span-1">
+                            <div class="bg-white p-10 rounded-3xl shadow-xl shadow-primary/5 border border-rose-50 sticky top-24">
+                                <h2 class="text-2xl font-bold text-gray-900 mb-8 border-b border-rose-50 pb-6">{{ __('Order Summary') }}</h2>
+                                <div class="space-y-4 mb-8">
+                                    <div class="flex justify-between text-gray-500">
+                                        <span>{{ __('Subtotal') }}</span>
+                                        <span class="font-bold text-gray-900">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($total, 2) }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-gray-500">
+                                        <span>{{ __('Shipping') }}</span>
+                                        <span class="font-bold text-green-600 uppercase text-xs tracking-widest">{{ __('Free') }}</span>
+                                    </div>
+                                </div>
+                                <div class="border-t border-rose-50 pt-6 mb-10">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-lg font-bold text-gray-900">{{ __('Total') }}</span>
+                                        <span class="text-3xl font-bold text-primary">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($total, 2) }}</span>
+                                    </div>
+                                </div>
+                                <a href="{{ route('web.checkout') }}" class="block w-full py-5 bg-primary text-white text-center rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">
+                                    {{ __('Proceed to Checkout') }}
+                                </a>
+                                <p class="text-center text-gray-400 text-xs mt-6">
+                                    {{ __('Taxes and shipping calculated at checkout') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <div class="bg-white rounded-3xl p-20 text-center shadow-sm border border-rose-50">
+                        <div class="w-24 h-24 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-8 text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('Your bag is empty') }}</h2>
+                        <p class="text-gray-500 mb-10 max-w-md mx-auto">{{ __('Looks like you haven\'t added any luxury pieces to your bag yet. Start exploring our latest collections.') }}</p>
+                        <a href="{{ route('web.shop') }}" class="inline-block px-10 py-4 bg-primary text-white rounded-2xl font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+                            {{ __('Explore Shop') }}
+                        </a>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        function updateQuantity(id, quantity) {
+            if(quantity < 1) return;
+            fetch("{{ route('web.cart.update') }}", {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({id: id, quantity: quantity})
+            }).then(() => location.reload());
+        }
+
+        function removeFromCart(id) {
+            if(!confirm('{{ __("Are you sure?") }}')) return;
+            fetch("{{ route('web.cart.remove') }}", {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({id: id})
+            }).then(() => location.reload());
+        }
+    </script>
+    @endpush
+</x-web::layouts.master>
