@@ -95,6 +95,8 @@
                         
                         <a href="{{ route('web.about') }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.about') ? 'text-primary' : '' }}">{{ __('About Us') }}</a>
                         
+                        <a href="{{ route('web.contact') }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.contact') ? 'text-primary' : '' }}">{{ __('Contact Us') }}</a>
+                        
                         @guest
                             <a href="{{ route('login') }}" class="hover:text-primary transition-colors">{{ __('Login') }}</a>
                         @else
@@ -140,8 +142,8 @@
                         <ul class="space-y-4 text-gray-400">
                             <li><a href="{{ route('web.shop') }}" class="hover:text-primary transition-colors">{{ __('Shop') }}</a></li>
                             <li><a href="{{ route('home') }}#categories" class="hover:text-primary transition-colors">{{ __('Categories') }}</a></li>
-                            <li><a href="#" class="hover:text-primary transition-colors">{{ __('About Us') }}</a></li>
-                            <li><a href="#" class="hover:text-primary transition-colors">{{ __('Contact') }}</a></li>
+                            <li><a href="{{ route('web.about') }}" class="hover:text-primary transition-colors">{{ __('About Us') }}</a></li>
+                            <li><a href="{{ route('web.contact') }}" class="hover:text-primary transition-colors">{{ __('Contact Us') }}</a></li>
                         </ul>
                     </div>
                     <div>
