@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Modules\Admin\Http\Requests\StoreProductRequest;
 use Modules\Admin\Http\Requests\UpdateProductRequest;
 use Modules\Admin\Services\CategoryService;
+use Modules\Admin\Services\CurrencyService;
 use Modules\Admin\Services\ProductService;
 
 class ProductController extends Controller
