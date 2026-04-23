@@ -33,7 +33,7 @@ class ShippingZoneController extends Controller
             'is_active' => $request->has('is_active'),
         ]);
 
-        return redirect()->route('shipping_zones.index')->with('success', __('Shipping zone created successfully.'));
+        return redirect()->route('admin.shipping_zones.index')->with('success', __('Shipping zone created successfully.'));
     }
 
     public function edit(ShippingZone $shippingZone)
@@ -55,12 +55,12 @@ class ShippingZoneController extends Controller
             'is_active' => $request->has('is_active'),
         ]);
 
-        return redirect()->route('shipping_zones.index')->with('success', __('Shipping zone updated successfully.'));
+        return redirect()->route('admin.shipping_zones.index')->with('success', __('Shipping zone updated successfully.'));
     }
 
     public function destroy(ShippingZone $shippingZone)
     {
         $shippingZone->delete();
-        return redirect()->route('shipping_zones.index')->with('success', __('Shipping zone deleted successfully.'));
+        return redirect()->route('admin.shipping_zones.index')->with('success', __('Shipping zone deleted successfully.'));
     }
 }

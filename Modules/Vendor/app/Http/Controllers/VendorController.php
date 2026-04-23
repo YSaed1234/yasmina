@@ -69,7 +69,7 @@ class VendorController extends Controller
             'phone' => 'nullable|string|max:20',
             'description' => 'nullable|string',
             'address' => 'nullable|string',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 

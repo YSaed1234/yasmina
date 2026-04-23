@@ -49,7 +49,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/notifications/mark-all-read', [\Modules\Web\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('web.notifications.mark-all-read');
 
     // Regions API
-    Route::get('/api/governorates/{governorate}/regions', function(\App\Models\Governorate $governorate) {
-        return $governorate->regions()->where('is_active', true)->orderBy('name')->get();
+    Route::get('/api/governorates/{governorate}/regions', function (\App\Models\Governorate $governorate, Request $request) {
+        $vendor_id = $request->vendor_id ?? null;
+        $query = $governorate->regions()->where('is_active', true);
+
+        if ($vendor_id) {
+            $query->where('vendor_id', $vendor_id);
+        } else {
+            $query->whereNull('vendor_id');
+        }
+
+        return $query->orderBy('name')->get();
     })->name('api.regions');
 });

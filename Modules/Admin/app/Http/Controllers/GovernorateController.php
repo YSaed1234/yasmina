@@ -27,7 +27,7 @@ class GovernorateController extends Controller
 
         Governorate::create($request->all());
 
-        return redirect()->route('governorates.index')->with('success', __('Governorate created successfully.'));
+        return redirect()->route('admin.governorates.index')->with('success', __('Governorate created successfully.'));
     }
 
     public function edit(Governorate $governorate)
@@ -43,12 +43,12 @@ class GovernorateController extends Controller
 
         $governorate->update($request->all());
 
-        return redirect()->route('governorates.index')->with('success', __('Governorate updated successfully.'));
+        return redirect()->route('admin.governorates.index')->with('success', __('Governorate updated successfully.'));
     }
 
     public function destroy(Governorate $governorate)
     {
         $governorate->delete();
-        return redirect()->route('governorates.index')->with('success', __('Governorate deleted successfully.'));
+        return redirect()->route('admin.governorates.index')->with('success', __('Governorate deleted successfully.'));
     }
 }

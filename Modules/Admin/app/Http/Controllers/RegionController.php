@@ -45,7 +45,7 @@ class RegionController extends Controller
             'is_active' => $request->has('is_active'),
         ]);
 
-        return redirect()->route('regions.index')->with('success', __('Region created successfully.'));
+        return redirect()->route('admin.regions.index')->with('success', __('Region created successfully.'));
     }
 
     public function edit(Region $region)
@@ -72,12 +72,12 @@ class RegionController extends Controller
             'is_active' => $request->has('is_active'),
         ]);
 
-        return redirect()->route('regions.index')->with('success', __('Region updated successfully.'));
+        return redirect()->route('admin.regions.index')->with('success', __('Region updated successfully.'));
     }
 
     public function destroy(Region $region)
     {
         $region->delete();
-        return redirect()->route('regions.index')->with('success', __('Region deleted successfully.'));
+        return redirect()->route('admin.regions.index')->with('success', __('Region deleted successfully.'));
     }
 }

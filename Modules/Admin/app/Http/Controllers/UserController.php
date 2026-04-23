@@ -33,7 +33,7 @@ class UserController extends Controller
     public function store(CreateUserRequest $request)
     {
         $this->userService->create($request->validated());
-        return redirect()->route('users.index')->with('success', __('User created successfully.'));
+        return redirect()->route('admin.users.index')->with('success', __('User created successfully.'));
     }
 
     public function edit(User $user)
@@ -45,7 +45,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $this->userService->update($user, $request->validated());
-        return redirect()->route('users.index')->with('success', __('User updated successfully.'));
+        return redirect()->route('admin.users.index')->with('success', __('User updated successfully.'));
     }
 
     public function destroy(User $user)
@@ -61,9 +61,9 @@ class UserController extends Controller
     {
         $search = $request->get('q');
         $users = User::where('name', 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%")
-                    ->limit(10)
-                    ->get(['id', 'name', 'email']);
+            ->orWhere('email', 'like', "%$search%")
+            ->limit(10)
+            ->get(['id', 'name', 'email']);
 
         return response()->json($users);
     }

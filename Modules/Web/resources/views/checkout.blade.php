@@ -6,6 +6,7 @@
 
                 <form action="{{ route('web.checkout.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                     @csrf
+                    <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}">
                     <div class="lg:col-span-2 space-y-8">
                         <!-- Shipping Information -->
                         <div class="bg-white p-10 rounded-3xl shadow-sm border border-rose-50">
@@ -14,7 +15,7 @@
                                     <span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">1</span>
                                     {{ __('Shipping Information') }}
                                 </h2>
-                                <a href="{{ route('web.profile.addresses') }}" class="text-xs font-bold text-primary hover:underline uppercase tracking-widest">
+                                <a href="{{ route('web.profile.addresses', ['vendor_id' => request('vendor_id')]) }}" class="text-xs font-bold text-primary hover:underline uppercase tracking-widest">
                                     {{ __('Manage Addresses') }}
                                 </a>
                             </div>
@@ -22,11 +23,25 @@
                             @if($addresses->count() > 0)
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                                     @foreach($addresses as $address)
-                                        @php $isAvailable = $address->region && $address->region->is_active; @endphp
+                                        @php 
+                                            $vId = request('vendor_id');
+                                            $currentRegion = null;
+                                            if ($vId) {
+                                                $currentRegion = \App\Models\Region::where('vendor_id', $vId)
+                                                    ->where('governorate_id', $address->governorate_id)
+                                                    ->where('name', $address->region?->name)
+                                                    ->where('is_active', true)
+                                                    ->first();
+                                            }
+                                            if (!$currentRegion) {
+                                                $currentRegion = $address->region;
+                                            }
+                                            $isAvailable = $currentRegion && $currentRegion->is_active; 
+                                        @endphp
                                         <label class="relative flex p-6 border-2 rounded-2xl cursor-pointer hover:bg-rose-50/50 transition-all border-rose-50 has-[:checked]:border-primary has-[:checked]:bg-rose-50/50 {{ !$isAvailable ? 'opacity-60 cursor-not-allowed grayscale' : '' }}"
-                                               data-shipping-rate="{{ $address->region ? $address->region->rate : 0 }}"
+                                               data-shipping-rate="{{ $currentRegion ? $currentRegion->rate : 0 }}"
                                                data-shipping-available="{{ $isAvailable ? 'true' : 'false' }}">
-                                            <input type="radio" name="address_id" value="{{ $address->id }}" {{ $loop->first ? 'checked' : '' }} onchange="updateSummary()" class="peer hidden" {{ !$isAvailable ? 'disabled' : '' }}>
+                                            <input type="radio" name="address_id" value="{{ $address->id }}" {{ $loop->first && $isAvailable ? 'checked' : '' }} onchange="updateSummary()" class="peer hidden" {{ !$isAvailable ? 'disabled' : '' }}>
                                             <div class="flex-1">
                                                 <div class="font-bold text-gray-900 mb-1 flex justify-between">
                                                     {{ $address->name }}

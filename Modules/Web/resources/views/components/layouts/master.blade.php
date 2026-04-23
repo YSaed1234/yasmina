@@ -56,12 +56,12 @@
         <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-rose-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-20 items-center">
-                    <a href="{{ route('home') }}" class="flex items-center">
-                        <img src="{{ asset('logo.png') }}" alt="Yasmina Logo" class="h-16 w-auto object-contain">
+                    <a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center">
+                        <img src="{{ ($currentVendor && $currentVendor->logo) ? asset('storage/' . $currentVendor->logo) : asset('logo.png') }}" alt="{{ ($currentVendor) ? $currentVendor->name : 'Yasmina Logo' }}" class="h-16 w-auto object-contain">
                     </a>
                     
                     <div class="hidden md:flex gap-8 text-sm font-bold uppercase tracking-widest text-gray-600 items-center">
-                        <a href="{{ route('home') }}" class="hover:text-primary transition-colors {{ request()->routeIs('home') ? 'text-primary' : '' }}">{{ __('Home') }}</a>
+                        <a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('home') ? 'text-primary' : '' }}">{{ __('Home') }}</a>
                         
                         <div class="relative group">
                             <button class="flex items-center gap-1 hover:text-primary transition-colors py-8">
@@ -74,7 +74,7 @@
                                 <div class="grid gap-2">
                                    
                                     @foreach($globalCategories as $category)
-                                        <a href="{{ route('web.shop', ['category_id' => $category->id]) }}" class="px-4 py-3 hover:bg-rose-50 rounded-xl transition-all flex items-center justify-between group/item">
+                                        <a href="{{ route('web.shop', ['category_id' => $category->id, 'vendor_id' => request('vendor_id')]) }}" class="px-4 py-3 hover:bg-rose-50 rounded-xl transition-all flex items-center justify-between group/item">
                                             <span class="font-bold text-gray-700 group-hover/item:text-primary">{{ $category->name }}</span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300 group-hover/item:text-primary opacity-0 group-hover/item:opacity-100 -translate-x-2 group-hover/item:translate-x-0 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -84,7 +84,7 @@
 
 
                                     <div class="mt-2 pt-2 border-t border-rose-50">
-                                        <a href="{{ route('web.shop') }}" class="block text-center py-2 text-xs font-bold text-primary hover:underline">
+                                        <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="block text-center py-2 text-xs font-bold text-primary hover:underline">
                                             {{ __('View All Categories') }}
                                         </a>
                                     </div>
@@ -92,14 +92,14 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('web.shop') }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.shop') ? 'text-primary' : '' }}">{{ __('Shop') }}</a>
+                        <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.shop') ? 'text-primary' : '' }}">{{ __('Shop') }}</a>
                         
-                        <a href="{{ route('web.about') }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.about') ? 'text-primary' : '' }}">{{ __('About Us') }}</a>
+                        <a href="{{ route('web.about', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.about') ? 'text-primary' : '' }}">{{ __('About Us') }}</a>
                         
-                        <a href="{{ route('web.contact') }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.contact') ? 'text-primary' : '' }}">{{ __('Contact Us') }}</a>
+                        <a href="{{ route('web.contact', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.contact') ? 'text-primary' : '' }}">{{ __('Contact Us') }}</a>
                         
                         <!-- Cart Icon -->
-                        <a href="{{ route('web.cart') }}" class="relative group p-2 hover:bg-rose-50 rounded-xl transition-all">
+                        <a href="{{ route('web.cart', ['vendor_id' => request('vendor_id')]) }}" class="relative group p-2 hover:bg-rose-50 rounded-xl transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>
@@ -284,16 +284,16 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
                     <div>
-                        <img src="{{ asset('logo.png') }}" alt="Yasmina Logo" class="h-12 w-auto object-contain mb-6 grayscale invert brightness-0">
-                        <p class="mt-6 text-gray-400">{{ __('Defining elegance and quality since 2026.') }}</p>
+                        <img src="{{ ($currentVendor && $currentVendor->logo) ? asset('storage/' . $currentVendor->logo) : asset('logo.png') }}" alt="{{ ($currentVendor) ? $currentVendor->name : 'Yasmina Logo' }}" class="h-12 w-auto object-contain mb-6 {{ (!$currentVendor || !$currentVendor->logo) ? 'grayscale invert brightness-0' : '' }}">
+                        <p class="mt-6 text-gray-400">{{ ($currentVendor && $currentVendor->description) ? $currentVendor->description : __('Defining elegance and quality since 2026.') }}</p>
                     </div>
                     <div>
                         <h4 class="text-lg font-bold mb-6">{{ __('Quick Links') }}</h4>
                         <ul class="space-y-4 text-gray-400">
-                            <li><a href="{{ route('web.shop') }}" class="hover:text-primary transition-colors">{{ __('Shop') }}</a></li>
-                            <li><a href="{{ route('home') }}#categories" class="hover:text-primary transition-colors">{{ __('Categories') }}</a></li>
-                            <li><a href="{{ route('web.about') }}" class="hover:text-primary transition-colors">{{ __('About Us') }}</a></li>
-                            <li><a href="{{ route('web.contact') }}" class="hover:text-primary transition-colors">{{ __('Contact Us') }}</a></li>
+                            <li><a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors">{{ __('Shop') }}</a></li>
+                            <li><a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}#categories" class="hover:text-primary transition-colors">{{ __('Categories') }}</a></li>
+                            <li><a href="{{ route('web.about', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors">{{ __('About Us') }}</a></li>
+                            <li><a href="{{ route('web.contact', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors">{{ __('Contact Us') }}</a></li>
                         </ul>
                     </div>
                     <div>

@@ -42,7 +42,7 @@ class RoleController extends Controller implements HasMiddleware
     public function store(StoreRoleRequest $request)
     {
         $this->roleService->create($request->validated());
-        return redirect()->route('roles.index')->with('success', __('Role created successfully.'));
+        return redirect()->route('admin.roles.index')->with('success', __('Role created successfully.'));
     }
 
     public function edit(Role $role)
@@ -55,12 +55,12 @@ class RoleController extends Controller implements HasMiddleware
     public function update(UpdateRoleRequest $request, Role $role)
     {
         $this->roleService->update($role, $request->validated());
-        return redirect()->route('roles.index')->with('success', __('Role updated successfully.'));
+        return redirect()->route('admin.roles.index')->with('success', __('Role updated successfully.'));
     }
 
     public function destroy(Role $role)
     {
         $this->roleService->delete($role);
-        return redirect()->route('roles.index')->with('success', __('Role deleted successfully.'));
+        return redirect()->route('admin.roles.index')->with('success', __('Role deleted successfully.'));
     }
 }

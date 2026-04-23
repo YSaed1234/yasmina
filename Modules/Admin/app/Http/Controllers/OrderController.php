@@ -44,6 +44,6 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         $this->orderService->delete($order);
-        return redirect()->route('orders.index')->with('success', __('Order deleted successfully.'));
+        return redirect()->route('admin.orders.index')->with('success', __('Order deleted successfully.'));
     }
 }

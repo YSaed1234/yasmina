@@ -57,13 +57,27 @@ class CheckoutController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+        $vendor_id = $request->get('vendor_id');
         $address = \App\Models\Address::with(['governorate', 'region'])->findOrFail($request->address_id);
         
-        if (!$address->region || !$address->region->is_active) {
+        $region = null;
+        if ($vendor_id) {
+            $region = \App\Models\Region::where('vendor_id', $vendor_id)
+                ->where('governorate_id', $address->governorate_id)
+                ->where('name', $address->region->name)
+                ->where('is_active', true)
+                ->first();
+        }
+
+        if (!$region) {
+            $region = $address->region;
+        }
+
+        if (!$region || !$region->is_active) {
             return back()->with('error', __('Shipping is not available for the selected address / area.'));
         }
 
-        $shippingCost = $address->region->rate;
+        $shippingCost = $region->rate;
 
         $cart = session()->get('cart', []);
         if (empty($cart)) {

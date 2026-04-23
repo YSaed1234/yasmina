@@ -10,10 +10,24 @@ class HomeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = \App\Models\Category::with('products')->orderBy('rank')->get();
-        $featuredProducts = \App\Models\Product::orderBy('rank')->take(8)->get();
+        $vendor_id = $request->get('vendor_id');
+        
+        $categoriesQuery = \App\Models\Category::with('products')->orderBy('rank');
+        $featuredProductsQuery = \App\Models\Product::orderBy('rank');
+        
+        if ($vendor_id) {
+            $categoriesQuery->where('vendor_id', $vendor_id);
+            $featuredProductsQuery->where('vendor_id', $vendor_id);
+        } else {
+            $categoriesQuery->whereNull('vendor_id');
+            $featuredProductsQuery->whereNull('vendor_id');
+        }
+        
+        $categories = $categoriesQuery->get();
+        $featuredProducts = $featuredProductsQuery->take(8)->get();
+        
         $slides = \App\Models\Slide::where('active', true)->orderBy('order')->get();
         return view('web::index', compact('categories', 'featuredProducts', 'slides'));
     }

@@ -24,7 +24,7 @@ class VendorController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'logo' => 'nullable|image|max:2048',
+            'logo' => 'nullable|image|max:5120',
             'email' => 'required|email|unique:vendors,email',
             'phone' => 'nullable|string',
             'status' => 'required|in:active,inactive',
@@ -53,14 +53,14 @@ class VendorController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'logo' => 'nullable|image|max:2048',
-            'email' => 'nullable|email',
+            'logo' => 'nullable|image|max:5120',
+            'email' => 'required|email|unique:vendors,email,' . $vendor->id,
             'phone' => 'nullable|string',
             'status' => 'required|in:active,inactive',
         ]);
 
-        $data = $request->except('password');
-        $data['slug'] = Str::slug($request->name);
+        $data = $request->only(['name', 'email', 'phone', 'status', 'address', 'description']);
+        $data['slug'] = \Illuminate\Support\Str::slug($request->name);
 
         if ($request->filled('password')) {
             $request->validate(['password' => 'string|min:6']);

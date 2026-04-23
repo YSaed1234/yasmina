@@ -12,7 +12,14 @@ class ProductDisplayController extends Controller
      */
     public function index(Request $request)
     {
+        $vendor_id = $request->get('vendor_id');
         $query = \App\Models\Product::with(['category', 'currency']);
+
+        if ($vendor_id) {
+            $query->where('vendor_id', $vendor_id);
+        } else {
+            $query->whereNull('vendor_id');
+        }
 
         // Search by name
         if ($request->has('search') && $request->search != '') {
@@ -38,7 +45,15 @@ class ProductDisplayController extends Controller
         }
 
         $products = $query->orderBy('rank')->paginate(12)->withQueryString();
-        $categories = \App\Models\Category::all();
+        
+        $categoriesQuery = \App\Models\Category::query();
+        if ($vendor_id) {
+            $categoriesQuery->where('vendor_id', $vendor_id);
+        } else {
+            $categoriesQuery->whereNull('vendor_id');
+        }
+        $categories = $categoriesQuery->get();
+        
         $currencies = \App\Models\Currency::all();
 
         return view('web::shop', compact('products', 'categories', 'currencies'));
@@ -60,9 +75,18 @@ class ProductDisplayController extends Controller
     /**
      * Show the specified resource.
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $product = \App\Models\Product::with(['category', 'currency'])->findOrFail($id);
+        $vendor_id = $request->get('vendor_id');
+        $query = \App\Models\Product::with(['category', 'currency']);
+        
+        if ($vendor_id) {
+            $query->where('vendor_id', $vendor_id);
+        } else {
+            $query->whereNull('vendor_id');
+        }
+
+        $product = $query->findOrFail($id);
         return view('web::show', compact('product'));
     }
 

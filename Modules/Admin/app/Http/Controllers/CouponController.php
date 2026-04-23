@@ -45,7 +45,7 @@ class CouponController extends Controller
         ]);
 
         $this->couponService->create($validated);
-        return redirect()->route('coupons.index')->with('success', __('Coupon created successfully.'));
+        return redirect()->route('admin.coupons.index')->with('success', __('Coupon created successfully.'));
     }
 
     public function edit(Coupon $coupon)
@@ -70,13 +70,13 @@ class CouponController extends Controller
         ]);
 
         $this->couponService->update($coupon, $validated);
-        return redirect()->route('coupons.index')->with('success', __('Coupon updated successfully.'));
+        return redirect()->route('admin.coupons.index')->with('success', __('Coupon updated successfully.'));
     }
 
     public function destroy(Coupon $coupon)
     {
         $this->authorize('manage coupons');
         $this->couponService->delete($coupon);
-        return redirect()->route('coupons.index')->with('success', __('Coupon deleted successfully.'));
+        return redirect()->route('admin.coupons.index')->with('success', __('Coupon deleted successfully.'));
     }
 }
