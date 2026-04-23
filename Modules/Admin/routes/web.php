@@ -41,5 +41,9 @@ Route::prefix('admin-dashboard-2026')->group(function () {
     Route::resource('shipping-zones', \Modules\Admin\Http\Controllers\ShippingZoneController::class)->names('shipping_zones')->middleware('permission:manage shipping');
     Route::resource('governorates', \Modules\Admin\Http\Controllers\GovernorateController::class)->names('governorates')->middleware('permission:manage shipping');
     Route::resource('regions', \Modules\Admin\Http\Controllers\RegionController::class)->names('regions')->middleware('permission:manage shipping');
+
+    // Points Settings
+    Route::get('settings/points', [\Modules\Admin\Http\Controllers\PointSettingController::class, 'index'])->name('admin.settings.points');
+    Route::post('settings/points', [\Modules\Admin\Http\Controllers\PointSettingController::class, 'update'])->name('admin.settings.points.update');
     });
 });

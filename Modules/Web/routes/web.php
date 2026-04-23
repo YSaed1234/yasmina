@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
 // Profile & Orders
 Route::middleware('auth')->group(function () {
     Route::get('/my-account', [ProfileController::class, 'index'])->name('web.profile');
+    Route::post('/my-account/convert-points', [ProfileController::class, 'convertPoints'])->name('web.profile.convert-points');
     Route::get('/my-account/orders', [ProfileController::class, 'orders'])->name('web.profile.orders');
     Route::get('/my-account/addresses', [ProfileController::class, 'addresses'])->name('web.profile.addresses');
     Route::post('/my-account/addresses', [ProfileController::class, 'storeAddress'])->name('web.profile.addresses.store');

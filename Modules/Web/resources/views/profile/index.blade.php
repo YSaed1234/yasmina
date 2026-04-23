@@ -4,49 +4,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
                 <!-- Sidebar -->
                 <div class="lg:col-span-1">
-                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-rose-50 sticky top-24">
-                        <div class="text-center mb-8">
-                            <div class="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 border-4 border-white shadow-lg">
-                                @if($user->profile_image)
-                                    <img src="{{ asset('storage/' . $user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
-                                @else
-                                    <div class="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-bold text-3xl">
-                                        {{ substr($user->name, 0, 2) }}
-                                    </div>
-                                @endif
-                            </div>
-                            <h2 class="text-xl font-bold text-gray-900">{{ $user->name }}</h2>
-                            <p class="text-sm text-gray-500">{{ $user->email }}</p>
-                        </div>
-
-                        <nav class="space-y-2">
-                            <a href="{{ route('web.profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('web.profile') ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-gray-600 hover:bg-rose-50' }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                                <span class="font-bold text-sm">{{ __('Personal Details') }}</span>
-                            </a>
-                            <a href="{{ route('web.profile.orders') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('web.profile.orders') ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-gray-600 hover:bg-rose-50' }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                </svg>
-                                <span class="font-bold text-sm">{{ __('My Orders') }}</span>
-                            </a>
-                            <a href="{{ route('web.wishlist') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('web.wishlist') ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-gray-600 hover:bg-rose-50' }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                </svg>
-                                <span class="font-bold text-sm">{{ __('My Favorites') }}</span>
-                            </a>
-                            <a href="{{ route('web.profile.addresses') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('web.profile.addresses') ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-gray-600 hover:bg-rose-50' }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                <span class="font-bold text-sm">{{ __('My Addresses') }}</span>
-                            </a>
-                        </nav>
-                    </div>
+                    <x-web::profile-sidebar />
                 </div>
 
                 <!-- Main Content -->
@@ -54,6 +12,56 @@
                     <div class="bg-white rounded-3xl p-10 shadow-sm border border-rose-50">
                         <h1 class="text-3xl font-bold text-gray-900 mb-8">{{ __('Account Overview') }}</h1>
                         
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                            <!-- Points Card -->
+                            <div class="p-8 bg-primary rounded-[2.5rem] text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
+                                <div class="relative z-10">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <span class="text-[10px] font-black uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full">{{ __('Loyalty Points') }}</span>
+                                    </div>
+                                    <div class="text-4xl font-black mb-2">{{ number_format($user->points) }}</div>
+                                    <p class="text-white/70 text-sm font-medium mb-6">{{ __('Earn more points with every order!') }}</p>
+                                    
+                                    @php $minPoints = (int) \App\Models\PointSetting::getValue('min_points_to_convert', 100); @endphp
+                                    @if($user->points >= $minPoints)
+                                        <form action="{{ route('web.profile.convert-points') }}" method="POST" class="flex gap-2">
+                                            @csrf
+                                            <input type="number" name="points" max="{{ $user->points }}" min="{{ $minPoints }}" value="{{ $user->points }}" 
+                                                class="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl outline-none text-sm placeholder:text-white/40" placeholder="{{ __('Points to convert') }}">
+                                            <button type="submit" class="px-6 py-2 bg-white text-primary rounded-xl font-bold text-xs whitespace-nowrap hover:bg-rose-50 transition-colors">
+                                                {{ __('Convert Now') }}
+                                            </button>
+                                        </form>
+                                    @else
+                                        <p class="text-[10px] text-white/50 italic">{{ __('Need at least :min points to convert to money.', ['min' => $minPoints]) }}</p>
+                                    @endif
+                                </div>
+                                <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-500"></div>
+                            </div>
+
+                            <!-- Wallet Card -->
+                            <div class="p-8 bg-gray-900 rounded-[2.5rem] text-white shadow-xl shadow-gray-900/10 relative overflow-hidden group">
+                                <div class="relative z-10">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-green-400">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                            </svg>
+                                        </div>
+                                        <span class="text-[10px] font-black uppercase tracking-widest bg-white/10 px-3 py-1 rounded-full text-green-400">{{ __('Wallet Balance') }}</span>
+                                    </div>
+                                    <div class="text-4xl font-black mb-2">{{ number_format($user->balance, 2) }} <span class="text-sm font-bold text-gray-500">{{ __('LE') }}</span></div>
+                                    <p class="text-white/50 text-sm font-medium">{{ __('Use your balance for future orders.') }}</p>
+                                </div>
+                                <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-green-500/10 rounded-full blur-3xl group-hover:bg-green-500/20 transition-all duration-500"></div>
+                            </div>
+                        </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="p-6 bg-rose-50/50 rounded-3xl border border-rose-100">
                                 <span class="text-xs font-bold text-primary uppercase tracking-widest block mb-2">{{ __('Full Name') }}</span>

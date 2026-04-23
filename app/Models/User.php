@@ -26,10 +26,70 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'points',
+        'balance',
         'role',
         'profile_image',
         'phone',
     ];
+
+    public function pointTransactions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PointTransaction::class);
+    }
+
+    public function convertPointsToBalance(int $pointsToConvert)
+    {
+        $minPoints = (int) PointSetting::getValue('min_points_to_convert', 100);
+        
+        if ($pointsToConvert < $minPoints) {
+            throw new \Exception(__('Minimum points to convert is :min', ['min' => $minPoints]));
+        }
+
+        if ($this->points < $pointsToConvert) {
+            throw new \Exception(__('Insufficient points balance.'));
+        }
+
+        $rate = (float) PointSetting::getValue('currency_per_point', 0.1);
+        $moneyValue = $pointsToConvert * $rate;
+
+        return \DB::transaction(function () use ($pointsToConvert, $moneyValue) {
+            $this->subtractPoints($pointsToConvert, 'spending', __('Converted to wallet balance'));
+            $this->increment('balance', $moneyValue);
+            
+            return $moneyValue;
+        });
+    }
+
+    public function addPoints(int $points, string $type, string $description = null, $reference = null)
+    {
+        $this->increment('points', $points);
+        
+        return $this->pointTransactions()->create([
+            'points' => $points,
+            'type' => $type,
+            'description' => $description,
+            'reference_type' => $reference ? get_class($reference) : null,
+            'reference_id' => $reference ? $reference->id : null,
+        ]);
+    }
+
+    public function subtractPoints(int $points, string $type, string $description = null, $reference = null)
+    {
+        if ($this->points < $points) {
+            throw new \Exception('Insufficient points balance.');
+        }
+
+        $this->decrement('points', $points);
+
+        return $this->pointTransactions()->create([
+            'points' => -$points,
+            'type' => $type,
+            'description' => $description,
+            'reference_type' => $reference ? get_class($reference) : null,
+            'reference_id' => $reference ? $reference->id : null,
+        ]);
+    }
 
     public function isAdmin(): bool
     {

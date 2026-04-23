@@ -111,4 +111,21 @@ class ProfileController extends Controller
 
         return back()->with('success', __('Address deleted successfully.'));
     }
+
+    public function convertPoints(Request $request)
+    {
+        $request->validate([
+            'points' => 'required|integer|min:1',
+        ]);
+
+        try {
+            $money = auth()->user()->convertPointsToBalance($request->points);
+            return back()->with('success', __('Successfully converted :points points to :money in your wallet.', [
+                'points' => $request->points,
+                'money' => $money
+            ]));
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
 }

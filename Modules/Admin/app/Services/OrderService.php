@@ -32,15 +32,48 @@ class OrderService
 
     public function updateStatus(Order $order, array $data)
     {
+        $oldStatus = $order->status->value ?? $order->status;
+        $newStatus = $data['status'];
+
         $updated = $order->update([
-            'status' => $data['status'],
+            'status' => $newStatus,
         ]);
 
         if ($updated && $order->user) {
             $order->user->notify(new \App\Notifications\OrderStatusUpdatedNotification($order));
+            
+            // Grant points logic
+            $earningStatusSetting = \App\Models\PointSetting::getValue('points_earning_status', 'delivered');
+            if ($newStatus === $earningStatusSetting && $oldStatus !== $earningStatusSetting) {
+                $this->grantPointsForOrder($order);
+            }
         }
 
         return $updated;
+    }
+
+    protected function grantPointsForOrder(Order $order)
+    {
+        // Check if already granted points for this order to avoid duplicates
+        $exists = $order->user->pointTransactions()
+            ->where('reference_type', Order::class)
+            ->where('reference_id', $order->id)
+            ->where('type', 'earning')
+            ->exists();
+            
+        if ($exists) return;
+
+        $pointsPerCurrency = (float) \App\Models\PointSetting::getValue('points_per_currency', 1);
+        $points = (int) ($order->total * $pointsPerCurrency);
+
+        if ($points > 0) {
+            $order->user->addPoints(
+                $points, 
+                'earning', 
+                __('Points earned from order #:id', ['id' => $order->id]),
+                $order
+            );
+        }
     }
 
     public function updatePaymentStatus(Order $order, string $status)
