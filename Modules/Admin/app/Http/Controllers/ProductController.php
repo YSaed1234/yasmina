@@ -49,14 +49,15 @@ class ProductController extends Controller implements HasMiddleware
     {
         $categories = $this->categoryService->getAllCategories();
         $currencies = $this->currencyService->getAllCurrencies();
-        return view('admin::products.create', compact('categories', 'currencies'));
+        $vendors = \App\Models\Vendor::all();
+        return view('admin::products.create', compact('categories', 'currencies', 'vendors'));
     }
 
     public function store(StoreProductRequest $request)
     {
         $this->productService->storeProduct($request->validated());
 
-        return redirect()->route('products.index')->with('success', __('Product created successfully.'));
+        return redirect()->route('admin.products.index')->with('success', __('Product created successfully.'));
     }
 
     public function show(string $id)
@@ -70,7 +71,8 @@ class ProductController extends Controller implements HasMiddleware
         $product = $this->productService->findProduct($id);
         $categories = $this->categoryService->getAllCategories();
         $currencies = $this->currencyService->getAllCurrencies();
-        return view('admin::products.edit', compact('product', 'categories', 'currencies'));
+        $vendors = \App\Models\Vendor::all();
+        return view('admin::products.edit', compact('product', 'categories', 'currencies', 'vendors'));
     }
 
     public function update(UpdateProductRequest $request, string $id)
@@ -78,7 +80,7 @@ class ProductController extends Controller implements HasMiddleware
         $product = $this->productService->findProduct($id);
         $this->productService->updateProduct($product, $request->validated());
 
-        return redirect()->route('products.index')->with('success', __('Product updated successfully.'));
+        return redirect()->route('admin.products.index')->with('success', __('Product updated successfully.'));
     }
 
     public function destroy(string $id)
@@ -86,6 +88,6 @@ class ProductController extends Controller implements HasMiddleware
         $product = $this->productService->findProduct($id);
         $this->productService->deleteProduct($product);
 
-        return redirect()->route('products.index')->with('success', __('Product deleted successfully.'));
+        return redirect()->route('admin.products.index')->with('success', __('Product deleted successfully.'));
     }
 }

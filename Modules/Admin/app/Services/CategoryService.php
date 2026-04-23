@@ -22,6 +22,7 @@ class CategoryService
     {
         $category = new Category();
         $category->rank = $data['rank'] ?? 0;
+        $category->vendor_id = $data['vendor_id'] ?? null;
         
         foreach (['ar', 'en'] as $locale) {
             if (isset($data[$locale]['name'])) {
@@ -36,6 +37,7 @@ class CategoryService
     public function updateCategory(Category $category, array $data)
     {
         $category->rank = $data['rank'] ?? $category->rank;
+        $category->vendor_id = $data['vendor_id'] ?? $category->vendor_id;
         
         foreach (['ar', 'en'] as $locale) {
             if (isset($data[$locale]['name'])) {

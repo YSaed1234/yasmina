@@ -22,6 +22,16 @@
                 <input type="number" name="rank" id="rank" class="w-full px-5 py-4 bg-yasmina-50/50 border border-yasmina-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-yasmina-100 focus:border-yasmina-300 transition-all outline-none font-bold text-gray-700" value="0">
                 @error('rank') <p class="mt-1 text-red-500 text-xs">{{ $message }}</p> @enderror
             </div>
+            <div>
+                <label for="vendor_id" class="block text-sm font-bold text-yasmina-500 mb-2 uppercase tracking-widest">{{ __('Institution (Optional)') }}</label>
+                <select name="vendor_id" id="vendor_id" class="w-full px-5 py-4 bg-yasmina-50/50 border border-yasmina-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-yasmina-100 focus:border-yasmina-300 transition-all outline-none font-bold text-gray-700 appearance-none">
+                    <option value="">{{ __('No Institution (Global)') }}</option>
+                    @foreach($vendors as $vendor)
+                        <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
+                    @endforeach
+                </select>
+                @error('vendor_id') <p class="mt-1 text-red-500 text-xs">{{ $message }}</p> @enderror
+            </div>
             <div class="pt-4 flex gap-4">
                 <button type="submit" class="flex-1 px-8 py-4 bg-yasmina-500 text-white rounded-2xl font-bold hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100">
                     {{ __('Save Category') }}

@@ -643,5 +643,8 @@
     "Get started by creating your first vendor.": "ابدأ بإنشاء أول مؤسسة في النظام.",
     "Search by Order ID or Customer Name": "البحث برقم الطلب أو اسم العميل",
     "Create Vendor": "إنشاء مؤسسة",
-    "Vendors": "المؤسسات"
+    "Vendors": "المؤسسات",
+    "Institution (Optional)": "المؤسسة (اختياري)",
+    "No Institution (Global)": "بدون مؤسسة (عام)",
+    "Institution Admin": "مدير المؤسسة"
 }

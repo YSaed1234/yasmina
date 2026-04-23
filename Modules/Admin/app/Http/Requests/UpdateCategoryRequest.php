@@ -17,6 +17,7 @@ class UpdateCategoryRequest extends FormRequest
             'ar.name' => 'required|string|max:255',
             'en.name' => 'required|string|max:255',
             'rank' => 'nullable|integer',
+            'vendor_id' => 'nullable|exists:vendors,id',
         ];
     }
 }

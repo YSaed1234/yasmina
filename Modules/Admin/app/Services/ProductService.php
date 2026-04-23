@@ -29,6 +29,7 @@ class ProductService
         $product->category_id = $data['category_id'];
         $product->currency_id = $data['currency_id'];
         $product->price = $data['price'];
+        $product->vendor_id = $data['vendor_id'] ?? null;
         $product->rank = $data['rank'] ?? 0;
 
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
@@ -54,6 +55,7 @@ class ProductService
         $product->category_id = $data['category_id'] ?? $product->category_id;
         $product->currency_id = $data['currency_id'] ?? $product->currency_id;
         $product->price = $data['price'] ?? $product->price;
+        $product->vendor_id = $data['vendor_id'] ?? $product->vendor_id;
         $product->rank = $data['rank'] ?? $product->rank;
 
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {

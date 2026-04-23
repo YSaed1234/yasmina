@@ -12,10 +12,15 @@ class Category extends Model implements TranslatableContract
     use Translatable;
 
     public $translatedAttributes = ['name'];
-    protected $fillable = ['rank'];
+    protected $fillable = ['rank', 'vendor_id'];
 
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
     }
 }

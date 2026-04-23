@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Vendor\Http\Controllers\CategoryController;
+use Modules\Vendor\Http\Controllers\ProductController;
 use Modules\Vendor\Http\Controllers\VendorController;
 use Modules\Vendor\Http\Controllers\Auth\LoginController;
 
@@ -13,5 +15,11 @@ Route::prefix('vendor-panel')->group(function () {
     // Dashboard - Protected
     Route::middleware(['auth:vendor'])->group(function () {
         Route::get('/', [VendorController::class, 'index'])->name('vendor.dashboard');
+
+        // Products
+        Route::resource('products', ProductController::class)->names('vendor.products');
+
+        // Categories
+        Route::resource('categories', CategoryController::class)->names('vendor.categories');
     });
 });

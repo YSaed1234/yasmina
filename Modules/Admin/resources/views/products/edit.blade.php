@@ -46,6 +46,16 @@
                     <input type="number" name="rank" value="{{ $product->rank }}" class="w-full px-5 py-4 bg-yasmina-50/50 border border-yasmina-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-yasmina-100 focus:border-yasmina-300 transition-all outline-none font-bold text-gray-700">
                 </div>
 
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-bold text-yasmina-500 mb-2 uppercase tracking-widest">{{ __('Institution (Optional)') }}</label>
+                    <select name="vendor_id" class="w-full px-5 py-4 bg-yasmina-50/50 border border-yasmina-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-yasmina-100 focus:border-yasmina-300 transition-all outline-none font-bold text-gray-700 appearance-none">
+                        <option value="">{{ __('No Institution (Global)') }}</option>
+                        @foreach($vendors as $vendor)
+                            <option value="{{ $vendor->id }}" {{ $product->vendor_id == $vendor->id ? 'selected' : '' }}>{{ $vendor->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="md:col-span-1">
                     <label class="block text-sm font-bold text-yasmina-500 mb-2 uppercase tracking-widest">{{ __('Description (Arabic)') }}</label>
                     <textarea name="ar[description]" rows="4" class="w-full px-5 py-4 bg-yasmina-50/50 border border-yasmina-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-yasmina-100 focus:border-yasmina-300 transition-all outline-none font-bold text-gray-700">{{ $product->translate('ar')->description ?? '' }}</textarea>

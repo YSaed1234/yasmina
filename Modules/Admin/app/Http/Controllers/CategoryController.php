@@ -40,14 +40,15 @@ class CategoryController extends Controller implements HasMiddleware
 
     public function create()
     {
-        return view('admin::categories.create');
+        $vendors = \App\Models\Vendor::all();
+        return view('admin::categories.create', compact('vendors'));
     }
 
     public function store(StoreCategoryRequest $request)
     {
         $this->categoryService->storeCategory($request->validated());
 
-        return redirect()->route('categories.index')->with('success', __('Category created successfully.'));
+        return redirect()->route('admin.categories.index')->with('success', __('Category created successfully.'));
     }
 
     public function show(string $id)
@@ -59,7 +60,8 @@ class CategoryController extends Controller implements HasMiddleware
     public function edit(string $id)
     {
         $category = $this->categoryService->findCategory($id);
-        return view('admin::categories.edit', compact('category'));
+        $vendors = \App\Models\Vendor::all();
+        return view('admin::categories.edit', compact('category', 'vendors'));
     }
 
     public function update(UpdateCategoryRequest $request, string $id)
@@ -67,7 +69,7 @@ class CategoryController extends Controller implements HasMiddleware
         $category = $this->categoryService->findCategory($id);
         $this->categoryService->updateCategory($category, $request->validated());
 
-        return redirect()->route('categories.index')->with('success', __('Category updated successfully.'));
+        return redirect()->route('admin.categories.index')->with('success', __('Category updated successfully.'));
     }
 
     public function destroy(string $id)
@@ -75,6 +77,6 @@ class CategoryController extends Controller implements HasMiddleware
         $category = $this->categoryService->findCategory($id);
         $this->categoryService->deleteCategory($category);
 
-        return redirect()->route('categories.index')->with('success', __('Category deleted successfully.'));
+        return redirect()->route('admin.categories.index')->with('success', __('Category deleted successfully.'));
     }
 }

@@ -40,6 +40,7 @@
             }
         </style>
         @stack('styles')
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     </head>
     <body class="antialiased">
         <div class="flex min-h-screen">
@@ -69,11 +70,18 @@
                         {{ __('Dashboard') }}
                     </a>
 
+                    <a href="{{ route('vendor.categories.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('vendor.categories.*') ? 'bg-primary text-white font-bold shadow-lg shadow-primary/20' : 'text-gray-500 hover:bg-gray-50' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                        </svg>
+                        {{ __('Categories') }}
+                    </a>
+
                     <div class="pt-4 pb-2 px-4">
                         <span class="text-[10px] font-black text-gray-300 uppercase tracking-widest">{{ __('Management') }}</span>
                     </div>
 
-                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-gray-400 cursor-not-allowed">
+                    <a href="{{ route('vendor.products.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('vendor.products.*') ? 'bg-primary text-white font-bold shadow-lg shadow-primary/20' : 'text-gray-500 hover:bg-gray-50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
@@ -104,21 +112,46 @@
             <!-- Main Content -->
             <main class="flex-1 ml-72 relative">
                 <!-- Header -->
-                <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-10 sticky top-0 z-30">
+                <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-10 sticky top-0 z-30 backdrop-blur-md bg-white/80">
                     <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary font-bold">
-                            {{ substr(auth('vendor')->user()->name, 0, 1) }}
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-gray-900">{{ auth('vendor')->user()->name }}</p>
-                            <p class="text-[10px] text-gray-400 font-medium">{{ auth('vendor')->user()->email }}</p>
-                        </div>
+                        <h2 class="text-xl font-black text-gray-900 tracking-tight">{{ auth('vendor')->user()->name }}</h2>
                     </div>
 
-                    <div class="flex items-center gap-4">
-                        <a href="{{ route('home') }}" class="px-6 py-2 border border-gray-200 rounded-xl text-xs font-bold text-gray-500 hover:bg-gray-50 transition-all">
-                            {{ __('Visit Store') }}
-                        </a>
+                    <div class="flex items-center gap-6">
+                        <!-- Language Switcher -->
+                        <div class="flex items-center bg-gray-50 rounded-2xl p-1 shadow-sm border border-gray-100">
+                            <a href="{{ route('lang.switch', 'en') }}" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all {{ app()->getLocale() == 'en' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-primary' }}">EN</a>
+                            <a href="{{ route('lang.switch', 'ar') }}" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all {{ app()->getLocale() == 'ar' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-primary' }}">AR</a>
+                        </div>
+
+                        <div class="relative border-s border-gray-100 ps-6" x-data="{ open: false }">
+                            <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-2xl transition-all">
+                                <div class="flex flex-col items-end rtl:items-start">
+                                    <span class="text-sm font-bold text-gray-900">{{ auth('vendor')->user()->name }}</span>
+                                    <span class="text-[10px] text-gray-400 font-black uppercase tracking-widest">{{ __('Institution Admin') }}</span>
+                                </div>
+                                <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-black shadow-lg shadow-primary/20">
+                                    {{ substr(auth('vendor')->user()->name, 0, 1) }}
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 transition-transform" :class="{'rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+
+                            <!-- Dropdown -->
+                            <div x-show="open" 
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                 class="absolute right-0 rtl:left-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                                <form method="POST" action="{{ route('vendor.logout') }}">
+                                    @csrf
+                                    <button type="submit" class="w-full text-left rtl:text-right px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-50 transition-colors">
+                                        {{ __('Logout') }}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </header>
 
