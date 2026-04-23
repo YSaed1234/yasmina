@@ -2,10 +2,7 @@
     <x-slot:title>{{ __('About Us') }} - Yasmina</x-slot:title>
 
     <x-web::sections.hero 
-        :title="__('Our Story & <br> <span class=\'text-primary\'>Vision</span>')"
-        :subtitle="__('About Yasmina')"
-        :description="__('Since 2026, Yasmina has been at the forefront of luxury fashion and lifestyle, bringing you the most exclusive products from around the world.')"
-        image="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=2000"
+        :slides="$slides"
         :showButton="false"
     />
 

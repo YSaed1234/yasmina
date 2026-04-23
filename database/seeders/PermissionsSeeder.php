@@ -41,6 +41,9 @@ class PermissionsSeeder extends Seeder
             'manage contact requests',
             'manage addresses',
             'manage coupons',
+            'manage slides',
+            'manage shipping',
+            'manage points',
         ];
 
         foreach ($permissions as $permission) {

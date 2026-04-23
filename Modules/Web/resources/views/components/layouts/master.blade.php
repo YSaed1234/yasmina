@@ -25,6 +25,7 @@
                 }
             }
         </script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
         <style>
             :root {
                 --yasmina-primary: #865d58;
@@ -300,7 +301,32 @@
         </footer>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                if (document.querySelector('.hero-swiper')) {
+                    const swiper = new Swiper('.hero-swiper', {
+                        loop: true,
+                        autoplay: {
+                            delay: 5000,
+                            disableOnInteraction: false,
+                        },
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                        },
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        },
+                        effect: 'fade',
+                        fadeEffect: {
+                            crossFade: true
+                        },
+                    });
+                }
+            });
+
             function setTheme(theme) {
                 document.documentElement.setAttribute('data-theme', theme);
                 localStorage.setItem('yasmina-theme', theme);
@@ -355,6 +381,14 @@
                     if (data.status === 'added') {
                         svg.classList.add('text-red-500', 'fill-current');
                         svg.classList.remove('text-gray-400');
+                        Swal.fire({
+                            icon: 'success',
+                            title: '{{ __("Success!") }}',
+                            text: '{{ __("Added to favorites") }}',
+                            timer: 1500,
+                            showConfirmButton: false,
+                            confirmButtonColor: 'var(--yasmina-primary)'
+                        });
                     } else {
                         svg.classList.remove('text-red-500', 'fill-current');
                         svg.classList.add('text-gray-400');

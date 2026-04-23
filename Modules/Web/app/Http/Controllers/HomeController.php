@@ -14,17 +14,20 @@ class HomeController extends Controller
     {
         $categories = \App\Models\Category::with('products')->orderBy('rank')->get();
         $featuredProducts = \App\Models\Product::orderBy('rank')->take(8)->get();
-        return view('web::index', compact('categories', 'featuredProducts'));
+        $slides = \App\Models\Slide::where('active', true)->orderBy('order')->get();
+        return view('web::index', compact('categories', 'featuredProducts', 'slides'));
     }
 
     public function about()
     {
-        return view('web::about');
+        $slides = \App\Models\Slide::where('active', true)->orderBy('order')->get();
+        return view('web::about', compact('slides'));
     }
 
     public function contact()
     {
-        return view('web::contact');
+        $slides = \App\Models\Slide::where('active', true)->orderBy('order')->get();
+        return view('web::contact', compact('slides'));
     }
 
     public function submitContact(Request $request)

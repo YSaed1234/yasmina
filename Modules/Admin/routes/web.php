@@ -3,10 +3,10 @@
 use Modules\Admin\Http\Controllers\CategoryController;
 use Modules\Admin\Http\Controllers\CurrencyController;
 use Modules\Admin\Http\Controllers\ProductController;
-
 use Modules\Admin\Http\Controllers\RoleController;
-
 use Modules\Admin\Http\Controllers\Auth\LoginController;
+use Modules\Admin\Http\Controllers\SlideController;
+use Modules\Admin\Http\Controllers\PointSettingController;
 
 Route::prefix('admin-dashboard-2026')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('admin.login');
@@ -42,8 +42,10 @@ Route::prefix('admin-dashboard-2026')->group(function () {
     Route::resource('governorates', \Modules\Admin\Http\Controllers\GovernorateController::class)->names('governorates')->middleware('permission:manage shipping');
     Route::resource('regions', \Modules\Admin\Http\Controllers\RegionController::class)->names('regions')->middleware('permission:manage shipping');
 
+    Route::resource('slides', SlideController::class)->names('admin.slides')->middleware('permission:manage slides');
+
     // Points Settings
-    Route::get('settings/points', [\Modules\Admin\Http\Controllers\PointSettingController::class, 'index'])->name('admin.settings.points');
-    Route::post('settings/points', [\Modules\Admin\Http\Controllers\PointSettingController::class, 'update'])->name('admin.settings.points.update');
+    Route::get('settings/points', [PointSettingController::class, 'index'])->name('admin.settings.points')->middleware('permission:manage points');
+    Route::post('settings/points', [PointSettingController::class, 'update'])->name('admin.settings.points.update')->middleware('permission:manage points');
     });
 });

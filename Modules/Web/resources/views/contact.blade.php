@@ -2,12 +2,8 @@
     <x-slot:title>{{ __('Contact Us') }} - Yasmina</x-slot:title>
 
     <x-web::sections.hero 
-        :title="__('Get in <br> <span class=\'text-primary\'>Touch</span>')"
-        :subtitle="__('Contact Us')"
-        :description="__('Have a question or feedback? We\'d love to hear from you. Reach out to our team today.')"
-        image="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&q=80&w=2000"
+        :slides="$slides"
         :showButton="false"
-        :compact="true"
     />
 
     <div class="py-32 bg-white">
