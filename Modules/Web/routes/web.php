@@ -34,4 +34,11 @@ Route::middleware('auth')->group(function() {
     Route::post('/my-account/addresses', [ProfileController::class, 'storeAddress'])->name('web.profile.addresses.store');
     Route::put('/my-account/addresses/{address}', [ProfileController::class, 'updateAddress'])->name('web.profile.addresses.update');
     Route::delete('/my-account/addresses/{address}', [ProfileController::class, 'deleteAddress'])->name('web.profile.addresses.delete');
+    
+    // Wishlist
+    Route::get('/wishlist', [\Modules\Web\Http\Controllers\WishlistController::class, 'index'])->name('web.wishlist');
+    Route::post('/wishlist/toggle/{product}', [\Modules\Web\Http\Controllers\WishlistController::class, 'toggle'])->name('web.wishlist.toggle');
+
+    // Reviews
+    Route::post('/reviews', [ProfileController::class, 'storeReview'])->name('web.reviews.store');
 });

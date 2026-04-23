@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Address;
 use App\Models\Order;
+use App\Models\Review;
 
 class ProfileController extends Controller
 {
@@ -63,10 +64,29 @@ class ProfileController extends Controller
         return back()->with('success', __('Address updated successfully.'));
     }
 
-    public function deleteAddress(Address $address)
+    public function storeReview(Request $request)
     {
-        $this->authorize('delete', $address);
-        $address->delete();
-        return back()->with('success', __('Address deleted successfully.'));
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:500',
+        ]);
+
+        // Check if user has an order with this product
+        $hasOrdered = auth()->user()->orders()
+            ->whereHas('items', function($q) use ($request) {
+                $q->where('product_id', $request->product_id);
+            })->exists();
+
+        if (!$hasOrdered) {
+            return back()->with('error', __('You can only rate products you have purchased.'));
+        }
+
+        Review::updateOrCreate(
+            ['user_id' => auth()->id(), 'product_id' => $request->product_id],
+            ['rating' => $request->rating, 'comment' => $request->comment]
+        );
+
+        return back()->with('success', __('Thank you for your review!'));
     }
 }

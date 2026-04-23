@@ -275,6 +275,37 @@
                     });
                 @endif
             });
+
+            function toggleWishlist(productId, btn) {
+                fetch(`/wishlist/toggle/${productId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const svg = btn.querySelector('svg');
+                    if (data.status === 'added') {
+                        svg.classList.add('text-red-500', 'fill-current');
+                        svg.classList.remove('text-gray-400');
+                    } else {
+                        svg.classList.remove('text-red-500', 'fill-current');
+                        svg.classList.add('text-gray-400');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: '{{ __("Error!") }}',
+                        text: '{{ __("Something went wrong. Please try again.") }}',
+                        icon: 'error',
+                        confirmButtonText: '{{ __("OK") }}',
+                        confirmButtonColor: 'var(--yasmina-primary)',
+                    });
+                });
+            }
         </script>
         @stack('scripts')
     </body>
