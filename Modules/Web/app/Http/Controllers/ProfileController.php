@@ -5,13 +5,17 @@ namespace Modules\Web\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Address;
-use App\Models\Order;
-use App\Models\Review;
-use App\Models\Governorate;
-use App\Models\Region;
+use Modules\Web\Services\ProfileService;
 
 class ProfileController extends Controller
 {
+    protected $profileService;
+
+    public function __construct(ProfileService $profileService)
+    {
+        $this->profileService = $profileService;
+    }
+
     public function index()
     {
         $user = auth()->user();
@@ -22,13 +26,7 @@ class ProfileController extends Controller
     {
         $vendor = request()->attributes->get('current_vendor');
         $vendorId = $vendor ? $vendor->id : null;
-        $orders = Order::where('vendor_id', $vendorId)
-            ->where('user_id', auth()->id())
-            ->with([
-                'items.product'
-            ])
-            ->latest()
-            ->paginate(10);
+        $orders = $this->profileService->getOrders($vendorId);
 
         return view('web::profile.orders', compact('orders'));
     }
@@ -37,8 +35,10 @@ class ProfileController extends Controller
     {
         $vendor = request()->attributes->get('current_vendor');
         $vendorId = $vendor ? $vendor->id : null;
-        $addresses = auth()->user()->addresses()->with(['governorate', 'region'])->where('vendor_id', $vendorId)->latest()->get();
-        $governorates = Governorate::orderBy('name')->get();
+        
+        $addresses = $this->profileService->getAddresses($vendorId);
+        $governorates = $this->profileService->getGovernorates();
+        
         return view('web::profile.addresses', compact('addresses', 'governorates'));
     }
 
@@ -57,16 +57,14 @@ class ProfileController extends Controller
             'governorate_id.required' => __('Please select a governorate.'),
             'region_id.required' => __('Please select an area.')
         ]);
-        auth()->user()->addresses()->create($request->all());
+        
+        $this->profileService->storeAddress($request->all());
 
         return back()->with('success', __('Address added successfully.'));
     }
 
     public function updateAddress(Request $request, Address $address)
     {
-        if ($address->user_id !== auth()->id())
-            abort(403);
-
         $request->validate([
             'name' => 'required|string|max:255',
             'phone' => ['required', 'string', 'regex:/^(\+20|0)?1[0125][0-9]{8}$|^(\+966|0)?5[0-9]{8}$/'],
@@ -81,7 +79,11 @@ class ProfileController extends Controller
             'region_id.required' => __('Please select an area.')
         ]);
 
-        $address->update($request->all());
+        $success = $this->profileService->updateAddress($address, $request->all());
+
+        if (!$success) {
+            abort(403);
+        }
 
         return back()->with('success', __('Address updated successfully.'));
     }
@@ -95,33 +97,24 @@ class ProfileController extends Controller
         ]);
 
         $vendor = request()->attributes->get('current_vendor');
-        $vendor_id = $vendor ? $vendor->id : null;
+        $vendorId = $vendor ? $vendor->id : null;
 
-        // Check if user has an order with this product
-        $hasOrdered = auth()->user()->orders()
-            ->whereHas('items', function ($q) use ($request) {
-                $q->where('product_id', $request->product_id);
-            })->exists();
+        $result = $this->profileService->storeReview($request->all(), $vendorId);
 
-        if (!$hasOrdered) {
-            return back()->with('error', __('You can only rate products you have purchased.'));
+        if (!$result['success']) {
+            return back()->with('error', $result['error']);
         }
 
-        Review::updateOrCreate(
-            ['user_id' => auth()->id(), 'product_id' => $request->product_id, 'vendor_id' => $vendor_id],
-            ['rating' => $request->rating, 'comment' => $request->comment]
-        );
-
-        return back()->with('success', __('Thank you for your review!'));
+        return back()->with('success', $result['message']);
     }
 
     public function deleteAddress(Address $address)
     {
-        if ($address->user_id !== auth()->id()) {
+        $success = $this->profileService->deleteAddress($address);
+
+        if (!$success) {
             abort(403);
         }
-
-        $address->delete();
 
         return back()->with('success', __('Address deleted successfully.'));
     }
@@ -132,14 +125,15 @@ class ProfileController extends Controller
             'points' => 'required|integer|min:1',
         ]);
 
-        try {
-            $money = auth()->user()->convertPointsToBalance($request->points);
-            return back()->with('success', __('Successfully converted :points points to :money in your wallet.', [
-                'points' => $request->points,
-                'money' => $money
-            ]));
-        } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
+        $result = $this->profileService->convertPoints($request->points);
+
+        if (!$result['success']) {
+            return back()->with('error', $result['error']);
         }
+
+        return back()->with('success', __('Successfully converted :points points to :money in your wallet.', [
+            'points' => $request->points,
+            'money' => $result['money']
+        ]));
     }
 }

@@ -27,6 +27,7 @@ class Vendor extends Authenticatable
         'about_image2',
         'status',
         'password',
+        'referred_by_id',
     ];
 
     protected $hidden = [

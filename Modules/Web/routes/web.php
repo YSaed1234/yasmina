@@ -12,6 +12,8 @@ Route::middleware([\Modules\Web\Http\Middleware\ResolveVendor::class])->group(fu
     Route::get('/about', [HomeController::class, 'about'])->name('web.about');
     Route::get('/contact', [HomeController::class, 'contact'])->name('web.contact');
     Route::post('/contact', [HomeController::class, 'submitContact'])->name('web.contact.submit');
+    Route::get('/become-a-vendor', [HomeController::class, 'becomeVendor'])->name('web.become-vendor');
+    Route::post('/become-a-vendor', [HomeController::class, 'registerVendor'])->name('web.register-vendor');
     Route::get('/shop', [ProductDisplayController::class, 'index'])->name('web.shop');
     Route::get('/products/{id}', [ProductDisplayController::class, 'show'])->name('web.products.show');
 

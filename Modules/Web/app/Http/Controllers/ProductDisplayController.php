@@ -4,60 +4,45 @@ namespace Modules\Web\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\Web\Services\ProductDisplayService;
 
 class ProductDisplayController extends Controller
 {
+    protected $productService;
+
+    public function __construct(ProductDisplayService $productService)
+    {
+        $this->productService = $productService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
         $vendor = $request->attributes->get('current_vendor');
-        $vendor_id = $vendor ? $vendor->id : null;
-        $query = \App\Models\Product::with(['category', 'currency']);
-
-        if ($vendor_id) {
-            $query->where('vendor_id', $vendor_id);
-        } else {
-            $query->whereNull('vendor_id');
-        }
-
-        // Search by name
-        if ($request->has('search') && $request->search != '') {
-            $query->whereTranslationLike('name', '%' . $request->search . '%');
-        }
-
-        // Filter by category
-        if ($request->has('category_id') && $request->category_id != '') {
-            $query->where('category_id', $request->category_id);
-        }
-
-        // Filter by currency
-        if ($request->has('currency_id') && $request->currency_id != '') {
-            $query->where('currency_id', $request->currency_id);
-        }
-
-        // Price range
-        if ($request->has('min_price') && $request->min_price != '') {
-            $query->where('price', '>=', $request->min_price);
-        }
-        if ($request->has('max_price') && $request->max_price != '') {
-            $query->where('price', '<=', $request->max_price);
-        }
-
-        $products = $query->orderBy('rank')->paginate(12)->withQueryString();
+        $vendorId = $vendor ? $vendor->id : null;
         
-        $categoriesQuery = \App\Models\Category::query();
-        if ($vendor_id) {
-            $categoriesQuery->where('vendor_id', $vendor_id);
-        } else {
-            $categoriesQuery->whereNull('vendor_id');
-        }
-        $categories = $categoriesQuery->get();
-        
-        $currencies = \App\Models\Currency::all();
+        $data = $this->productService->getShopData($request, $vendorId);
 
-        return view('web::shop', compact('products', 'categories', 'currencies'));
+        return view('web::shop', $data);
+    }
+
+    /**
+     * Show the specified resource.
+     */
+    public function show(Request $request, $id)
+    {
+        $vendor = $request->attributes->get('current_vendor');
+        $vendorId = $vendor ? $vendor->id : null;
+        
+        $product = $this->productService->getProductDetails($id, $vendorId);
+        
+        if (!$product) {
+            abort(404);
+        }
+        
+        return view('web::show', compact('product'));
     }
 
     /**
@@ -72,26 +57,6 @@ class ProductDisplayController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show(Request $request, $id)
-    {
-        $product = \App\Models\Product::with(['category', 'currency'])->findOrFail($id);
-        
-        $vendor = $request->attributes->get('current_vendor');
-        
-        // If a vendor is specified in the URL, ensure the product belongs to it
-        if ($vendor && $product->vendor_id != $vendor->id) {
-            abort(404);
-        }
-        
-        // If no vendor is specified but the product belongs to one, 
-        // we might want to redirect or just show it. 
-        // For now, let's just show it.
-        return view('web::show', compact('product'));
-    }
 
     /**
      * Show the form for editing the specified resource.

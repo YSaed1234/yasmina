@@ -4,6 +4,9 @@ namespace Modules\Web\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\Web\Http\Requests\VendorRegistrationRequest;
+use Modules\Admin\Services\VendorService;
+use App\Notifications\VendorApplicationReceivedNotification;
 
 class HomeController extends Controller
 {
@@ -14,10 +17,10 @@ class HomeController extends Controller
     {
         $vendor = $request->attributes->get('current_vendor');
         $vendor_id = $vendor ? $vendor->id : null;
-        
+
         $categoriesQuery = \App\Models\Category::with('products')->orderBy('rank');
         $featuredProductsQuery = \App\Models\Product::orderBy('rank');
-        
+
         if ($vendor_id) {
             $categoriesQuery->where('vendor_id', $vendor_id);
             $featuredProductsQuery->where('vendor_id', $vendor_id);
@@ -25,10 +28,10 @@ class HomeController extends Controller
             $categoriesQuery->whereNull('vendor_id');
             $featuredProductsQuery->whereNull('vendor_id');
         }
-        
+
         $categories = $categoriesQuery->get();
         $featuredProducts = $featuredProductsQuery->take(8)->get();
-        
+
         $slidesQuery = \App\Models\Slide::where('active', true);
         if ($vendor_id) {
             $slidesQuery->where('vendor_id', $vendor_id);
@@ -99,7 +102,9 @@ class HomeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
+    public function store(Request $request)
+    {
+    }
 
     /**
      * Show the specified resource.
@@ -120,10 +125,43 @@ class HomeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id) {}
+    public function update(Request $request, $id)
+    {
+    }
+
+    public function becomeVendor()
+    {
+        return view('web::become_vendor');
+    }
+
+    public function registerVendor(VendorRegistrationRequest $request, VendorService $vendorService)
+    {
+        $data = $request->validated();
+        $data['status'] = 'inactive'; // Set as inactive by default
+
+        $currentVendorContext = $request->attributes->get('current_vendor');
+        if ($currentVendorContext) {
+            $data['referred_by_id'] = $currentVendorContext->id;
+        }
+
+        $vendor = $vendorService->storeVendor($data);
+
+        // Send notification to the new vendor account
+        $vendor->notify(new VendorApplicationReceivedNotification($vendor));
+
+        // Send notification to the logged-in user (if any)
+        if (auth()->check()) {
+            auth()->user()->notify(new VendorApplicationReceivedNotification($currentVendorContext));
+        }
+
+        return redirect()->route('home', ['vendor_id' => $request->get('vendor_id')])
+            ->with('success', __('Your application has been submitted successfully! We will contact you soon.'));
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id) {}
+    public function destroy($id)
+    {
+    }
 }

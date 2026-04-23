@@ -98,6 +98,10 @@
                         
                         <a href="{{ route('web.contact', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.contact') ? 'text-primary' : '' }}">{{ __('Contact Us') }}</a>
                         
+                        <a href="{{ route('web.become-vendor',['vendor_id'=>request('vendor_id')]) }}" class="px-6 py-2 bg-primary text-white rounded-full text-xs font-bold hover:bg-primary-hover transition-all shadow-lg shadow-primary/20">
+                            {{ __('Join Us') }}
+                        </a>
+                        
                         <!-- Cart Icon -->
                         <a href="{{ route('web.cart', ['vendor_id' => request('vendor_id')]) }}" class="relative group p-2 hover:bg-rose-50 rounded-xl transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -322,6 +326,7 @@
                             <li><a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}#categories" class="hover:text-primary transition-colors">{{ __('Categories') }}</a></li>
                             <li><a href="{{ route('web.about', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors">{{ __('About Us') }}</a></li>
                             <li><a href="{{ route('web.contact', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors">{{ __('Contact Us') }}</a></li>
+                            <li><a href="{{ route('web.become-vendor') }}" class="hover:text-primary transition-colors">{{ __('Become a Service Provider') }}</a></li>
                         </ul>
                     </div>
                     <div>
