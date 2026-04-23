@@ -5,7 +5,7 @@
     </div>
 
     <div class="max-w-4xl bg-white/70 backdrop-blur-md p-8 rounded-3xl border border-yasmina-50 shadow-xl shadow-yasmina-100/50">
-        <form action="{{ route('roles.store') }}" method="POST" class="space-y-8">
+        <form action="{{ route('admin.roles.store') }}" method="POST" class="space-y-8">
             @csrf
             <div>
                 <label for="name" class="block text-sm font-bold text-yasmina-500 mb-2 uppercase tracking-widest">{{ __('Role Name') }}</label>
@@ -46,7 +46,7 @@
                 <button type="submit" class="flex-1 px-8 py-4 bg-yasmina-500 text-white rounded-2xl font-bold hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100">
                     {{ __('Create Role') }}
                 </button>
-                <a href="{{ route('roles.index') }}" class="px-8 py-4 bg-gray-100 text-gray-600 rounded-2xl font-bold hover:bg-gray-200 transition-all">
+                <a href="{{ route('admin.roles.index') }}" class="px-8 py-4 bg-gray-100 text-gray-600 rounded-2xl font-bold hover:bg-gray-200 transition-all">
                     {{ __('Cancel') }}
                 </a>
             </div>

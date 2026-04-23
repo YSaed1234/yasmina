@@ -4,7 +4,7 @@
             <h1 class="text-3xl font-bold text-gray-800">{{ __('Roles & Permissions') }}</h1>
             <p class="text-gray-500 mt-2">{{ __('Manage access levels for your team.') }}</p>
         </div>
-        <a href="{{ route('roles.create') }}" class="px-8 py-4 bg-yasmina-500 text-white rounded-2xl font-bold hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100 flex items-center gap-2">
+        <a href="{{ route('admin.roles.create') }}" class="px-8 py-4 bg-yasmina-500 text-white rounded-2xl font-bold hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
@@ -13,7 +13,7 @@
     </div>
 
     <div class="mb-10 flex flex-wrap gap-4">
-        <form method="GET" action="{{ route('roles.index') }}" class="flex-1 min-w-[300px]">
+        <form method="GET" action="{{ route('admin.roles.index') }}" class="flex-1 min-w-[300px]">
             <div class="relative">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search roles') }}..." 
                        class="w-full pl-12 pr-4 py-3 bg-white border border-yasmina-50 rounded-2xl focus:ring-2 focus:ring-yasmina-200 outline-none transition-all">
@@ -59,12 +59,12 @@
                     </td>
                     <td class="px-6 py-4 text-center space-x-2 rtl:space-x-reverse">
                         <div class="flex justify-center gap-2">
-                            <a href="{{ route('roles.edit', $role) }}" class="inline-flex p-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-all">
+                            <a href="{{ route('admin.roles.edit', $role) }}" class="inline-flex p-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-all">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                             </a>
-                            <form action="{{ route('roles.destroy', $role) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ __('Are you sure?') }}')">
+                            <form action="{{ route('admin.roles.destroy', $role) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ __('Are you sure?') }}')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="inline-flex p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-all">

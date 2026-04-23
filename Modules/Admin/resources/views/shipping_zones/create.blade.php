@@ -4,7 +4,7 @@
             <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Add New Shipping Zone') }}</h1>
             <p class="text-gray-500 mt-2">{{ __('Define a new regional shipping rate.') }}</p>
         </div>
-        <a href="{{ route('shipping_zones.index') }}" class="px-6 py-3 bg-gray-100 text-gray-700 rounded-2xl font-bold hover:bg-gray-200 transition-all flex items-center gap-2">
+        <a href="{{ route('admin.shipping_zones.index') }}" class="px-6 py-3 bg-gray-100 text-gray-700 rounded-2xl font-bold hover:bg-gray-200 transition-all flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -13,7 +13,7 @@
     </div>
 
     <div class="max-w-2xl">
-        <form action="{{ route('shipping_zones.store') }}" method="POST" class="bg-white p-10 rounded-[3rem] shadow-sm border border-gray-100 space-y-8">
+        <form action="{{ route('admin.shipping_zones.store') }}" method="POST" class="bg-white p-10 rounded-[3rem] shadow-sm border border-gray-100 space-y-8">
             @csrf
             <div>
                 <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Zone Name') }}</label>

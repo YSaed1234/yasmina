@@ -4,7 +4,7 @@
             <h1 class="text-3xl font-bold text-gray-800">{{ __('Coupons') }}</h1>
             <p class="text-gray-500 mt-1">{{ __('Manage your discount coupons and usage limits.') }}</p>
         </div>
-        <a href="{{ route('coupons.create') }}" class="flex items-center gap-2 px-6 py-3 bg-yasmina-500 text-white rounded-2xl font-bold hover:opacity-90 transition-all shadow-lg shadow-yasmina-100">
+        <a href="{{ route('admin.coupons.create') }}" class="flex items-center gap-2 px-6 py-3 bg-yasmina-500 text-white rounded-2xl font-bold hover:opacity-90 transition-all shadow-lg shadow-yasmina-100">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
@@ -14,7 +14,7 @@
 
     <!-- Filters -->
     <div class="bg-white rounded-3xl p-6 shadow-sm border border-yasmina-50 mb-8">
-        <form id="filterForm" action="{{ route('coupons.index') }}" method="GET" class="flex flex-wrap items-end gap-4">
+        <form id="filterForm" action="{{ route('admin.coupons.index') }}" method="GET" class="flex flex-wrap items-end gap-4">
             <div class="flex-1 min-w-[200px]">
                 <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">{{ __('Search') }}</label>
                 <input type="text" name="search" value="{{ request('search') }}" 
@@ -30,7 +30,7 @@
                     <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
                 </select>
             </div>
-            <a href="{{ route('coupons.index') }}" class="px-8 py-3 bg-yasmina-50 text-gray-500 rounded-2xl font-bold hover:bg-yasmina-100 transition-all">
+            <a href="{{ route('admin.coupons.index') }}" class="px-8 py-3 bg-yasmina-50 text-gray-500 rounded-2xl font-bold hover:bg-yasmina-100 transition-all">
                 {{ __('Reset') }}
             </a>
         </form>
@@ -98,12 +98,12 @@
                             </td>
                             <td class="px-8 py-5 text-right">
                                 <div class="flex items-center justify-end gap-2">
-                                    <a href="{{ route('coupons.edit', $coupon) }}" class="p-2 text-gray-400 hover:text-yasmina-500 hover:bg-yasmina-50 rounded-xl transition-all">
+                                    <a href="{{ route('admin.coupons.edit', $coupon) }}" class="p-2 text-gray-400 hover:text-yasmina-500 hover:bg-yasmina-50 rounded-xl transition-all">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                         </svg>
                                     </a>
-                                    <form action="{{ route('coupons.destroy', $coupon) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure?') }}')">
+                                    <form action="{{ route('admin.coupons.destroy', $coupon) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure?') }}')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">

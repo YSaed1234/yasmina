@@ -45,6 +45,11 @@ class User extends Authenticatable
         });
     }
 
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
+
     public function inviter()
     {
         return $this->belongsTo(User::class, 'referred_by');

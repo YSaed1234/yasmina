@@ -201,6 +201,17 @@
                                                 <span class="font-bold text-gray-700 text-xs">{{ __('Admin Dashboard') }}</span>
                                             </a>
                                         @endif
+
+                                        @if(auth()->user()->vendor_id)
+                                            <a href="{{ route('vendor.dashboard') }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
+                                                <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                                    </svg>
+                                                </div>
+                                                <span class="font-bold text-gray-700 text-xs">{{ __('Vendor Panel') }}</span>
+                                            </a>
+                                        @endif
                                         
                                         <a href="{{ route('web.profile') }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
                                             <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover/item:text-primary transition-colors">

@@ -38,12 +38,18 @@ class PermissionsSeeder extends Seeder
             'manage permissions',
             'manage users',
             'manage orders',
+            'view orders',
             'manage contact requests',
             'manage addresses',
             'manage coupons',
             'manage slides',
             'manage shipping',
             'manage points',
+            'manage vendors',
+            'view vendors',
+            'create vendors',
+            'edit vendors',
+            'delete vendors',
         ];
 
         foreach ($permissions as $permission) {
@@ -61,6 +67,18 @@ class PermissionsSeeder extends Seeder
             'view products',
             'edit products',
             'view currencies'
+        ]);
+
+        $vendorAdminRole = Role::firstOrCreate(['name' => 'vendor_admin']);
+        $vendorAdminRole->givePermissionTo([
+            'manage products',
+            'manage orders',
+        ]);
+
+        $vendorStaffRole = Role::firstOrCreate(['name' => 'vendor_staff']);
+        $vendorStaffRole->givePermissionTo([
+            'view products',
+            'view orders',
         ]);
 
         // Create Admin User

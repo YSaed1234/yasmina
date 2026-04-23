@@ -7,7 +7,7 @@
             </div>
             <p class="text-gray-500 mt-2">{{ __('Placed on') }} {{ $order->created_at->format('M d, Y \a\t H:i') }}</p>
         </div>
-        <a href="{{ route('orders.index') }}" class="px-6 py-3 bg-gray-100 text-gray-700 rounded-2xl font-bold hover:bg-gray-200 transition-all flex items-center gap-2">
+        <a href="{{ route('admin.orders.index') }}" class="px-6 py-3 bg-gray-100 text-gray-700 rounded-2xl font-bold hover:bg-gray-200 transition-all flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -121,7 +121,7 @@
                 <h3 class="text-lg font-bold text-gray-900 mb-8 border-b border-gray-50 pb-6">{{ __('Manage Order') }}</h3>
                 
                 <div class="space-y-6">
-                    <form action="{{ route('orders.update-status', $order) }}" method="POST">
+                    <form action="{{ route('admin.orders.update-status', $order) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Order Status') }}</label>
@@ -132,7 +132,7 @@
                         </select>
                     </form>
 
-                    <form action="{{ route('orders.update-payment-status', $order) }}" method="POST">
+                    <form action="{{ route('admin.orders.update-payment-status', $order) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Payment Status') }}</label>
@@ -145,7 +145,7 @@
                 </div>
 
                 <div class="mt-8 pt-8 border-t border-gray-50">
-                    <form action="{{ route('orders.destroy', $order) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to delete this order? This action cannot be undone.') }}')">
+                    <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to delete this order? This action cannot be undone.') }}')">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="w-full py-4 bg-red-50 text-red-600 rounded-2xl font-bold text-sm hover:bg-red-100 transition-all">

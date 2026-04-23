@@ -21,13 +21,33 @@ class RoleService
 
     public function getGroupedPermissions()
     {
-        return Permission::all()->groupBy(function($perm) {
-            if (str_contains($perm->name, 'categories')) return 'Categories';
-            if (str_contains($perm->name, 'products')) return 'Products';
-            if (str_contains($perm->name, 'currencies')) return 'Currencies';
-            if (str_contains($perm->name, 'contact requests')) return 'Contact Requests';
-            if (str_contains($perm->name, 'users')) return 'Users';
-            if (str_contains($perm->name, 'permissions')) return 'System';
+        return Permission::all()->groupBy(function ($perm) {
+            if (str_contains($perm->name, 'categories'))
+                return 'Categories';
+            if (str_contains($perm->name, 'products'))
+                return 'Products';
+            if (str_contains($perm->name, 'currencies'))
+                return 'Currencies';
+            if (str_contains($perm->name, 'contact requests'))
+                return 'Contact Requests';
+            if (str_contains($perm->name, 'users'))
+                return 'Users';
+            if (str_contains($perm->name, 'vendors'))
+                return 'Vendors';
+            if (str_contains($perm->name, 'permissions'))
+                return 'System';
+            if (str_contains($perm->name, 'orders'))
+                return 'Orders';
+            if (str_contains($perm->name, 'addresses'))
+                return 'Addresses';
+            if (str_contains($perm->name, 'coupons'))
+                return 'Coupons';
+            if (str_contains($perm->name, 'slides'))
+                return 'Slideshow';
+            if (str_contains($perm->name, 'shipping') || str_contains($perm->name, 'governorates') || str_contains($perm->name, 'regions'))
+                return 'Shipping';
+            if (str_contains($perm->name, 'points'))
+                return 'Loyalty Points';
             return 'Other';
         });
     }

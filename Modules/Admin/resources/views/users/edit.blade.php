@@ -6,7 +6,7 @@
                 <p class="text-gray-500 mt-2">{{ __('Update account details and modify roles for :name', ['name' => $user->name]) }}</p>
             </div>
 
-            <form action="{{ route('users.update', $user) }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+            <form action="{{ route('admin.users.update', $user) }}" method="POST" enctype="multipart/form-data" class="space-y-8">
                 @csrf
                 @method('PUT')
 
@@ -80,7 +80,7 @@
                     <button type="submit" class="flex-1 py-4 bg-primary text-white rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">
                         {{ __('Update User') }}
                     </button>
-                    <a href="{{ route('users.index') }}" class="flex-1 py-4 bg-gray-100 text-gray-700 rounded-2xl font-bold text-lg text-center hover:bg-gray-200 transition-all">
+                    <a href="{{ route('admin.users.index') }}" class="flex-1 py-4 bg-gray-100 text-gray-700 rounded-2xl font-bold text-lg text-center hover:bg-gray-200 transition-all">
                         {{ __('Cancel') }}
                     </a>
                 </div>

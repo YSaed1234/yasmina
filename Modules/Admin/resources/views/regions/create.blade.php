@@ -1,6 +1,6 @@
 <x-admin::layouts.master>
     <div class="mb-10 flex items-center gap-4">
-        <a href="{{ route('regions.index') }}" class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-gray-400 hover:text-primary transition-all border border-gray-100 shadow-sm">
+        <a href="{{ route('admin.regions.index') }}" class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-gray-400 hover:text-primary transition-all border border-gray-100 shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
@@ -13,7 +13,7 @@
 
     <div class="max-w-2xl">
         <div class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100">
-            <form action="{{ isset($region) ? route('regions.update', $region) : route('regions.store') }}" method="POST">
+            <form action="{{ isset($region) ? route('admin.regions.update', $region) : route('admin.regions.store') }}" method="POST">
                 @csrf
                 @if(isset($region))
                     @method('PUT')

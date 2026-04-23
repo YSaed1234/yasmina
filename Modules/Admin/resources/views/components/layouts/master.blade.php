@@ -90,7 +90,7 @@
                     </a>
                     
                     @canany([ 'manage categories'])
-                    <a href="{{ route('categories.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('categories.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                    <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.categories.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -98,17 +98,26 @@
                     </a>
                     @endcanany
 
-                    @canany([ 'manage products'])
-                    <a href="{{ route('products.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('products.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
-                        {{ __('Products') }}
-                    </a>
-                    @endcanany
+                    @can('manage products')
+                <a href="{{ route('admin.products.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.products.*') ? 'bg-primary text-white font-bold shadow-lg shadow-primary/20' : 'text-gray-500 hover:bg-gray-50' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    {{ __('Products') }}
+                </a>
+            @endcan
+
+            @can('manage vendors')
+                <a href="{{ route('admin.vendors.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.vendors.*') ? 'bg-primary text-white font-bold shadow-lg shadow-primary/20' : 'text-gray-500 hover:bg-gray-50' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    {{ __('Vendors') }}
+                </a>
+            @endcan
 
                     @canany([ 'manage currencies'])
-                    <a href="{{ route('currencies.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('currencies.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                    <a href="{{ route('admin.currencies.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.currencies.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -117,7 +126,7 @@
                     @endcanany
 
                     @can('manage users')
-                    <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('users.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                    <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.users.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
@@ -126,7 +135,7 @@
                     @endcan
 
                     @can('manage addresses')
-                    <a href="{{ route('addresses.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('addresses.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                    <a href="{{ route('admin.addresses.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.addresses.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -136,7 +145,7 @@
                     @endcan
 
                     @can('manage permissions')
-                    <a href="{{ route('roles.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('roles.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                    <a href="{{ route('admin.roles.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.roles.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
@@ -145,7 +154,7 @@
                     @endcan
 
                     @can('manage orders')
-                    <a href="{{ route('orders.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('orders.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                    <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.orders.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
@@ -154,7 +163,7 @@
                     @endcan
 
                     @can('manage contact requests')
-                    <a href="{{ route('contact_requests.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('contact_requests.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                    <a href="{{ route('admin.contact_requests.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.contact_requests.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
@@ -163,7 +172,7 @@
                     @endcan
 
                     @can('manage coupons')
-                    <a href="{{ route('coupons.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('coupons.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                    <a href="{{ route('admin.coupons.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.coupons.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                         </svg>
@@ -172,14 +181,14 @@
                     @endcan
 
                     @can('manage shipping')
-                    <a href="{{ route('governorates.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('governorates.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                    <a href="{{ route('admin.governorates.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.governorates.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                         {{ __('Governorates') }}
                     </a>
-                    <a href="{{ route('regions.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('regions.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                    <a href="{{ route('admin.regions.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.regions.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A2 2 0 013 15.491V6.509a2 2 0 011.553-1.943L9 3m0 17l6-3m-6 3V3m6 14l5.447 2.724A2 2 0 0021 17.509V8.509a2 2 0 00-1.553-1.943L15 3m0 17V3" />
                         </svg>

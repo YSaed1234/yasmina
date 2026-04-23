@@ -15,10 +15,16 @@ class Product extends Model implements TranslatableContract
     protected $fillable = [
         'category_id',
         'currency_id',
+        'vendor_id',
         'price',
         'image',
         'rank'
     ];
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
 
     public function category()
     {

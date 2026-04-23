@@ -5,7 +5,7 @@
     </div>
 
     <div class="max-w-4xl bg-white/70 backdrop-blur-md p-8 rounded-3xl border border-yasmina-50 shadow-xl shadow-yasmina-100/50">
-        <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+        <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
             @csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="md:col-span-1">
@@ -80,7 +80,7 @@
                 <button type="submit" class="flex-1 py-4 bg-yasmina-500 text-white rounded-2xl font-bold hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100">
                     {{ __('Save Product') }}
                 </button>
-                <a href="{{ route('products.index') }}" class="px-8 py-4 bg-gray-100 text-gray-600 rounded-2xl font-bold hover:bg-gray-200 transition-all">
+                <a href="{{ route('admin.products.index') }}" class="px-8 py-4 bg-gray-100 text-gray-600 rounded-2xl font-bold hover:bg-gray-200 transition-all">
                     {{ __('Cancel') }}
                 </a>
             </div>

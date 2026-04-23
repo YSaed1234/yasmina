@@ -5,7 +5,7 @@
             <p class="text-gray-500 mt-2">{{ __('Manage your product categories and their display order.') }}</p>
         </div>
         @canany(['create categories'])
-        <a href="{{ route('categories.create') }}" class="px-6 py-3 bg-yasmina-500 text-white rounded-2xl font-bold hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100 flex items-center gap-2">
+        <a href="{{ route('admin.categories.create') }}" class="px-6 py-3 bg-yasmina-500 text-white rounded-2xl font-bold hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
@@ -15,7 +15,7 @@
     </div>
 
     <div class="mb-10 flex flex-wrap gap-4">
-        <form id="filterForm" method="GET" action="{{ route('categories.index') }}" class="flex-1 min-w-[300px]">
+        <form id="filterForm" method="GET" action="{{ route('admin.categories.index') }}" class="flex-1 min-w-[300px]">
             <div class="relative">
                 <input type="text" name="search" value="{{ request('search') }}" 
                        oninput="debounceSubmit()"
@@ -66,7 +66,7 @@
                     <td class="px-8 py-5 whitespace-nowrap text-center text-sm font-bold">
                         <div class="flex justify-center gap-3">
                             @canany(['edit categories'])
-                            <a href="{{ route('categories.edit', $category) }}" class="p-2 text-yasmina-500 hover:bg-yasmina-50 rounded-xl transition-all">
+                            <a href="{{ route('admin.categories.edit', $category) }}" class="p-2 text-yasmina-500 hover:bg-yasmina-50 rounded-xl transition-all">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
@@ -74,7 +74,7 @@
                             @endcanany
                             
                             @canany(['delete categories'])
-                            <form action="{{ route('categories.destroy', $category) }}" method="POST" class="inline-block">
+                            <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline-block">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="p-2 text-red-400 hover:bg-red-50 rounded-xl transition-all" onclick="return confirm('{{ __('Are you sure?') }}')">

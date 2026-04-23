@@ -4,7 +4,7 @@
             <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Shipping Zones') }}</h1>
             <p class="text-gray-500 mt-2">{{ __('Manage regional shipping rates and availability.') }}</p>
         </div>
-        <a href="{{ route('shipping_zones.create') }}" class="px-6 py-3 bg-primary text-white rounded-2xl font-bold hover:opacity-90 transition-all flex items-center gap-2 shadow-xl shadow-primary/20">
+        <a href="{{ route('admin.shipping_zones.create') }}" class="px-6 py-3 bg-primary text-white rounded-2xl font-bold hover:opacity-90 transition-all flex items-center gap-2 shadow-xl shadow-primary/20">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
@@ -38,12 +38,12 @@
                         </td>
                         <td class="px-8 py-6 text-right">
                             <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                                <a href="{{ route('shipping_zones.edit', $zone) }}" class="p-2 bg-gray-100 text-gray-600 rounded-xl hover:bg-primary hover:text-white transition-all">
+                                <a href="{{ route('admin.shipping_zones.edit', $zone) }}" class="p-2 bg-gray-100 text-gray-600 rounded-xl hover:bg-primary hover:text-white transition-all">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
                                 </a>
-                                <form action="{{ route('shipping_zones.destroy', $zone) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure?') }}')">
+                                <form action="{{ route('admin.shipping_zones.destroy', $zone) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure?') }}')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="p-2 bg-gray-100 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all">

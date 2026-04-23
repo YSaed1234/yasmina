@@ -1,6 +1,6 @@
 <x-admin::layouts.master>
     <div class="mb-8">
-        <a href="{{ route('coupons.index') }}" class="flex items-center gap-2 text-yasmina-500 font-bold hover:gap-3 transition-all mb-4">
+        <a href="{{ route('admin.coupons.index') }}" class="flex items-center gap-2 text-yasmina-500 font-bold hover:gap-3 transition-all mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -10,7 +10,7 @@
         <p class="text-gray-500 mt-1">{{ __('Define discount rules and usage limits.') }}</p>
     </div>
 
-    <form action="{{ route('coupons.store') }}" method="POST" class="max-w-4xl">
+    <form action="{{ route('admin.coupons.store') }}" method="POST" class="max-w-4xl">
         @csrf
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <!-- Basic Info -->

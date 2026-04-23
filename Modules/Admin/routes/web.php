@@ -13,39 +13,42 @@ Route::prefix('admin-dashboard-2026')->group(function () {
     Route::post('login', [LoginController::class, 'login'])->name('admin.login.submit');
     Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');
 
-    Route::middleware(['auth:admin', 'verified', 'admin'])->group(function () {
-        Route::get('/', [\Modules\Admin\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
+    Route::middleware(['auth:admin', 'verified', 'admin'])->name('admin.')->group(function () {
+        Route::get('/', [\Modules\Admin\Http\Controllers\AdminController::class, 'index'])->name('index');
 
-    Route::resource('categories', CategoryController::class);
-    Route::resource('products', ProductController::class);
-    Route::resource('currencies', CurrencyController::class);
-    Route::resource('roles', RoleController::class);
-    
-    Route::get('contact-requests', [\Modules\Admin\Http\Controllers\ContactRequestController::class, 'index'])->name('contact_requests.index')->middleware('permission:manage contact requests');
-    Route::post('contact-requests/{id}/replied', [\Modules\Admin\Http\Controllers\ContactRequestController::class, 'markAsReplied'])->name('contact_requests.replied')->middleware('permission:manage contact requests');
+        Route::resource('categories', CategoryController::class);
+        Route::resource('products', ProductController::class);
+        Route::resource('currencies', CurrencyController::class);
+        Route::resource('roles', RoleController::class);
+        
+        Route::get('contact-requests', [\Modules\Admin\Http\Controllers\ContactRequestController::class, 'index'])->name('contact_requests.index')->middleware('permission:manage contact requests');
+        Route::post('contact-requests/{id}/replied', [\Modules\Admin\Http\Controllers\ContactRequestController::class, 'markAsReplied'])->name('contact_requests.replied')->middleware('permission:manage contact requests');
 
-    Route::get('users/search', [\Modules\Admin\Http\Controllers\UserController::class, 'search'])->name('users.search')->middleware('permission:manage users');
-    Route::resource('users', \Modules\Admin\Http\Controllers\UserController::class)->middleware('permission:manage users');
+        Route::get('users/search', [\Modules\Admin\Http\Controllers\UserController::class, 'search'])->name('users.search')->middleware('permission:manage users');
+        Route::resource('users', \Modules\Admin\Http\Controllers\UserController::class)->middleware('permission:manage users');
 
-    Route::get('orders', [\Modules\Admin\Http\Controllers\OrderController::class, 'index'])->name('orders.index')->middleware('permission:manage orders');
-    Route::get('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'show'])->name('orders.show')->middleware('permission:manage orders');
-    Route::put('orders/{order}/status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.update-status')->middleware('permission:manage orders');
-    Route::put('orders/{order}/payment-status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updatePaymentStatus'])->name('orders.update-payment-status')->middleware('permission:manage orders');
-    Route::delete('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy')->middleware('permission:manage orders');
+        Route::get('orders', [\Modules\Admin\Http\Controllers\OrderController::class, 'index'])->name('orders.index')->middleware('permission:manage orders');
+        Route::get('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'show'])->name('orders.show')->middleware('permission:manage orders');
+        Route::put('orders/{order}/status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.update-status')->middleware('permission:manage orders');
+        Route::put('orders/{order}/payment-status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updatePaymentStatus'])->name('orders.update-payment-status')->middleware('permission:manage orders');
+        Route::delete('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy')->middleware('permission:manage orders');
 
-    Route::resource('coupons', \Modules\Admin\Http\Controllers\CouponController::class)->middleware('permission:manage coupons');
+        Route::resource('coupons', \Modules\Admin\Http\Controllers\CouponController::class)->middleware('permission:manage coupons');
 
-    Route::resource('addresses', \Modules\Admin\Http\Controllers\AddressController::class)->names('addresses')->middleware('permission:manage addresses');
-    Route::delete('addresses/{address}', [\Modules\Admin\Http\Controllers\AddressController::class, 'destroy'])->name('addresses.destroy')->middleware('permission:manage addresses');
+        Route::resource('addresses', \Modules\Admin\Http\Controllers\AddressController::class)->names('addresses')->middleware('permission:manage addresses');
+        Route::delete('addresses/{address}', [\Modules\Admin\Http\Controllers\AddressController::class, 'destroy'])->name('addresses.destroy')->middleware('permission:manage addresses');
 
-    Route::resource('shipping-zones', \Modules\Admin\Http\Controllers\ShippingZoneController::class)->names('shipping_zones')->middleware('permission:manage shipping');
-    Route::resource('governorates', \Modules\Admin\Http\Controllers\GovernorateController::class)->names('governorates')->middleware('permission:manage shipping');
-    Route::resource('regions', \Modules\Admin\Http\Controllers\RegionController::class)->names('regions')->middleware('permission:manage shipping');
+        Route::resource('shipping-zones', \Modules\Admin\Http\Controllers\ShippingZoneController::class)->names('shipping_zones')->middleware('permission:manage shipping');
+        Route::resource('governorates', \Modules\Admin\Http\Controllers\GovernorateController::class)->names('governorates')->middleware('permission:manage shipping');
+        Route::resource('regions', \Modules\Admin\Http\Controllers\RegionController::class)->names('regions')->middleware('permission:manage shipping');
 
-    Route::resource('slides', SlideController::class)->names('admin.slides')->middleware('permission:manage slides');
+        Route::resource('slides', SlideController::class)->names('slides')->middleware('permission:manage slides');
 
-    // Points Settings
-    Route::get('settings/points', [PointSettingController::class, 'index'])->name('admin.settings.points')->middleware('permission:manage points');
-    Route::post('settings/points', [PointSettingController::class, 'update'])->name('admin.settings.points.update')->middleware('permission:manage points');
+        // Points Settings
+        Route::get('settings/points', [PointSettingController::class, 'index'])->name('settings.points')->middleware('permission:manage points');
+        Route::post('settings/points', [PointSettingController::class, 'update'])->name('settings.points.update')->middleware('permission:manage points');
+
+        // Vendor Management
+        Route::resource('vendors', \Modules\Admin\Http\Controllers\VendorController::class)->names('vendors')->middleware('permission:manage vendors');
     });
 });

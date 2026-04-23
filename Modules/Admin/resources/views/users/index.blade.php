@@ -5,7 +5,7 @@
                 <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Users') }}</h1>
                 <p class="text-gray-500 mt-2">{{ __('Manage your platform users and their roles.') }}</p>
             </div>
-            <a href="{{ route('users.create') }}" class="px-6 py-3 bg-primary text-white rounded-2xl font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
+            <a href="{{ route('admin.users.create') }}" class="px-6 py-3 bg-primary text-white rounded-2xl font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
@@ -14,7 +14,7 @@
         </div>
 
         <div class="mb-10 flex flex-wrap gap-4">
-            <form method="GET" action="{{ route('users.index') }}" class="flex-1 min-w-[300px]">
+            <form method="GET" action="{{ route('admin.users.index') }}" class="flex-1 min-w-[300px]">
                 <div class="relative">
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search users by name or email') }}..." 
                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 outline-none transition-all">
@@ -78,7 +78,7 @@
                             </td>
                             <td class="py-6 px-6 text-center last:rounded-r-2xl">
                                 <div class="flex items-center justify-center gap-3">
-                                    <a href="{{ route('users.edit', $user) }}" class="p-2 text-gray-400 hover:text-primary transition-all" title="{{ __('Edit Roles') }}">
+                                    <a href="{{ route('admin.users.edit', $user) }}" class="p-2 text-gray-400 hover:text-primary transition-all" title="{{ __('Edit Roles') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                         </svg>

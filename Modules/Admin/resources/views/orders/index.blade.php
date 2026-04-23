@@ -7,7 +7,7 @@
     </div>
 
     <div class="mb-10 flex flex-wrap gap-4">
-        <form method="GET" action="{{ route('orders.index') }}" class="flex-1 flex gap-4 min-w-[300px]">
+        <form method="GET" action="{{ route('admin.orders.index') }}" class="flex-1 flex gap-4 min-w-[300px]">
             <div class="relative flex-1">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search by Order ID or Customer Name') }}..." 
                        class="w-full pl-12 pr-4 py-3 bg-white border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary/20 outline-none transition-all">
@@ -59,7 +59,7 @@
                             {{ number_format($order->shipping_amount, 2) }}
                         </td>
                         <td class="px-8 py-6">
-                            <form action="{{ route('orders.update-status', $order) }}" method="POST" class="status-update-form">
+                            <form action="{{ route('admin.orders.update-status', $order) }}" method="POST" class="status-update-form">
                                 @csrf
                                 @method('PUT')
                                 <select name="status" onchange="this.form.submit()" 
@@ -73,7 +73,7 @@
                             </form>
                         </td>
                         <td class="px-8 py-6">
-                            <form action="{{ route('orders.update-payment-status', $order) }}" method="POST">
+                            <form action="{{ route('admin.orders.update-payment-status', $order) }}" method="POST">
                                 @csrf
                                 @method('PUT')
                                 <select name="payment_status" onchange="this.form.submit()" 
@@ -88,7 +88,7 @@
                             {{ $order->created_at->format('M d, Y') }}
                         </td>
                         <td class="px-8 py-6 text-right">
-                            <a href="{{ route('orders.show', $order) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-xs font-bold hover:bg-primary hover:text-white transition-all">
+                            <a href="{{ route('admin.orders.show', $order) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-xs font-bold hover:bg-primary hover:text-white transition-all">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />

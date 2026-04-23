@@ -5,7 +5,7 @@
     </div>
 
     <div class="max-w-2xl bg-white/70 backdrop-blur-md p-8 rounded-3xl border border-yasmina-50 shadow-xl shadow-yasmina-100/50">
-        <form action="{{ route('categories.update', $category) }}" method="POST" class="space-y-6">
+        <form action="{{ route('admin.categories.update', $category) }}" method="POST" class="space-y-6">
             @csrf
             @method('PUT')
             <div>
@@ -27,7 +27,7 @@
                 <button type="submit" class="flex-1 px-8 py-4 bg-yasmina-500 text-white rounded-2xl font-bold hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100">
                     {{ __('Update Category') }}
                 </button>
-                <a href="{{ route('categories.index') }}" class="px-8 py-4 bg-gray-100 text-gray-600 rounded-2xl font-bold hover:bg-gray-200 transition-all">
+                <a href="{{ route('admin.categories.index') }}" class="px-8 py-4 bg-gray-100 text-gray-600 rounded-2xl font-bold hover:bg-gray-200 transition-all">
                     {{ __('Cancel') }}
                 </a>
             </div>

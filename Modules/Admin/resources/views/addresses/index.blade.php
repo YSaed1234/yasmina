@@ -8,7 +8,7 @@
 
     <!-- Filters -->
     <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-8">
-        <form id="filterForm" action="{{ route('addresses.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+        <form id="filterForm" action="{{ route('admin.addresses.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
             <div>
                 <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Search') }}</label>
                 <input type="text" name="search" value="{{ request('search') }}" 
@@ -26,7 +26,7 @@
             </div>
             <div class="flex gap-3">
                 @if(request()->anyFilled(['search', 'user_id']))
-                    <a href="{{ route('addresses.index') }}" class="w-full py-3 px-6 bg-gray-100 text-gray-500 rounded-xl font-bold text-sm hover:bg-gray-200 transition-all text-center">
+                    <a href="{{ route('admin.addresses.index') }}" class="w-full py-3 px-6 bg-gray-100 text-gray-500 rounded-xl font-bold text-sm hover:bg-gray-200 transition-all text-center">
                         {{ __('Reset') }}
                     </a>
                 @endif
@@ -74,7 +74,7 @@
                         </td>
                         <td class="px-8 py-6 text-sm font-medium text-gray-900">{{ $address->phone }}</td>
                         <td class="px-8 py-6 text-right">
-                            <form action="{{ route('addresses.destroy', $address) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ __('Are you sure?') }}')">
+                            <form action="{{ route('admin.addresses.destroy', $address) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ __('Are you sure?') }}')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="p-2 text-gray-300 hover:text-red-500 transition-colors">
