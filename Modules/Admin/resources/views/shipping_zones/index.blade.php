@@ -1,7 +1,7 @@
 <x-admin::layouts.master>
     <div class="mb-10 flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Shipping Zones') }}</h1>
+            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Shipping Zones') }} <span class="ml-2 px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">{{ $zones->total() }}</span></h1>
             <p class="text-gray-500 mt-2">{{ __('Manage regional shipping rates and availability.') }}</p>
         </div>
         <a href="{{ route('admin.shipping_zones.create') }}" class="px-6 py-3 bg-primary text-white rounded-2xl font-bold hover:opacity-90 transition-all flex items-center gap-2 shadow-xl shadow-primary/20">

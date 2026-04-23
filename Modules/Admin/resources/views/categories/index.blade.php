@@ -1,7 +1,7 @@
 <x-admin::layouts.master>
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">{{ __('Categories') }}</h1>
+            <h1 class="text-3xl font-bold text-gray-800">{{ __('Categories') }} <span class="ml-2 px-3 py-1 bg-yasmina-50 text-yasmina-500 text-sm rounded-full font-bold shadow-sm">{{ $categories->total() }}</span></h1>
             <p class="text-gray-500 mt-2">{{ __('Manage your product categories and their display order.') }}</p>
         </div>
         @canany(['create categories'])

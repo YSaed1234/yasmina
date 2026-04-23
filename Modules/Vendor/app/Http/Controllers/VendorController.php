@@ -65,6 +65,7 @@ class VendorController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:vendors,slug,' . $vendor->id,
             'email' => 'required|email|unique:vendors,email,' . $vendor->id,
             'phone' => 'nullable|string|max:20',
             'phone_secondary' => 'nullable|string|max:20',
@@ -83,9 +84,10 @@ class VendorController extends Controller
         ]);
 
         $data = $request->only([
-            'name', 'email', 'phone', 'phone_secondary', 'description', 'about_ar', 'about_en', 
+            'name', 'slug', 'email', 'phone', 'phone_secondary', 'description', 'about_ar', 'about_en', 
             'address', 'facebook', 'instagram', 'twitter', 'whatsapp'
         ]);
+        $data['slug'] = $request->slug ? \Str::slug($request->slug) : \Str::slug($request->name);
 
         if ($request->hasFile('logo')) {
             if ($vendor->logo && \Storage::disk('public')->exists($vendor->logo)) {

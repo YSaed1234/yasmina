@@ -31,6 +31,13 @@
                     </div>
 
                     <div>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Institution Slug') }}</label>
+                        <input type="text" name="slug" value="{{ old('slug', $vendor->slug) }}" 
+                            class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900">
+                        @error('slug') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
                         <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Email Address') }}</label>
                         <input type="email" name="email" value="{{ old('email', $vendor->email) }}" 
                             class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900" required>

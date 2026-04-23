@@ -1,7 +1,7 @@
 <x-admin::layouts.master>
     <div class="mb-10 flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Orders') }}</h1>
+            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Orders') }} <span class="ml-2 px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">{{ $orders->total() }}</span></h1>
             <p class="text-gray-500 mt-2">{{ __('Manage customer orders and track payment statuses.') }}</p>
         </div>
     </div>

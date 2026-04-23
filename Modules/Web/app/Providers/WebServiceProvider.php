@@ -39,15 +39,18 @@ class WebServiceProvider extends ModuleServiceProvider
         parent::boot();
         
         \Illuminate\Support\Facades\View::composer(['web::*'], function ($view) {
-            $vendorId = request()->get('vendor_id');
+            $vendorParam = request()->get('vendor_id');
             $currentVendor = null;
-            if ($vendorId) {
-                $currentVendor = \App\Models\Vendor::find($vendorId);
+            
+            if ($vendorParam) {
+                $currentVendor = \App\Models\Vendor::where('id', $vendorParam)
+                    ->orWhere('slug', $vendorParam)
+                    ->first();
             }
 
             $categoriesQuery = \App\Models\Category::orderBy('rank');
-            if ($vendorId) {
-                $categoriesQuery->where('vendor_id', $vendorId);
+            if ($currentVendor) {
+                $categoriesQuery->where('vendor_id', $currentVendor->id);
             } else {
                 $categoriesQuery->whereNull('vendor_id');
             }

@@ -1,7 +1,7 @@
 <x-admin::layouts.master>
     <div class="mb-10 flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Governorates') }}</h1>
+            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Governorates') }} <span class="ml-2 px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">{{ $governorates->total() }}</span></h1>
             <p class="text-gray-500 mt-2">{{ __('Manage governorates and administrative regions.') }}</p>
         </div>
         <a href="{{ route('admin.governorates.create') }}" class="px-8 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:opacity-90 transition-all flex items-center gap-2">

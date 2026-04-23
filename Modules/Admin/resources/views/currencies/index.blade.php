@@ -1,7 +1,7 @@
 <x-admin::layouts.master>
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">{{ __('Currencies') }}</h1>
+            <h1 class="text-3xl font-bold text-gray-800">{{ __('Currencies') }} <span class="ml-2 px-3 py-1 bg-yasmina-50 text-yasmina-500 text-sm rounded-full font-bold shadow-sm">{{ $currencies->total() }}</span></h1>
             <p class="text-gray-500 mt-2">{{ __('Manage the currencies supported by your platform.') }}</p>
         </div>
         @canany(['create currencies'])

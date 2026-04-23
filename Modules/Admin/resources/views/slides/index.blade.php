@@ -1,7 +1,7 @@
 <x-admin::layouts.master>
     <div class="mb-10 flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Slideshow Settings') }}</h1>
+            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Slideshow Settings') }} <span class="ml-2 px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">{{ $slides->count() }}</span></h1>
             <p class="text-gray-500 mt-2">{{ __('Manage the images and text on your homepage hero slider.') }}</p>
         </div>
         <a href="{{ route('admin.slides.create') }}" class="px-6 py-3 bg-primary text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary/20 hover:opacity-90 transition-all flex items-center gap-2">

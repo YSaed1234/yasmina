@@ -2,7 +2,7 @@
     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Users') }}</h1>
+                <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Users') }} <span class="ml-2 px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">{{ $users->total() }}</span></h1>
                 <p class="text-gray-500 mt-2">{{ __('Manage your platform users and their roles.') }}</p>
             </div>
             <a href="{{ route('admin.users.create') }}" class="px-6 py-3 bg-primary text-white rounded-2xl font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2">

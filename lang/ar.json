@@ -653,6 +653,10 @@
     "Message marked as replied.": "تم تحديد الرسالة كمردود عليها.",
     "Are you sure you want to mark this message as read?": "هل أنت متأكد من تحديد هذه الرسالة كمقروءة؟",
     "Are you sure you want to mark this message as replied?": "هل أنت متأكد من تحديد هذه الرسالة كمردود عليها؟",
-    "Mark as replied": "تحديد كمردود عليه"
+    "Mark as replied": "تحديد كمردود عليه",
+    "Phone 1": "رقم الهاتف 1",
+    "Phone 2": "رقم الهاتف 2",
+    "Vendor Slug": "رابط المؤسسة",
+    "Institution Slug": "رابط المؤسسة"
 
 }

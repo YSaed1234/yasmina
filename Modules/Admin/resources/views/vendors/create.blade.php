@@ -36,6 +36,11 @@
                 </div>
 
                 <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Vendor Slug') }}</label>
+                    <input type="text" name="slug" value="{{ old('slug') }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="e.g. boutique-name">
+                </div>
+
+                <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Status') }}</label>
                     <select name="status" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
                         <option value="active">{{ __('Active') }}</option>

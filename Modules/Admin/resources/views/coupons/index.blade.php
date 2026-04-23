@@ -1,7 +1,7 @@
 <x-admin::layouts.master>
     <div class="mb-8 flex items-center justify-between">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">{{ __('Coupons') }}</h1>
+            <h1 class="text-3xl font-bold text-gray-800">{{ __('Coupons') }} <span class="ml-2 px-3 py-1 bg-yasmina-50 text-yasmina-500 text-sm rounded-full font-bold shadow-sm">{{ $coupons->total() }}</span></h1>
             <p class="text-gray-500 mt-1">{{ __('Manage your discount coupons and usage limits.') }}</p>
         </div>
         <a href="{{ route('admin.coupons.create') }}" class="flex items-center gap-2 px-6 py-3 bg-yasmina-500 text-white rounded-2xl font-bold hover:opacity-90 transition-all shadow-lg shadow-yasmina-100">

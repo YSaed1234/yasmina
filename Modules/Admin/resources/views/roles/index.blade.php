@@ -1,7 +1,7 @@
 <x-admin::layouts.master>
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">{{ __('Roles & Permissions') }}</h1>
+            <h1 class="text-3xl font-bold text-gray-800">{{ __('Roles & Permissions') }} <span class="ml-2 px-3 py-1 bg-yasmina-50 text-yasmina-500 text-sm rounded-full font-bold shadow-sm">{{ $roles->total() }}</span></h1>
             <p class="text-gray-500 mt-2">{{ __('Manage access levels for your team.') }}</p>
         </div>
         <a href="{{ route('admin.roles.create') }}" class="px-8 py-4 bg-yasmina-500 text-white rounded-2xl font-bold hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100 flex items-center gap-2">
