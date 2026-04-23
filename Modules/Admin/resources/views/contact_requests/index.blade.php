@@ -1,10 +1,29 @@
 <x-admin::layouts.master>
     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-        <div class="flex justify-between items-center mb-10">
+        <div class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Contact Requests') }}</h1>
                 <p class="text-gray-500 mt-2">{{ __('Manage and respond to customer inquiries.') }}</p>
             </div>
+        </div>
+
+        <div class="mb-10 flex flex-wrap gap-4">
+            <form method="GET" action="{{ route('contact_requests.index') }}" class="flex-1 flex gap-4 min-w-[300px]">
+                <div class="relative flex-1">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search by name, email or subject') }}..." 
+                           class="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 outline-none transition-all">
+                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <select name="status" onchange="this.form.submit()" class="px-6 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 outline-none transition-all min-w-[200px]">
+                    <option value="">{{ __('All Statuses') }}</option>
+                    <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>{{ __('New') }}</option>
+                    <option value="replied" {{ request('status') == 'replied' ? 'selected' : '' }}>{{ __('Replied') }}</option>
+                </select>
+            </form>
         </div>
 
         @if(session('success'))
@@ -79,7 +98,7 @@
         </div>
 
         <div class="mt-10">
-            {{ $requests->links() }}
+            {{ $requests->appends(request()->query())->links() }}
         </div>
     </div>
 

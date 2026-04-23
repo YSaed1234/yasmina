@@ -15,6 +15,8 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, HasRoles;
 
+    protected $guard_name = 'web';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -25,11 +27,13 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'profile_image',
+        'phone',
     ];
 
     public function isAdmin(): bool
     {
-        return $this->hasRole('Admin') || $this->role === 'admin';
+        return $this->hasRole('admin') || $this->role === 'admin';
     }
 
     public function addresses(): \Illuminate\Database\Eloquent\Relations\HasMany

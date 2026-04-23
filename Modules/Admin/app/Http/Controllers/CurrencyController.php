@@ -29,9 +29,9 @@ class CurrencyController extends Controller implements HasMiddleware
         ];
     }
 
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $currencies = $this->currencyService->getAllCurrencies();
+        $currencies = $this->currencyService->getAllCurrencies($request->all());
         return view('admin::currencies.index', compact('currencies'));
     }
 

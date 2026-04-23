@@ -8,10 +8,12 @@
 
     <!-- Filters -->
     <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-8">
-        <form action="{{ route('addresses.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+        <form id="filterForm" action="{{ route('addresses.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
             <div>
                 <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Search') }}</label>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Name, City, or User...') }}" class="w-full px-5 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-primary outline-none text-sm transition-all shadow-sm">
+                <input type="text" name="search" value="{{ request('search') }}" 
+                    oninput="debounceSubmit()"
+                    placeholder="{{ __('Name, City, or User...') }}" class="w-full px-5 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-primary outline-none text-sm transition-all shadow-sm">
             </div>
             <div>
                 <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Filter by User') }}</label>
@@ -23,17 +25,24 @@
                 </select>
             </div>
             <div class="flex gap-3">
-                <button type="submit" class="flex-1 py-3 bg-primary text-white rounded-xl font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-primary/20">
-                    {{ __('Filter') }}
-                </button>
                 @if(request()->anyFilled(['search', 'user_id']))
-                    <a href="{{ route('addresses.index') }}" class="py-3 px-6 bg-gray-100 text-gray-500 rounded-xl font-bold text-sm hover:bg-gray-200 transition-all">
+                    <a href="{{ route('addresses.index') }}" class="w-full py-3 px-6 bg-gray-100 text-gray-500 rounded-xl font-bold text-sm hover:bg-gray-200 transition-all text-center">
                         {{ __('Reset') }}
                     </a>
                 @endif
             </div>
         </form>
     </div>
+
+    <script>
+        let timer;
+        function debounceSubmit() {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                document.getElementById('filterForm').submit();
+            }, 500);
+        }
+    </script>
 
     <!-- Table -->
     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
@@ -87,7 +96,7 @@
         </table>
         @if($addresses->hasPages())
             <div class="px-8 py-6 border-t border-gray-50">
-                {{ $addresses->links() }}
+                {{ $addresses->appends(request()->query())->links() }}
             </div>
         @endif
     </div>
@@ -100,6 +109,9 @@
             sortField: {
                 field: "text",
                 direction: "asc"
+            },
+            onChange: function(value) {
+                document.getElementById('filterForm').submit();
             }
         });
     </script>

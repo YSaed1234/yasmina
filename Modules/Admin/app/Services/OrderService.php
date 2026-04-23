@@ -6,9 +6,23 @@ use App\Models\Order;
 
 class OrderService
 {
-    public function getAllPaginated($limit = 10)
+    public function getAllPaginated($limit = 10, array $filters = [])
     {
-        return Order::latest()->paginate($limit);
+        $query = Order::with('user')->latest();
+
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where('id', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  });
+        }
+
+        if (!empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        return $query->paginate($limit);
     }
 
     public function getOrderDetails(Order $order)

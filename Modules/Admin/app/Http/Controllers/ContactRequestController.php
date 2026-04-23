@@ -8,9 +8,24 @@ use Illuminate\Http\Request;
 
 class ContactRequestController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $requests = ContactRequest::latest()->paginate(10);
+        $query = ContactRequest::latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('subject', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $requests = $query->paginate(10);
         return view('admin::contact_requests.index', compact('requests'));
     }
 

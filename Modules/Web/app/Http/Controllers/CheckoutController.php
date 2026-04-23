@@ -22,19 +22,42 @@ class CheckoutController extends Controller
             $total += $item['price'] * $item['quantity'];
         }
 
-        return view('web::checkout', compact('cart', 'total'));
+        $coupon = null;
+        $discount = 0;
+        if (session()->has('coupon')) {
+            $couponData = session()->get('coupon');
+            $coupon = \App\Models\Coupon::where('code', $couponData['code'])->first();
+            
+            if ($coupon && $coupon->isValid()) {
+                if ($total >= $coupon->min_order_amount) {
+                    if ($coupon->type === 'percentage') {
+                        $discount = ($total * $coupon->value) / 100;
+                    } else {
+                        $discount = $coupon->value;
+                    }
+                } else {
+                    session()->forget('coupon');
+                }
+            } else {
+                session()->forget('coupon');
+            }
+        }
+
+        $finalTotal = max(0, $total - $discount);
+        $addresses = auth()->user()->addresses;
+
+        return view('web::checkout', compact('cart', 'total', 'coupon', 'discount', 'finalTotal', 'addresses'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
-            'address' => 'required|string',
-            'city' => 'required|string',
+            'address_id' => 'required|exists:addresses,id,user_id,' . auth()->id(),
             'payment_method' => 'required|string|in:cod,card',
+            'notes' => 'nullable|string',
         ]);
+
+        $address = \App\Models\Address::findOrFail($request->address_id);
 
         $cart = session()->get('cart', []);
         if (empty($cart)) {
@@ -46,23 +69,42 @@ class CheckoutController extends Controller
             $total += $item['price'] * $item['quantity'];
         }
 
+        $discount = 0;
+        $coupon = null;
+        if (session()->has('coupon')) {
+            $couponData = session()->get('coupon');
+            $coupon = \App\Models\Coupon::where('code', $couponData['code'])->first();
+            if ($coupon && $coupon->isValid() && $total >= $coupon->min_order_amount) {
+                if ($coupon->type === 'percentage') {
+                    $discount = ($total * $coupon->value) / 100;
+                } else {
+                    $discount = $coupon->value;
+                }
+            }
+        }
+
+        $finalTotal = max(0, $total - $discount);
+
         try {
             DB::beginTransaction();
 
             $order = Order::create([
                 'user_id' => auth()->id(),
-                'total' => $total,
+                'total' => $finalTotal,
                 'status' => 'new',
                 'payment_status' => 'pending',
                 'payment_method' => $request->payment_method,
                 'shipping_details' => [
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'address' => $request->address,
-                    'city' => $request->city,
+                    'name' => $address->name,
+                    'email' => auth()->user()->email,
+                    'phone' => $address->phone,
+                    'address' => $address->address_line1 . ($address->address_line2 ? ', ' . $address->address_line2 : ''),
+                    'city' => $address->city,
+                    'country' => $address->country,
                 ],
                 'notes' => $request->notes,
+                'coupon_id' => $coupon ? $coupon->id : null,
+                'discount_amount' => $discount,
             ]);
 
             foreach ($cart as $id => $details) {
@@ -74,8 +116,22 @@ class CheckoutController extends Controller
                 ]);
             }
 
+            if ($coupon) {
+                $coupon->increment('used_count');
+                if (auth()->check()) {
+                    $userUsage = $coupon->users()->where('user_id', auth()->id())->first();
+                    if ($userUsage) {
+                        $coupon->users()->updateExistingPivot(auth()->id(), [
+                            'usage_count' => $userUsage->pivot->usage_count + 1
+                        ]);
+                    } else {
+                        $coupon->users()->attach(auth()->id(), ['usage_count' => 1]);
+                    }
+                }
+            }
+
             DB::commit();
-            session()->forget('cart');
+            session()->forget(['cart', 'coupon']);
 
             return redirect()->route('home')->with('success', __('Order placed successfully! Your order ID is :id', ['id' => $order->id]));
 

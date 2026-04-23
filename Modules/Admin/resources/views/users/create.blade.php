@@ -6,8 +6,28 @@
                 <p class="text-gray-500 mt-2">{{ __('Create a new account and assign roles.') }}</p>
             </div>
 
-            <form action="{{ route('users.store') }}" method="POST" class="space-y-8">
+            <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
                 @csrf
+
+                <div class="flex items-center gap-8 p-8 bg-rose-50/30 rounded-3xl border border-rose-50/50 mb-10">
+                    <div class="relative group">
+                        <div class="w-24 h-24 rounded-3xl bg-white shadow-md border-2 border-white overflow-hidden">
+                            <img id="imagePreview" src="https://ui-avatars.com/api/?name=User&background=fff&color=865d58&bold=true" class="w-full h-full object-cover">
+                        </div>
+                        <label class="absolute -bottom-2 -right-2 w-10 h-10 bg-primary text-white rounded-2xl flex items-center justify-center cursor-pointer shadow-lg hover:scale-110 transition-transform active:scale-95">
+                            <input type="file" name="profile_image" class="hidden" onchange="previewImage(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </label>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900">{{ __('Profile Photo') }}</h3>
+                        <p class="text-sm text-gray-500 mt-1">{{ __('Upload a high-quality avatar for the user.') }}</p>
+                        @error('profile_image') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+                    </div>
+                </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
@@ -19,6 +39,20 @@
                         <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Email') }}</label>
                         <input type="email" name="email" value="{{ old('email') }}" required class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
                         @error('email') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Phone') }}</label>
+                        <input type="text" name="phone" value="{{ old('phone') }}" required class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
+                        @error('phone') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Select Role') }} ({{ __('Role field is required') }})</label>
+                        <select name="role" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm font-bold text-gray-700">
+                            @foreach($roles as $role)
+                                <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>{{ $role->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('role') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
                     </div>
                 </div>
 
@@ -34,27 +68,6 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-6">{{ __('Select Role') }}</label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        @foreach($roles as $role)
-                            <label class="group relative flex items-center p-6 border rounded-3xl cursor-pointer transition-all hover:bg-rose-50/30 has-[:checked]:border-primary has-[:checked]:bg-rose-50/50 border-gray-100">
-                                <input type="radio" name="roles" value="{{ $role->name }}" class="peer hidden" {{ is_array(old('roles')) && in_array($role->name, old('roles')) ? 'checked' : '' }}>
-                                <div class="flex-1">
-                                    <div class="font-bold text-gray-900 group-hover:text-primary transition-colors">{{ $role->name }}</div>
-                                    <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider font-medium">{{ count($role->permissions) }} {{ __('Permissions') }}</div>
-                                </div>
-                                <div class="w-8 h-8 rounded-full border-2 border-primary flex items-center justify-center transition-all bg-white peer-checked:bg-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                            </label>
-                        @endforeach
-                    </div>
-                    @error('role') <p class="text-red-500 text-xs mt-4 font-bold">{{ $message }}</p> @enderror
-                </div>
-
                 <div class="pt-6 border-t border-gray-50 flex gap-4">
                     <button type="submit" class="flex-1 py-4 bg-primary text-white rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">
                         {{ __('Create User') }}
@@ -66,6 +79,18 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 
     <style>
         input[type="checkbox"]:checked + div + .border-primary .check-indicator {

@@ -23,8 +23,18 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->redirectTo(
-            guests: '/login',
-            users: '/admin-dashboard-2026'
+            guests: function($request) {
+                if ($request->is('admin-dashboard-2026/*') || $request->is('admin-dashboard-2026')) {
+                    return route('admin.login');
+                }
+                return '/login';
+            },
+            users: function() {
+                if (auth('admin')->check()) {
+                    return '/admin-dashboard-2026';
+                }
+                return '/';
+            }
         );
     })
     ->withExceptions(function (Exceptions $exceptions): void {

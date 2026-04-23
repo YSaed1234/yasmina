@@ -1,5 +1,5 @@
 <x-admin::layouts.master>
-    <div class="flex justify-between items-center mb-10">
+    <div class="flex justify-between items-center mb-6">
         <div>
             <h1 class="text-3xl font-bold text-gray-800">{{ __('Products') }}</h1>
             <p class="text-gray-500 mt-2">{{ __('Manage your product catalog and inventory.') }}</p>
@@ -13,6 +13,38 @@
         </a>
         @endcanany
     </div>
+
+    <div class="mb-10 flex flex-wrap gap-4">
+        <form id="filterForm" method="GET" action="{{ route('products.index') }}" class="flex-1 flex gap-4 min-w-[300px]">
+            <div class="relative flex-1">
+                <input type="text" name="search" value="{{ request('search') }}" 
+                       oninput="debounceSubmit()"
+                       placeholder="{{ __('Search products') }}..." 
+                       class="w-full pl-12 pr-4 py-3 bg-white border border-yasmina-50 rounded-2xl focus:ring-2 focus:ring-yasmina-200 outline-none transition-all">
+                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-yasmina-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+            <select name="category_id" onchange="this.form.submit()" class="px-6 py-3 bg-white border border-yasmina-50 rounded-2xl focus:ring-2 focus:ring-yasmina-200 outline-none transition-all min-w-[200px]">
+                <option value="">{{ __('All Categories') }}</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                @endforeach
+            </select>
+        </form>
+    </div>
+
+    <script>
+        let timer;
+        function debounceSubmit() {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                document.getElementById('filterForm').submit();
+            }, 500);
+        }
+    </script>
 
     <div class="bg-white/70 backdrop-blur-md rounded-3xl border border-yasmina-50 shadow-xl shadow-yasmina-100/50 overflow-hidden">
         <table class="min-w-full divide-y divide-yasmina-50">
@@ -90,5 +122,9 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+
+    <div class="mt-8">
+        {{ $products->appends(request()->query())->links() }}
     </div>
 </x-admin::layouts.master>

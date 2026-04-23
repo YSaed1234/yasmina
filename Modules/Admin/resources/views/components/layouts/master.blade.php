@@ -14,6 +14,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
         <script src="https://cdn.tailwindcss.com"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         <script>
             tailwind.config = {
                 theme: {
@@ -81,7 +82,7 @@
                     <img src="{{ asset('assets/logo.png') }}" alt="{{ __('Yasmina Admin') }}" class="h-12 w-auto">
                 </div>
                 <nav class="mt-6 px-4 space-y-2 flex-1">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('dashboard') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                    <a href="{{ route('admin.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.index') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
@@ -160,6 +161,15 @@
                         {{ __('Contact Requests') }}
                     </a>
                     @endcan
+
+                    @can('manage coupons')
+                    <a href="{{ route('coupons.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('coupons.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
+                        {{ __('Coupons') }}
+                    </a>
+                    @endcan
                 </nav>
 
                 <div class="p-4 border-t border-yasmina-50">
@@ -196,19 +206,48 @@
                             <a href="{{ route('lang.switch', 'ar') }}" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all {{ app()->getLocale() == 'ar' ? 'bg-white text-yasmina-600 shadow-sm' : 'text-gray-500 hover:text-yasmina-500' }}">AR</a>
                         </div>
 
-                        <div class="flex items-center gap-3 border-s border-yasmina-100 ps-6">
-                            <div class="flex flex-col items-end">
-                                <span class="text-sm font-bold text-gray-800">{{ Auth::user()->name }}</span>
-                                <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">{{ __('Administrator') }}</span>
+                        <div class="relative border-s border-yasmina-100 ps-6" x-data="{ open: false }">
+                            <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 hover:bg-yasmina-50 p-2 rounded-2xl transition-all">
+                                <div class="flex flex-col items-end">
+                                    <span class="text-sm font-bold text-gray-800">{{ auth('admin')->user()->name }}</span>
+                                    <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">{{ __('Administrator') }}</span>
+                                </div>
+                                <div class="w-10 h-10 rounded-xl bg-yasmina-500 flex items-center justify-center text-white font-bold shadow-lg shadow-yasmina-100">
+                                    {{ substr(auth('admin')->user()->name, 0, 1) }}
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 transition-transform" :class="{'rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+
+                            <!-- Dropdown Menu -->
+                            <div x-show="open" 
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                 x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+                                 class="absolute right-0 mt-2 w-56 bg-white rounded-3xl shadow-2xl border border-yasmina-50 p-2 z-[60]"
+                                 style="display: none;">
+                                
+                                <div class="px-4 py-3 border-b border-yasmina-50 mb-2">
+                                    <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">{{ __('Signed in as') }}</p>
+                                    <p class="text-sm font-bold text-gray-800 truncate">{{ auth('admin')->user()->email }}</p>
+                                </div>
+
+                                <form method="POST" action="{{ route('admin.logout') }}">
+                                    @csrf
+                                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-500 hover:bg-red-50 rounded-2xl transition-all">
+                                        <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                            </svg>
+                                        </div>
+                                        {{ __('Log Out') }}
+                                    </button>
+                                </form>
                             </div>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="p-2 rounded-xl text-gray-400 hover:text-yasmina-500 hover:bg-yasmina-50 transition-all" title="{{ __('Log Out') }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                    </svg>
-                                </button>
-                            </form>
                         </div>
                     </div>
                 </header>
@@ -226,11 +265,11 @@
         <script>
             function changeTheme(themeName) {
                 document.documentElement.setAttribute('data-theme', themeName);
-                localStorage.setItem('selectedTheme', themeName);
+                localStorage.setItem('yasmina-theme', themeName);
             }
 
             // Load saved theme
-            const savedTheme = localStorage.getItem('selectedTheme') || 'yasmina';
+            const savedTheme = localStorage.getItem('yasmina-theme') || 'yasmina';
             document.documentElement.setAttribute('data-theme', savedTheme);
         </script>
         @stack('scripts')

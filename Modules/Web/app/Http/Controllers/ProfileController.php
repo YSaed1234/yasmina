@@ -31,10 +31,12 @@ class ProfileController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => ['required', 'string', 'regex:/^(\+20|0)?1[0125][0-9]{8}$|^(\+966|0)?5[0-9]{8}$/'],
             'address_line1' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'country' => 'required|string|max:255',
+        ], [
+            'phone.regex' => __('Please enter a valid Egyptian or Saudi phone number.')
         ]);
 
         auth()->user()->addresses()->create($request->all());
@@ -48,10 +50,12 @@ class ProfileController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => ['required', 'string', 'regex:/^(\+20|0)?1[0125][0-9]{8}$|^(\+966|0)?5[0-9]{8}$/'],
             'address_line1' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'country' => 'required|string|max:255',
+        ], [
+            'phone.regex' => __('Please enter a valid Egyptian or Saudi phone number.')
         ]);
 
         $address->update($request->all());

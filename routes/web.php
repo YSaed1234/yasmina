@@ -6,9 +6,9 @@ use App\Http\Controllers\LanguageController;
 
 Route::get('lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 
-Route::get('/admin-dashboard-2026', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    return redirect('/');
+})->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

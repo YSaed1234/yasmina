@@ -7,9 +7,16 @@ use Spatie\Permission\Models\Permission;
 
 class RoleService
 {
-    public function getAllWithPermissions()
+    public function getAllWithPermissions(array $filters = [])
     {
-        return Role::with('permissions')->get();
+        $query = Role::with('permissions');
+
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        return $query->paginate($filters['per_page'] ?? 10);
     }
 
     public function getGroupedPermissions()

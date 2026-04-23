@@ -7,9 +7,20 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductService
 {
-    public function getAllProducts()
+    public function getAllProducts(array $filters = [])
     {
-        return Product::with(['category', 'translations', 'category.translations', 'currency'])->orderBy('rank')->get();
+        $query = Product::with(['category', 'translations', 'category.translations', 'currency'])->orderBy('rank');
+
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->whereTranslationLike('name', "%{$search}%");
+        }
+
+        if (!empty($filters['category_id'])) {
+            $query->where('category_id', $filters['category_id']);
+        }
+
+        return $query->paginate($filters['per_page'] ?? 10);
     }
 
     public function storeProduct(array $data)

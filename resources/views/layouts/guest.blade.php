@@ -14,9 +14,36 @@
         
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
-            body { font-family: 'Outfit', sans-serif; }
-            .gradient-bg { background: linear-gradient(135deg, #fb7185 0%, #db2777 100%); }
+            :root {
+                --yasmina-primary: #865d58;
+                --yasmina-primary-hover: #75514c;
+                --yasmina-secondary: #d6a6a1;
+                --yasmina-bg-soft: #fdf8f7;
+            }
+
+            [data-theme="barbie"] {
+                --yasmina-primary: #e0218a;
+                --yasmina-primary-hover: #c2146e;
+                --yasmina-secondary: #ff64b1;
+                --yasmina-bg-soft: #fffafb;
+            }
+
+            body { 
+                font-family: 'Outfit', sans-serif; 
+                background-color: var(--yasmina-bg-soft);
+            }
+            .gradient-bg { background: linear-gradient(135deg, var(--yasmina-secondary) 0%, var(--yasmina-primary) 100%); }
+            .text-primary-gradient {
+                background: linear-gradient(to r, var(--yasmina-primary), var(--yasmina-secondary));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
         </style>
+        <script>
+            // Load saved theme immediately to prevent flash
+            const savedTheme = localStorage.getItem('yasmina-theme') || 'yasmina';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        </script>
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -29,15 +56,15 @@
         </div>
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 relative overflow-hidden">
             <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 gradient-bg rounded-full opacity-10 blur-3xl"></div>
-            <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-pink-300 rounded-full opacity-10 blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 gradient-bg rounded-full opacity-10 blur-3xl"></div>
             
             <div class="z-10">
                 <a href="/">
-                    <span class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-pink-600">Yasmina</span>
+                    <span class="text-4xl font-bold text-primary-gradient">Yasmina</span>
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-8 py-8 bg-white shadow-xl shadow-rose-100/50 overflow-hidden sm:rounded-3xl border border-rose-50 z-10">
+            <div class="w-full sm:max-w-md mt-6 px-8 py-8 bg-white shadow-xl shadow-gray-200/50 overflow-hidden sm:rounded-3xl border border-[var(--yasmina-bg-soft)] z-10">
                 {{ $slot }}
             </div>
         </div>

@@ -18,9 +18,9 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $users = $this->userService->getAllPaginated(10);
+        $users = $this->userService->getAllPaginated(10, $request->all());
         return view('admin::users.index', compact('users'));
     }
 

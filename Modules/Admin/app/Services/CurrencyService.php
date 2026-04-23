@@ -6,9 +6,18 @@ use App\Models\Currency;
 
 class CurrencyService
 {
-    public function getAllCurrencies()
+    public function getAllCurrencies(array $filters = [])
     {
-        return Currency::with('translations')->get();
+        $query = Currency::with('translations');
+
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->whereTranslationLike('name', "%{$search}%")
+                  ->orWhere('code', 'like', "%{$search}%")
+                  ->orWhere('symbol', 'like', "%{$search}%");
+        }
+
+        return $query->paginate($filters['per_page'] ?? 10);
     }
 
     public function storeCurrency(array $data)

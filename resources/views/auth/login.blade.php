@@ -27,14 +27,14 @@
         <!-- Remember Me -->
         <div class="block mt-4">
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-rose-300 text-rose-600 shadow-sm focus:ring-rose-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                <input id="remember_me" type="checkbox" class="rounded border-[var(--yasmina-secondary)] text-[var(--yasmina-primary)] shadow-sm focus:ring-[var(--yasmina-primary)]" name="remember">
+                <span class="ms-2 text-sm text-gray-500">{{ __('Remember me') }}</span>
             </label>
         </div>
 
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500" href="{{ route('password.request') }}">
+                <a class="underline text-sm text-gray-500 hover:text-[var(--yasmina-primary)] rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--yasmina-primary)] transition-colors" href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
@@ -44,10 +44,10 @@
             </x-primary-button>
         </div>
         
-        <div class="mt-6 text-center border-t border-rose-50 pt-6">
+        <div class="mt-6 text-center border-t border-[var(--yasmina-bg-soft)] pt-6">
             <p class="text-sm text-gray-600">
                 {{ __("Don't have an account?") }}
-                <a href="{{ route('register') }}" class="font-bold text-rose-500 hover:text-rose-600 ml-1">{{ __('Register') }}</a>
+                <a href="{{ route('register') }}" class="font-bold text-[var(--yasmina-primary)] hover:opacity-80 ml-1 transition-colors">{{ __('Register') }}</a>
             </p>
         </div>
     </form>

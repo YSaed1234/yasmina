@@ -27,9 +27,9 @@ class RoleController extends Controller implements HasMiddleware
         ];
     }
 
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $roles = $this->roleService->getAllWithPermissions();
+        $roles = $this->roleService->getAllWithPermissions($request->all());
         return view('admin::roles.index', compact('roles'));
     }
 

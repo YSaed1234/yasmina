@@ -12,7 +12,16 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view('admin::index');
+        $stats = [
+            'products_count' => \App\Models\Product::count(),
+            'categories_count' => \App\Models\Category::count(),
+            'orders_count' => \App\Models\Order::count(),
+            'users_count' => \App\Models\User::count(),
+            'coupons_count' => \App\Models\Coupon::count(),
+            'contact_requests_count' => \App\Models\ContactRequest::count(),
+        ];
+
+        return view('admin::index', compact('stats'));
     }
 
     /**

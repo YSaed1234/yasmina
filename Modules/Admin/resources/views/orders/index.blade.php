@@ -6,6 +6,26 @@
         </div>
     </div>
 
+    <div class="mb-10 flex flex-wrap gap-4">
+        <form method="GET" action="{{ route('orders.index') }}" class="flex-1 flex gap-4 min-w-[300px]">
+            <div class="relative flex-1">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search by Order ID or Customer Name') }}..." 
+                       class="w-full pl-12 pr-4 py-3 bg-white border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary/20 outline-none transition-all">
+                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+            <select name="status" onchange="this.form.submit()" class="px-6 py-3 bg-white border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary/20 outline-none transition-all min-w-[200px]">
+                <option value="">{{ __('All Statuses') }}</option>
+                @foreach(['new', 'processing', 'shipped', 'delivered', 'cancelled'] as $status)
+                    <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ __($status) }}</option>
+                @endforeach
+            </select>
+        </form>
+    </div>
+
     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
         <table class="w-full text-left border-collapse">
             <thead>
@@ -81,7 +101,7 @@
             </tbody>
         </table>
         <div class="px-8 py-6 border-t border-gray-50">
-            {{ $orders->links() }}
+            {{ $orders->appends(request()->query())->links() }}
         </div>
     </div>
 </x-admin::layouts.master>

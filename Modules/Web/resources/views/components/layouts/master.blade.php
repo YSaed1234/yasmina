@@ -126,7 +126,7 @@
                                 <div class="absolute right-0 top-full w-56 bg-white rounded-2xl shadow-2xl border border-rose-50 p-2 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
                                     <div class="grid gap-1">
                                         @if(auth()->user()->isAdmin())
-                                            <a href="{{ route('dashboard') }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
+                                            <a href="{{ route('admin.index') }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
                                                 <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -234,6 +234,7 @@
             </div>
         </footer>
 
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             function setTheme(theme) {
                 document.documentElement.setAttribute('data-theme', theme);
@@ -243,6 +244,37 @@
             // Initial sync
             const savedTheme = localStorage.getItem('yasmina-theme') || 'yasmina';
             document.documentElement.setAttribute('data-theme', savedTheme);
+
+            // Flash Message Handler
+            document.addEventListener('DOMContentLoaded', function() {
+                @if(session('success'))
+                    Swal.fire({
+                        title: '{{ __("Success!") }}',
+                        text: '{{ session("success") }}',
+                        icon: 'success',
+                        confirmButtonText: '{{ __("OK") }}',
+                        confirmButtonColor: 'var(--yasmina-primary)',
+                        customClass: {
+                            popup: 'rounded-3xl border-none',
+                            confirmButton: 'rounded-2xl px-8 py-3 font-bold uppercase tracking-widest text-xs'
+                        }
+                    });
+                @endif
+
+                @if(session('error'))
+                    Swal.fire({
+                        title: '{{ __("Error!") }}',
+                        text: '{{ session("error") }}',
+                        icon: 'error',
+                        confirmButtonText: '{{ __("OK") }}',
+                        confirmButtonColor: 'var(--yasmina-primary)',
+                        customClass: {
+                            popup: 'rounded-3xl border-none',
+                            confirmButton: 'rounded-2xl px-8 py-3 font-bold uppercase tracking-widest text-xs'
+                        }
+                    });
+                @endif
+            });
         </script>
         @stack('scripts')
     </body>

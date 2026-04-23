@@ -38,10 +38,11 @@ class ProductController extends Controller implements HasMiddleware
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $products = $this->productService->getAllProducts();
-        return view('admin::products.index', compact('products'));
+        $products = $this->productService->getAllProducts($request->all());
+        $categories = $this->categoryService->getAllCategories(['per_page' => 100]); // For filter dropdown
+        return view('admin::products.index', compact('products', 'categories'));
     }
 
     public function create()

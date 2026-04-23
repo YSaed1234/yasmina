@@ -52,11 +52,45 @@
                         <div class="lg:col-span-1">
                             <div class="bg-white p-10 rounded-3xl shadow-xl shadow-primary/5 border border-rose-50 sticky top-24">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-8 border-b border-rose-50 pb-6">{{ __('Order Summary') }}</h2>
+                                
+                                <!-- Coupon Input -->
+                                <div class="mb-8">
+                                    <form action="{{ route('web.cart.coupon.apply') }}" method="POST" class="flex gap-2">
+                                        @csrf
+                                        <input type="text" name="code" placeholder="{{ __('Coupon code...') }}" class="flex-1 px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-primary outline-none text-sm shadow-sm" {{ session()->has('coupon') ? 'disabled' : '' }} value="{{ session()->get('coupon.code') }}">
+                                        @if(session()->has('coupon'))
+                                            <button type="button" onclick="document.getElementById('remove-coupon-form').submit()" class="px-4 py-3 bg-red-50 text-red-500 rounded-xl font-bold text-sm hover:bg-red-100 transition-all">
+                                                ✕
+                                            </button>
+                                        @else
+                                            <button type="submit" class="px-6 py-3 bg-gray-900 text-white rounded-xl font-bold text-sm hover:bg-gray-800 transition-all shadow-lg">
+                                                {{ __('Apply') }}
+                                            </button>
+                                        @endif
+                                    </form>
+                                    <form id="remove-coupon-form" action="{{ route('web.cart.coupon.remove') }}" method="POST" class="hidden">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                    @if(session()->has('coupon'))
+                                        <p class="text-[10px] text-green-600 font-bold mt-2 uppercase tracking-widest flex items-center gap-1">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                            {{ __('Coupon applied successfully!') }}
+                                        </p>
+                                    @endif
+                                </div>
+
                                 <div class="space-y-4 mb-8">
                                     <div class="flex justify-between text-gray-500">
                                         <span>{{ __('Subtotal') }}</span>
                                         <span class="font-bold text-gray-900">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($total, 2) }}</span>
                                     </div>
+                                    @if($discount > 0)
+                                        <div class="flex justify-between text-green-600">
+                                            <span>{{ __('Discount') }}</span>
+                                            <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($discount, 2) }}</span>
+                                        </div>
+                                    @endif
                                     <div class="flex justify-between text-gray-500">
                                         <span>{{ __('Shipping') }}</span>
                                         <span class="font-bold text-green-600 uppercase text-xs tracking-widest">{{ __('Free') }}</span>
@@ -65,7 +99,7 @@
                                 <div class="border-t border-rose-50 pt-6 mb-10">
                                     <div class="flex justify-between items-center">
                                         <span class="text-lg font-bold text-gray-900">{{ __('Total') }}</span>
-                                        <span class="text-3xl font-bold text-primary">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($total, 2) }}</span>
+                                        <span class="text-3xl font-bold text-primary">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($finalTotal, 2) }}</span>
                                     </div>
                                 </div>
                                 <a href="{{ route('web.checkout') }}" class="block w-full py-5 bg-primary text-white text-center rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">

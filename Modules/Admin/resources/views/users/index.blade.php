@@ -1,6 +1,6 @@
 <x-admin::layouts.master>
     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-        <div class="flex justify-between items-center mb-10">
+        <div class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Users') }}</h1>
                 <p class="text-gray-500 mt-2">{{ __('Manage your platform users and their roles.') }}</p>
@@ -11,6 +11,20 @@
                 </svg>
                 {{ __('Add New User') }}
             </a>
+        </div>
+
+        <div class="mb-10 flex flex-wrap gap-4">
+            <form method="GET" action="{{ route('users.index') }}" class="flex-1 min-w-[300px]">
+                <div class="relative">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search users by name or email') }}..." 
+                           class="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 outline-none transition-all">
+                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </form>
         </div>
 
         @if(session('success'))
@@ -26,8 +40,10 @@
             <table class="w-full border-separate border-spacing-y-3">
                 <thead>
                     <tr class="text-center text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">
+                        <th class="pb-4 px-6">{{ __('Image') }}</th>
                         <th class="pb-4 px-6">{{ __('Name') }}</th>
                         <th class="pb-4 px-6">{{ __('Email') }}</th>
+                        <th class="pb-4 px-6">{{ __('Phone') }}</th>
                         <th class="pb-4 px-6">{{ __('Roles') }}</th>
                         <th class="pb-4 px-6">{{ __('Joined At') }}</th>
                         <th class="pb-4 px-6">{{ __('Actions') }}</th>
@@ -36,8 +52,20 @@
                 <tbody>
                     @foreach($users as $user)
                         <tr class="bg-gray-50/50 hover:bg-rose-50/30 transition-colors rounded-2xl">
-                            <td class="py-6 px-6 text-center text-sm font-bold text-gray-900 first:rounded-l-2xl">{{ $user->name }}</td>
+                            <td class="py-6 px-6 text-center first:rounded-l-2xl">
+                                <div class="w-12 h-12 rounded-2xl overflow-hidden mx-auto border-2 border-white shadow-sm">
+                                    @if($user->profile_image)
+                                        <img src="{{ asset('storage/' . $user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                                    @else
+                                        <div class="w-full h-full bg-rose-50 flex items-center justify-center text-primary font-bold text-xs uppercase">
+                                            {{ substr($user->name, 0, 2) }}
+                                        </div>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="py-6 px-6 text-center text-sm font-bold text-gray-900">{{ $user->name }}</td>
                             <td class="py-6 px-6 text-center text-sm text-gray-600">{{ $user->email }}</td>
+                            <td class="py-6 px-6 text-center text-sm text-gray-600 font-medium">{{ $user->phone ?? '-' }}</td>
                             <td class="py-6 px-6 text-center">
                                 <div class="flex flex-wrap justify-center gap-2">
                                     <span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider rounded-full border border-primary/20">
@@ -71,7 +99,7 @@
         </div>
 
         <div class="mt-10">
-            {{ $users->links() }}
+            {{ $users->appends(request()->query())->links() }}
         </div>
     </div>
 

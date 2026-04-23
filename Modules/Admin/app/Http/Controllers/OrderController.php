@@ -16,9 +16,9 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $orders = $this->orderService->getAllPaginated(10);
+        $orders = $this->orderService->getAllPaginated(10, $request->all());
         return view('admin::orders.index', compact('orders'));
     }
 

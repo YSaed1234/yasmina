@@ -6,7 +6,16 @@ use Modules\Admin\Http\Controllers\ProductController;
 
 use Modules\Admin\Http\Controllers\RoleController;
 
-Route::prefix('admin-dashboard-2026')->middleware(['auth', 'verified', 'admin'])->group(function () {
+use Modules\Admin\Http\Controllers\Auth\LoginController;
+
+Route::prefix('admin-dashboard-2026')->group(function () {
+    Route::get('login', [LoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('login', [LoginController::class, 'login'])->name('admin.login.submit');
+    Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');
+
+    Route::middleware(['auth:admin', 'verified', 'admin'])->group(function () {
+        Route::get('/', [\Modules\Admin\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
+
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
     Route::resource('currencies', CurrencyController::class);
@@ -23,6 +32,9 @@ Route::prefix('admin-dashboard-2026')->middleware(['auth', 'verified', 'admin'])
     Route::post('orders/{order}/status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.update_status')->middleware('permission:manage orders');
     Route::delete('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy')->middleware('permission:manage orders');
 
+    Route::resource('coupons', \Modules\Admin\Http\Controllers\CouponController::class)->middleware('permission:manage coupons');
+
     Route::get('addresses', [\Modules\Admin\Http\Controllers\AddressController::class, 'index'])->name('addresses.index')->middleware('permission:manage addresses');
     Route::delete('addresses/{address}', [\Modules\Admin\Http\Controllers\AddressController::class, 'destroy'])->name('addresses.destroy')->middleware('permission:manage addresses');
+    });
 });

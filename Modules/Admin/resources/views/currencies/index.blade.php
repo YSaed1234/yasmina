@@ -1,5 +1,5 @@
 <x-admin::layouts.master>
-    <div class="flex justify-between items-center mb-10">
+    <div class="flex justify-between items-center mb-6">
         <div>
             <h1 class="text-3xl font-bold text-gray-800">{{ __('Currencies') }}</h1>
             <p class="text-gray-500 mt-2">{{ __('Manage the currencies supported by your platform.') }}</p>
@@ -12,6 +12,20 @@
             {{ __('Add New Currency') }}
         </a>
         @endcanany
+    </div>
+
+    <div class="mb-10 flex flex-wrap gap-4">
+        <form method="GET" action="{{ route('currencies.index') }}" class="flex-1 min-w-[300px]">
+            <div class="relative">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search currencies by name, code or symbol') }}..." 
+                       class="w-full pl-12 pr-4 py-3 bg-white border border-yasmina-50 rounded-2xl focus:ring-2 focus:ring-yasmina-200 outline-none transition-all">
+                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-yasmina-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+        </form>
     </div>
 
     <div class="bg-white/70 backdrop-blur-md rounded-3xl border border-yasmina-50 shadow-xl shadow-yasmina-100/50 overflow-hidden">
@@ -63,5 +77,9 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+
+    <div class="mt-8">
+        {{ $currencies->appends(request()->query())->links() }}
     </div>
 </x-admin::layouts.master>

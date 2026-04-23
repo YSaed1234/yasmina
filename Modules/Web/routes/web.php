@@ -18,9 +18,13 @@ Route::get('/cart', [CartController::class, 'index'])->name('web.cart');
 Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('web.cart.add');
 Route::patch('/cart/update', [CartController::class, 'update'])->name('web.cart.update');
 Route::delete('/cart/remove', [CartController::class, 'remove'])->name('web.cart.remove');
+Route::post('/cart/coupon', [CartController::class, 'applyCoupon'])->name('web.cart.coupon.apply');
+Route::delete('/cart/coupon', [CartController::class, 'removeCoupon'])->name('web.cart.coupon.remove');
 
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('web.checkout');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('web.checkout.store');
+Route::middleware('auth')->group(function() {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('web.checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('web.checkout.store');
+});
 
 // Profile & Orders
 Route::middleware('auth')->group(function() {

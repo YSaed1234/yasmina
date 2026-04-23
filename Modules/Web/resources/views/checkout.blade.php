@@ -9,36 +9,47 @@
                     <div class="lg:col-span-2 space-y-8">
                         <!-- Shipping Information -->
                         <div class="bg-white p-10 rounded-3xl shadow-sm border border-rose-50">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-                                <span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">1</span>
-                                {{ __('Shipping Information') }}
-                            </h2>
+                            <div class="flex justify-between items-center mb-8">
+                                <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                                    <span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">1</span>
+                                    {{ __('Shipping Information') }}
+                                </h2>
+                                <a href="{{ route('web.profile.addresses') }}" class="text-xs font-bold text-primary hover:underline uppercase tracking-widest">
+                                    {{ __('Manage Addresses') }}
+                                </a>
+                            </div>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Full Name') }}</label>
-                                    <input type="text" name="name" value="{{ auth()->user()->name ?? old('name') }}" required class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
+                            @if($addresses->count() > 0)
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                                    @foreach($addresses as $address)
+                                        <label class="relative flex p-6 border-2 rounded-2xl cursor-pointer hover:bg-rose-50/50 transition-all border-rose-50 has-[:checked]:border-primary has-[:checked]:bg-rose-50/50">
+                                            <input type="radio" name="address_id" value="{{ $address->id }}" {{ $loop->first ? 'checked' : '' }} class="peer hidden">
+                                            <div class="flex-1">
+                                                <div class="font-bold text-gray-900 mb-1">{{ $address->name }}</div>
+                                                <div class="text-xs text-gray-500 leading-relaxed">
+                                                    {{ $address->address_line1 }}<br>
+                                                    {{ $address->city }}, {{ $address->country }}<br>
+                                                    {{ $address->phone }}
+                                                </div>
+                                            </div>
+                                            <div class="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center bg-white peer-checked:bg-primary transition-all">
+                                                <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                            </div>
+                                        </label>
+                                    @endforeach
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Email Address') }}</label>
-                                    <input type="email" name="email" value="{{ auth()->user()->email ?? old('email') }}" required class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
+                            @else
+                                <div class="p-8 bg-rose-50/50 rounded-2xl border border-dashed border-rose-200 text-center mb-8">
+                                    <p class="text-sm text-gray-500 mb-4">{{ __('No saved addresses found.') }}</p>
+                                    <a href="{{ route('web.profile.addresses') }}" class="inline-block px-6 py-3 bg-primary text-white rounded-xl font-bold text-sm shadow-lg shadow-primary/20">
+                                        {{ __('Add New Address') }}
+                                    </a>
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Phone Number') }}</label>
-                                    <input type="text" name="phone" value="{{ old('phone') }}" required class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
-                                </div>
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Street Address') }}</label>
-                                    <input type="text" name="address" value="{{ old('address') }}" required class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('City') }}</label>
-                                    <input type="text" name="city" value="{{ old('city') }}" required class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Order Notes (Optional)') }}</label>
-                                    <input type="text" name="notes" value="{{ old('notes') }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
-                                </div>
+                            @endif
+
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-3">{{ __('Order Notes (Optional)') }}</label>
+                                <textarea name="notes" rows="3" placeholder="{{ __('Anything else we should know about your delivery?') }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm resize-none"></textarea>
                             </div>
                         </div>
 
@@ -103,13 +114,19 @@
                                     <span>{{ __('Subtotal') }}</span>
                                     <span class="font-bold text-gray-900">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($total, 2) }}</span>
                                 </div>
+                                @if($discount > 0)
+                                    <div class="flex justify-between text-green-600">
+                                        <span>{{ __('Discount') }}</span>
+                                        <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($discount, 2) }}</span>
+                                    </div>
+                                @endif
                                 <div class="flex justify-between text-gray-500">
                                     <span>{{ __('Shipping') }}</span>
                                     <span class="font-bold text-green-600 uppercase text-xs tracking-widest">{{ __('Free') }}</span>
                                 </div>
                                 <div class="border-t border-rose-50 pt-6 flex justify-between items-center">
                                     <span class="text-lg font-bold text-gray-900">{{ __('Total') }}</span>
-                                    <span class="text-3xl font-bold text-primary">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($total, 2) }}</span>
+                                    <span class="text-3xl font-bold text-primary">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($finalTotal, 2) }}</span>
                                 </div>
                             </div>
 

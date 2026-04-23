@@ -6,13 +6,19 @@
                 <div class="lg:col-span-1">
                     <div class="bg-white rounded-3xl p-8 shadow-sm border border-rose-50 sticky top-24">
                         <div class="text-center mb-8">
-                            <div class="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-3xl mx-auto mb-4 border-4 border-white shadow-lg">
-                                {{ substr($user->name, 0, 2) }}
+                            <div class="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 border-4 border-white shadow-lg">
+                                @if($user->profile_image)
+                                    <img src="{{ asset('storage/' . $user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-bold text-3xl">
+                                        {{ substr($user->name, 0, 2) }}
+                                    </div>
+                                @endif
                             </div>
                             <h2 class="text-xl font-bold text-gray-900">{{ $user->name }}</h2>
                             <p class="text-sm text-gray-500">{{ $user->email }}</p>
                         </div>
-                        
+
                         <nav class="space-y-2">
                             <a href="{{ route('web.profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('web.profile') ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-gray-600 hover:bg-rose-50' }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -50,6 +56,10 @@
                             <div class="p-6 bg-rose-50/50 rounded-3xl border border-rose-100">
                                 <span class="text-xs font-bold text-primary uppercase tracking-widest block mb-2">{{ __('Email Address') }}</span>
                                 <p class="text-lg font-bold text-gray-900">{{ $user->email }}</p>
+                            </div>
+                            <div class="p-6 bg-rose-50/50 rounded-3xl border border-rose-100">
+                                <span class="text-xs font-bold text-primary uppercase tracking-widest block mb-2">{{ __('Phone Number') }}</span>
+                                <p class="text-lg font-bold text-gray-900">{{ $user->phone ?? __('Not Provided') }}</p>
                             </div>
                         </div>
 

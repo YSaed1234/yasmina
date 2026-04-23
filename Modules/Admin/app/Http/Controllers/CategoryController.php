@@ -32,9 +32,9 @@ class CategoryController extends Controller implements HasMiddleware
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $categories = $this->categoryService->getAllCategories();
+        $categories = $this->categoryService->getAllCategories($request->all());
         return view('admin::categories.index', compact('categories'));
     }
 

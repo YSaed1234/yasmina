@@ -6,9 +6,16 @@ use App\Models\Category;
 
 class CategoryService
 {
-    public function getAllCategories()
+    public function getAllCategories(array $filters = [])
     {
-        return Category::with('translations')->orderBy('rank')->get();
+        $query = Category::with('translations')->orderBy('rank');
+
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->whereTranslationLike('name', "%{$search}%");
+        }
+
+        return $query->paginate($filters['per_page'] ?? 10);
     }
 
     public function storeCategory(array $data)
