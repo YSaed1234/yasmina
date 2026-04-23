@@ -38,10 +38,17 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Phone Number') }}</label>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Phone Number 1') }}</label>
                         <input type="text" name="phone" value="{{ old('phone', $vendor->phone) }}" 
                             class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900">
                         @error('phone') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Phone Number 2') }}</label>
+                        <input type="text" name="phone_secondary" value="{{ old('phone_secondary', $vendor->phone_secondary) }}" 
+                            class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900">
+                        @error('phone_secondary') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
                     </div>
 
                     <div>

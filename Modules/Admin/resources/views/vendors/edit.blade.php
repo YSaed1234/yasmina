@@ -65,13 +65,37 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Phone') }}</label>
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Phone 1') }}</label>
                     <input type="text" name="phone" value="{{ old('phone', $vendor->phone) }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Phone 2') }}</label>
+                    <input type="text" name="phone_secondary" value="{{ old('phone_secondary', $vendor->phone_secondary) }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
                 </div>
 
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Password') }}</label>
                     <input type="password" name="password" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="{{ __('Leave blank to keep current') }}">
+                </div>
+
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-50 pt-8">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Facebook URL') }}</label>
+                        <input type="url" name="facebook" value="{{ old('facebook', $vendor->facebook) }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Instagram URL') }}</label>
+                        <input type="url" name="instagram" value="{{ old('instagram', $vendor->instagram) }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Twitter URL') }}</label>
+                        <input type="url" name="twitter" value="{{ old('twitter', $vendor->twitter) }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('WhatsApp Number') }}</label>
+                        <input type="text" name="whatsapp" value="{{ old('whatsapp', $vendor->whatsapp) }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="e.g. 201234567890">
+                    </div>
                 </div>
 
                 <div class="md:col-span-2">

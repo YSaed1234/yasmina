@@ -29,7 +29,12 @@ class VendorController extends Controller
             'about_image2' => 'nullable|image|max:5120',
             'email' => 'required|email|unique:vendors,email',
             'phone' => 'nullable|string',
+            'phone_secondary' => 'nullable|string',
             'status' => 'required|in:active,inactive',
+            'facebook' => 'nullable|url|max:255',
+            'instagram' => 'nullable|url|max:255',
+            'twitter' => 'nullable|url|max:255',
+            'whatsapp' => 'nullable|string|max:255',
             'password' => 'required|string|min:6',
         ]);
 
@@ -68,10 +73,18 @@ class VendorController extends Controller
             'about_image2' => 'nullable|image|max:5120',
             'email' => 'required|email|unique:vendors,email,' . $vendor->id,
             'phone' => 'nullable|string',
+            'phone_secondary' => 'nullable|string',
             'status' => 'required|in:active,inactive',
+            'facebook' => 'nullable|url|max:255',
+            'instagram' => 'nullable|url|max:255',
+            'twitter' => 'nullable|url|max:255',
+            'whatsapp' => 'nullable|string|max:255',
         ]);
 
-        $data = $request->only(['name', 'email', 'phone', 'status', 'address', 'description']);
+        $data = $request->only([
+            'name', 'email', 'phone', 'phone_secondary', 'status', 'address', 'description',
+            'facebook', 'instagram', 'twitter', 'whatsapp'
+        ]);
         $data['slug'] = \Illuminate\Support\Str::slug($request->name);
 
         if ($request->filled('password')) {

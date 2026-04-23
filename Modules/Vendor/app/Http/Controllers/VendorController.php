@@ -67,6 +67,7 @@ class VendorController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:vendors,email,' . $vendor->id,
             'phone' => 'nullable|string|max:20',
+            'phone_secondary' => 'nullable|string|max:20',
             'description' => 'nullable|string',
             'about_ar' => 'nullable|string',
             'about_en' => 'nullable|string',
@@ -82,7 +83,7 @@ class VendorController extends Controller
         ]);
 
         $data = $request->only([
-            'name', 'email', 'phone', 'description', 'about_ar', 'about_en', 
+            'name', 'email', 'phone', 'phone_secondary', 'description', 'about_ar', 'about_en', 
             'address', 'facebook', 'instagram', 'twitter', 'whatsapp'
         ]);
 

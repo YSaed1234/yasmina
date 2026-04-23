@@ -16,6 +16,7 @@ class Vendor extends Authenticatable
         'about_ar',
         'about_en',
         'phone',
+        'phone_secondary',
         'email',
         'address',
         'facebook',
