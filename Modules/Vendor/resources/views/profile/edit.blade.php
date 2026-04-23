@@ -114,7 +114,99 @@
                 </div>
             </div>
 
-            <!-- New Section: About Us & Social Links -->
+            <!-- New Section: Promotional Settings -->
+            <div class="mt-10 pt-10 border-t border-gray-100">
+                <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest mb-8">{{ __('Promotional & Discount Settings') }}</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <!-- Order Threshold Discount -->
+                    <div class="p-8 bg-rose-50/30 rounded-3xl border border-rose-50 space-y-6">
+                        <h4 class="font-bold text-gray-900 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {{ __('Order Threshold Discount') }}
+                        </h4>
+                        <p class="text-xs text-gray-500">{{ __('Apply a discount if the total order amount exceeds a certain threshold.') }}</p>
+                        
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Minimum Order Amount') }}</label>
+                                <input type="number" step="0.01" name="order_threshold" value="{{ old('order_threshold', $vendor->order_threshold) }}" 
+                                    class="w-full px-6 py-4 bg-white border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900" placeholder="0.00">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Discount Value') }}</label>
+                                    <input type="number" step="0.01" name="order_threshold_discount" value="{{ old('order_threshold_discount', $vendor->order_threshold_discount) }}" 
+                                        class="w-full px-6 py-4 bg-white border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900" placeholder="0.00">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Discount Type') }}</label>
+                                    <select name="order_threshold_discount_type" class="w-full px-6 py-4 bg-white border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900 appearance-none">
+                                        <option value="fixed" {{ old('order_threshold_discount_type', $vendor->order_threshold_discount_type) == 'fixed' ? 'selected' : '' }}>{{ __('Fixed Amount') }}</option>
+                                        <option value="percentage" {{ old('order_threshold_discount_type', $vendor->order_threshold_discount_type) == 'percentage' ? 'selected' : '' }}>{{ __('Percentage (%)') }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Multi-item Discount -->
+                    <div class="p-8 bg-yasmina-50/30 rounded-3xl border border-yasmina-50 space-y-6">
+                        <h4 class="font-bold text-gray-900 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yasmina-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                            {{ __('Multi-item Discount (Bundle)') }}
+                        </h4>
+                        <p class="text-xs text-gray-500">{{ __('Apply a discount if the customer buys more than a specific number of items.') }}</p>
+                        
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Minimum Number of Items') }}</label>
+                                <input type="number" name="min_items_for_discount" value="{{ old('min_items_for_discount', $vendor->min_items_for_discount) }}" 
+                                    class="w-full px-6 py-4 bg-white border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900" placeholder="0">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Discount Value') }}</label>
+                                    <input type="number" step="0.01" name="items_discount_amount" value="{{ old('items_discount_amount', $vendor->items_discount_amount) }}" 
+                                        class="w-full px-6 py-4 bg-white border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900" placeholder="0.00">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Discount Type') }}</label>
+                                    <select name="items_discount_type" class="w-full px-6 py-4 bg-white border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900 appearance-none">
+                                        <option value="fixed" {{ old('items_discount_type', $vendor->items_discount_type) == 'fixed' ? 'selected' : '' }}>{{ __('Fixed Amount') }}</option>
+                                        <option value="percentage" {{ old('items_discount_type', $vendor->items_discount_type) == 'percentage' ? 'selected' : '' }}>{{ __('Percentage (%)') }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- Free Shipping Setting -->
+                <div class="mt-10 p-8 bg-sky-50/30 rounded-3xl border border-sky-50 space-y-6">
+                    <h4 class="font-bold text-gray-900 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+                        </svg>
+                        {{ __('Free Shipping Threshold') }}
+                    </h4>
+                    <p class="text-xs text-gray-500">{{ __('Offer free delivery if the order amount from your institution exceeds this value.') }}</p>
+                    
+                    <div class="max-w-md">
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Minimum Order for Free Shipping') }}</label>
+                        <input type="number" step="0.01" name="free_shipping_threshold" value="{{ old('free_shipping_threshold', $vendor->free_shipping_threshold) }}" 
+                            class="w-full px-6 py-4 bg-white border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900" placeholder="0.00">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Existing Section: About Us & Social Links -->
             <div class="mt-10 pt-10 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div class="space-y-8">
                     <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest">{{ __('About Us Content') }}</h3>

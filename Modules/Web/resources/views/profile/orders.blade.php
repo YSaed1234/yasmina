@@ -168,8 +168,12 @@
                                     <span id="modal-subtotal" class="font-bold text-gray-900"></span>
                                 </div>
                                 <div class="flex justify-between text-sm">
-                                    <span class="text-gray-500">{{ __('Discount') }}</span>
+                                    <span class="text-gray-500">{{ __('Coupon Discount') }}</span>
                                     <span id="modal-discount" class="font-bold text-green-600"></span>
+                                </div>
+                                <div id="modal-vendor-discount-row" class="flex justify-between text-sm hidden">
+                                    <span class="text-gray-500" id="modal-vendor-discount-label"></span>
+                                    <span id="modal-vendor-discount" class="font-bold text-yasmina-600"></span>
                                 </div>
                                 <div class="flex justify-between text-sm">
                                     <span class="text-gray-500">{{ __('Shipping') }}</span>
@@ -254,12 +258,25 @@
 
             const shippingAmount = parseFloat(order.shipping_amount || 0);
             const discountAmount = parseFloat(order.discount_amount || 0);
+            const vendorDiscountAmount = parseFloat(order.vendor_discount_amount || 0);
             const totalAmount = parseFloat(order.total);
-            const subtotalAmount = totalAmount - shippingAmount + discountAmount;
+            const subtotalAmount = totalAmount - shippingAmount + discountAmount + vendorDiscountAmount;
 
             document.getElementById('modal-subtotal').innerText = subtotalAmount.toFixed(2);
             document.getElementById('modal-shipping').innerText = shippingAmount.toFixed(2);
+            document.getElementById('modal-discount').parentElement.classList.toggle('hidden', discountAmount === 0);
             document.getElementById('modal-discount').innerText = `-${discountAmount.toFixed(2)}`;
+            
+            const vendorRow = document.getElementById('modal-vendor-discount-row');
+            if (vendorDiscountAmount > 0) {
+                vendorRow.classList.remove('hidden');
+                const label = order.vendor_discount_type === 'threshold' ? '{{ __("Order Threshold Discount") }}' : '{{ __("Multi-item Discount") }}';
+                document.getElementById('modal-vendor-discount-label').innerText = label;
+                document.getElementById('modal-vendor-discount').innerText = `-${vendorDiscountAmount.toFixed(2)}`;
+            } else {
+                vendorRow.classList.add('hidden');
+            }
+
             document.getElementById('modal-total').innerText = totalAmount.toFixed(2);
             
             // Payment info

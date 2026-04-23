@@ -57,11 +57,17 @@ class CheckoutService
             return ['success' => false, 'error' => __('Shipping is not available for the selected address / area.')];
         }
 
-        $shippingCost = $region->rate;
         $cartData = $this->cartService->getCartData();
 
         if (empty($cartData['cart'])) {
             return ['success' => false, 'error' => __('Your cart is empty!')];
+        }
+
+        $shippingCost = $region->rate;
+        
+        // Apply Free Shipping if vendor allows it
+        if ($vendor && in_array($vendor->id, $cartData['freeShippingVendors'])) {
+            $shippingCost = 0;
         }
 
         $finalTotal = $cartData['finalTotal'] + $shippingCost;
@@ -89,6 +95,8 @@ class CheckoutService
                 'notes' => $data['notes'] ?? null,
                 'coupon_id' => $cartData['coupon'] ? $cartData['coupon']->id : null,
                 'discount_amount' => $cartData['discount'],
+                'vendor_discount_amount' => $cartData['vendorDiscount'],
+                'vendor_discount_type' => count($cartData['appliedVendorDiscounts']) > 0 ? $cartData['appliedVendorDiscounts'][0]['type'] : null,
             ]);
 
             foreach ($cartData['cart'] as $id => $details) {

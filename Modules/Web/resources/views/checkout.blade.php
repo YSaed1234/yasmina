@@ -147,6 +147,12 @@
                                         <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($productSavings, 2) }}</span>
                                     </div>
                                 @endif
+                                @foreach($appliedVendorDiscounts as $applied)
+                                    <div class="flex justify-between text-yasmina-600">
+                                        <span>{{ $applied['label'] }} ({{ $applied['vendor_name'] }})</span>
+                                        <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($applied['amount'], 2) }}</span>
+                                    </div>
+                                @endforeach
                                 @if($discount > 0)
                                     <div class="flex justify-between text-green-600">
                                         <span>{{ __('Coupon Discount') }}</span>
@@ -177,7 +183,9 @@
     <script>
         const subtotal = {{ $totalOriginal }};
         const productSavings = {{ $productSavings }};
+        const vendorDiscount = {{ $vendorDiscount }};
         const discount = {{ $discount }};
+        const isFreeShipping = {{ (isset($currentVendor) && in_array($currentVendor->id, $freeShippingVendors)) ? 'true' : 'false' }};
         const currency = "{{ reset($cart)['currency'] ?? '$' }}";
 
         function updateSummary() {
@@ -190,8 +198,9 @@
                 const isAvailable = label.dataset.shippingAvailable === 'true';
                 
                 if (isAvailable) {
-                    document.getElementById('shipping-display').innerText = rate > 0 ? currency + rate.toFixed(2) : "{{ __('Free') }}";
-                    document.getElementById('total-display').innerText = currency + (subtotal - productSavings - discount + rate).toFixed(2);
+                    const finalRate = isFreeShipping ? 0 : rate;
+                    document.getElementById('shipping-display').innerText = finalRate > 0 ? currency + finalRate.toFixed(2) : "{{ __('Free') }}";
+                    document.getElementById('total-display').innerText = currency + (subtotal - productSavings - vendorDiscount - discount + finalRate).toFixed(2);
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 } else {

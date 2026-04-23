@@ -87,6 +87,43 @@
                     </div>
                 </div>
 
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-50 pt-8">
+                    <h3 class="md:col-span-2 text-sm font-bold text-gray-900 uppercase tracking-widest">{{ __('Promotional Settings') }}</h3>
+                    
+                    <div class="p-6 bg-rose-50/30 rounded-2xl border border-rose-50 space-y-4">
+                        <label class="block text-xs font-bold text-gray-900 uppercase tracking-widest">{{ __('Order Threshold Discount') }}</label>
+                        <div class="grid grid-cols-1 gap-4">
+                            <input type="number" step="0.01" name="order_threshold" value="{{ old('order_threshold') }}" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="{{ __('Min Order Amount') }}">
+                            <div class="grid grid-cols-2 gap-4">
+                                <input type="number" step="0.01" name="order_threshold_discount" value="{{ old('order_threshold_discount') }}" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="{{ __('Discount Value') }}">
+                                <select name="order_threshold_discount_type" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
+                                    <option value="fixed">{{ __('Fixed') }}</option>
+                                    <option value="percentage">{{ __('Percentage') }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-gray-50 rounded-2xl border border-gray-100 space-y-4">
+                        <label class="block text-xs font-bold text-gray-900 uppercase tracking-widest">{{ __('Multi-item Discount') }}</label>
+                        <div class="grid grid-cols-1 gap-4">
+                            <input type="number" name="min_items_for_discount" value="{{ old('min_items_for_discount') }}" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="{{ __('Min Items Count') }}">
+                            <div class="grid grid-cols-2 gap-4">
+                                <input type="number" step="0.01" name="items_discount_amount" value="{{ old('items_discount_amount') }}" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="{{ __('Discount Value') }}">
+                                <select name="items_discount_type" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
+                                    <option value="fixed">{{ __('Fixed') }}</option>
+                                    <option value="percentage">{{ __('Percentage') }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 p-6 bg-sky-50/30 rounded-2xl border border-sky-50 space-y-4">
+                    <label class="block text-xs font-bold text-gray-900 uppercase tracking-widest">{{ __('Free Shipping Threshold') }}</label>
+                    <input type="number" step="0.01" name="free_shipping_threshold" value="{{ old('free_shipping_threshold') }}" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="{{ __('Min Order for Free Shipping') }}">
+                </div>
+
                 <div class="md:col-span-2">
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Address') }}</label>
                     <textarea name="address" rows="3" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">{{ old('address') }}</textarea>

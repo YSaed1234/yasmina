@@ -96,6 +96,12 @@
                                             <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($productSavings, 2) }}</span>
                                         </div>
                                     @endif
+                                    @foreach($appliedVendorDiscounts as $applied)
+                                        <div class="flex justify-between text-yasmina-600">
+                                            <span>{{ $applied['label'] }} ({{ $applied['vendor_name'] }})</span>
+                                            <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($applied['amount'], 2) }}</span>
+                                        </div>
+                                    @endforeach
                                     @if($discount > 0)
                                         <div class="flex justify-between text-green-600">
                                             <span>{{ __('Coupon Discount') }}</span>

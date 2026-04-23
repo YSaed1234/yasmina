@@ -81,11 +81,21 @@ class VendorController extends Controller
             'about_image1' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'about_image2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'password' => 'nullable|string|min:8|confirmed',
+            'order_threshold' => 'nullable|numeric|min:0',
+            'order_threshold_discount' => 'nullable|numeric|min:0',
+            'order_threshold_discount_type' => 'required|in:fixed,percentage',
+            'min_items_for_discount' => 'nullable|integer|min:0',
+            'items_discount_amount' => 'nullable|numeric|min:0',
+            'items_discount_type' => 'required|in:fixed,percentage',
+            'free_shipping_threshold' => 'nullable|numeric|min:0',
         ]);
 
         $data = $request->only([
             'name', 'slug', 'email', 'phone', 'phone_secondary', 'description', 'about_ar', 'about_en', 
-            'address', 'facebook', 'instagram', 'twitter', 'whatsapp'
+            'address', 'facebook', 'instagram', 'twitter', 'whatsapp',
+            'order_threshold', 'order_threshold_discount', 'order_threshold_discount_type',
+            'min_items_for_discount', 'items_discount_amount', 'items_discount_type',
+            'free_shipping_threshold'
         ]);
         $data['slug'] = $request->slug ? \Str::slug($request->slug) : \Str::slug($request->name);
 

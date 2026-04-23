@@ -62,11 +62,19 @@
                     <tfoot>
                         <tr class="bg-gray-50/50">
                             <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Subtotal') }}</td>
-                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->total - $order->shipping_amount + $order->discount_amount, 2) }}</td>
+                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->total - $order->shipping_amount + $order->discount_amount + $order->vendor_discount_amount, 2) }}</td>
                         </tr>
+                        @if($order->vendor_discount_amount > 0)
+                        <tr class="bg-gray-50/50">
+                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">
+                                {{ $order->vendor_discount_type === 'threshold' ? __('Order Threshold Discount') : __('Multi-item Discount') }}
+                            </td>
+                            <td class="px-8 py-4 text-right font-bold text-yasmina-600">-{{ number_format($order->vendor_discount_amount, 2) }}</td>
+                        </tr>
+                        @endif
                         @if($order->discount_amount > 0)
                         <tr class="bg-gray-50/50">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Discount') }}</td>
+                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Coupon Discount') }}</td>
                             <td class="px-8 py-4 text-right font-bold text-green-600">-{{ number_format($order->discount_amount, 2) }}</td>
                         </tr>
                         @endif

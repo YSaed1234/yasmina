@@ -700,5 +700,20 @@
     "Read-only": "قراءة فقط",
     "Discount Price": "سعر الخصم",
     "Sale": "خصم",
-    "View Store": "عرض المتجر"
+    "View Store": "عرض المتجر",
+    "Promotional & Discount Settings": "إعدادات العروض والخصومات",
+    "Order Threshold Discount": "خصم على إجمالي الطلب",
+    "Apply a discount if the total order amount exceeds a certain threshold.": "تطبيق خصم إذا تجاوز إجمالي مبلغ الطلب حداً معيناً.",
+    "Discount Value": "قيمة الخصم",
+    "Multi-item Discount": "خصم الكمية (باكدج)",
+    "Apply a discount if the customer buys more than a specific number of items.": "تطبيق خصم إذا اشترى العميل أكثر من عدد معين من القطع.",
+    "Minimum Number of Items": "الحد الأدنى لعدد القطع",
+    "Institutional Discount": "خصم المؤسسة",
+    "Product Discount": "خصم المنتج",
+    "Coupon Discount": "خصم الكوبون",
+    "Percentage (%)": "نسبة مئوية (%)",
+    "Free Shipping Threshold": "حد الشحن المجاني",
+    "Offer free delivery if the order amount from your institution exceeds this value.": "تقديم شحن مجاني إذا تجاوز مبلغ الطلب من مؤسستك هذه القيمة.",
+    "Minimum Order for Free Shipping": "الحد الأدنى للطلب للشحن المجاني",
+    "Min Order for Free Shipping": "أقل مبلغ للشحن المجاني"
 }

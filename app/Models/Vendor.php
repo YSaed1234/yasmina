@@ -28,6 +28,13 @@ class Vendor extends Authenticatable
         'status',
         'password',
         'referred_by_id',
+        'order_threshold',
+        'order_threshold_discount',
+        'order_threshold_discount_type',
+        'min_items_for_discount',
+        'items_discount_amount',
+        'items_discount_type',
+        'free_shipping_threshold',
     ];
 
     protected $hidden = [

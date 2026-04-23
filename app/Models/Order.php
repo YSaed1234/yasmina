@@ -19,6 +19,10 @@ class Order extends Model
         'shipping_details',
         'notes',
         'rejection_reason',
+        'coupon_id',
+        'discount_amount',
+        'vendor_discount_amount',
+        'vendor_discount_type',
     ];
 
     protected $casts = [

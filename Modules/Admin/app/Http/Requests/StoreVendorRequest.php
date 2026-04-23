@@ -36,6 +36,12 @@ class StoreVendorRequest extends FormRequest
             'twitter' => 'nullable|url|max:255',
             'whatsapp' => 'nullable|string|max:255',
             'password' => 'required|string|min:6',
+            'order_threshold' => 'nullable|numeric|min:0',
+            'order_threshold_discount' => 'nullable|numeric|min:0',
+            'order_threshold_discount_type' => 'required|in:fixed,percentage',
+            'min_items_for_discount' => 'nullable|integer|min:0',
+            'items_discount_amount' => 'nullable|numeric|min:0',
+            'items_discount_type' => 'required|in:fixed,percentage',
         ];
     }
 

@@ -55,10 +55,33 @@
                         @endforeach
                     </tbody>
                     <tfoot>
+                        <tr class="bg-gray-50/50">
+                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Subtotal') }}</td>
+                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->items->sum(fn($i) => $i->price * $i->quantity), 2) }} LE</td>
+                        </tr>
+                        @if($order->vendor_discount_amount > 0)
+                        <tr class="bg-yasmina-50/30">
+                            <td colspan="3" class="px-8 py-4 text-right font-bold text-yasmina-600 uppercase tracking-widest text-[10px]">
+                                <span class="flex items-center justify-end gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 11h.01M7 15h.01M13 7h.01M13 11h.01M13 15h.01M17 7h.01M17 11h.01M17 15h.01" />
+                                    </svg>
+                                    {{ $order->vendor_discount_type === 'threshold' ? __('Order Threshold Discount') : __('Multi-item Discount') }}
+                                </span>
+                            </td>
+                            <td class="px-8 py-4 text-right font-bold text-yasmina-600">
+                                -{{ number_format($order->vendor_discount_amount, 2) }} LE
+                            </td>
+                        </tr>
+                        @endif
+                        <tr class="bg-gray-50/50">
+                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Shipping') }}</td>
+                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->shipping_amount, 2) }} LE</td>
+                        </tr>
                         <tr class="bg-primary/5">
-                            <td colspan="3" class="px-8 py-6 text-right font-bold text-primary">{{ __('Your Total Revenue') }}:</td>
-                            <td class="px-8 py-6 text-right font-black text-primary text-xl">
-                                {{ number_format($order->items->sum(fn($i) => $i->price * $i->quantity), 2) }} LE
+                            <td colspan="3" class="px-8 py-6 text-right font-bold text-primary uppercase tracking-widest text-xs">{{ __('Your Total Revenue') }}</td>
+                            <td class="px-8 py-6 text-right font-black text-primary text-2xl">
+                                {{ number_format($order->items->sum(fn($i) => $i->price * $i->quantity) - $order->vendor_discount_amount + $order->shipping_amount, 2) }} LE
                             </td>
                         </tr>
                     </tfoot>
