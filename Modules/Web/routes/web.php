@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
 
     // Regions API
     Route::get('/api/governorates/{governorate}/regions', function (\App\Models\Governorate $governorate, Request $request) {
-        $vendor_id = $request->vendor_id ?? null;
+        $vendor_id = request('vendor_id');
         $query = $governorate->regions()->where('is_active', true);
 
         if ($vendor_id) {

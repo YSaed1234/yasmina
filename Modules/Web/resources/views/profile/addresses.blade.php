@@ -132,7 +132,7 @@
             }
 
             try {
-                const response = await fetch(`/api/governorates/${govId}/regions`);
+                const response = await fetch(`/api/governorates/${govId}/regions?vendor_id={{ request()->vendor_id ?? null }}`);
                 const regions = await response.json();
                 
                 regionSelect.innerHTML = '<option value="">{{ __("Select area") }}</option>';
