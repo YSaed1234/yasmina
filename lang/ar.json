@@ -592,5 +592,16 @@
     "Define the content and style for your new hero slide.": "حدد المحتوى والتنسيق للسلايد الرئيسي الجديد.",
     "Back to Slides": "العودة للسلايدات",
     "Modify the content and style for your hero slide.": "تعديل المحتوى والتنسيق للسلايد الرئيسي.",
-    "Title": "العنوان"
+    "Title": "العنوان",
+    "Referral Reward Points": "نقاط مكافأة الدعوة",
+    "Points awarded to a user when someone they invited registers.": "النقاط التي تمنح للمستخدم عندما يسجل شخص قام بدعوته.",
+    "Referral Code (Optional)": "كود الدعوة (اختياري)",
+    "The provided referral code is invalid.": "كود الدعوة المدخل غير صحيح.",
+    "Reward for inviting :name": "مكافأة دعوة :name",
+    "Invite & Earn": "ادعُ واربح",
+    "Share your referral code with friends! When they join Yasmina using your code, you will earn :points points.": "شارك كود الدعوة الخاص بك مع أصدقائك! عندما ينضمون إلى ياسمينة باستخدام كودك، ستحصل على :points نقطة.",
+    "Your Invite Code": "كود الدعوة الخاص بك",
+    "Copied!": "تم النسخ!",
+    "Referral code copied to clipboard": "تم نسخ كود الدعوة إلى الحافظة",
+    "You earned :points points because :name joined Yasmina using your invite code!": "لقد حصلت على :points نقطة لأن :name انضم إلى ياسمينة باستخدام كود الدعوة الخاص بك!"
 }

@@ -35,16 +35,40 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'phone' => ['required', 'string', 'regex:/^(\+20|0)?1[0125][0-9]{8}$|^(\+966|0)?5[0-9]{8}$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'referral_code' => ['nullable', 'string', 'exists:users,referral_code'],
         ], [
-            'phone.regex' => __('Please enter a valid Egyptian or Saudi phone number.')
+            'phone.regex' => __('Please enter a valid Egyptian or Saudi phone number.'),
+            'referral_code.exists' => __('The provided referral code is invalid.')
         ]);
+
+        $referredByUser = null;
+        if ($request->referral_code) {
+            $referredByUser = User::where('referral_code', $request->referral_code)->first();
+        }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'referred_by' => $referredByUser ? $referredByUser->id : null,
         ]);
+
+        // Award points to the inviter
+        if ($referredByUser) {
+            $referralPoints = (int) \App\Models\PointSetting::getValue('referral_points', 50);
+            if ($referralPoints > 0) {
+                $referredByUser->addPoints(
+                    $referralPoints, 
+                    'referral', 
+                    __('Reward for inviting :name', ['name' => $user->name]),
+                    $user
+                );
+                
+                // Notify the inviter
+                $referredByUser->notify(new \App\Notifications\ReferralRewardNotification($user, $referralPoints));
+            }
+        }
 
         event(new Registered($user));
 

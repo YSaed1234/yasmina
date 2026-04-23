@@ -38,6 +38,16 @@
                             <option value="completed" {{ ($settings['points_earning_status'] ?? '') == 'completed' ? 'selected' : '' }}>{{ __('Completed') }}</option>
                         </select>
                     </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Referral Reward Points') }}</label>
+                        <div class="relative">
+                            <input type="number" name="referral_points" value="{{ $settings['referral_points'] ?? '50' }}" required
+                                   class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
+                            <div class="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xs uppercase">{{ __('Points') }}</div>
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-2 italic">{{ __('Points awarded to a user when someone they invited registers.') }}</p>
+                    </div>
                 </div>
             </div>
 

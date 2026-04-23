@@ -62,6 +62,30 @@
                             </div>
                         </div>
 
+                        <!-- Referral Card -->
+                        <div class="mb-12 p-8 bg-rose-50 rounded-[2.5rem] border border-rose-100 relative overflow-hidden group">
+                            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ __('Invite & Earn') }}</h3>
+                                    <p class="text-gray-600 max-w-md">
+                                        {{ __('Share your referral code with friends! When they join Yasmina using your code, you will earn :points points.', ['points' => (int) \App\Models\PointSetting::getValue('referral_points', 50)]) }}
+                                    </p>
+                                </div>
+                                <div class="bg-white p-4 rounded-3xl shadow-sm border border-rose-100 flex items-center gap-6 min-w-[250px]">
+                                    <div class="flex-1">
+                                        <span class="text-[10px] font-black text-primary uppercase tracking-[0.2em] block mb-1">{{ __('Your Invite Code') }}</span>
+                                        <div class="text-2xl font-black text-gray-900 tracking-widest">{{ $user->referral_code }}</div>
+                                    </div>
+                                    <button onclick="copyToClipboard('{{ $user->referral_code }}', this)" class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all group/btn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="absolute -right-12 -top-12 w-48 h-48 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-all duration-500"></div>
+                        </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="p-6 bg-rose-50/50 rounded-3xl border border-rose-100">
                                 <span class="text-xs font-bold text-primary uppercase tracking-widest block mb-2">{{ __('Full Name') }}</span>

@@ -31,7 +31,29 @@ class User extends Authenticatable
         'role',
         'profile_image',
         'phone',
+        'referral_code',
+        'referred_by',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($user) {
+            if (empty($user->referral_code)) {
+                $user->referral_code = strtoupper(\Illuminate\Support\Str::random(8));
+            }
+        });
+    }
+
+    public function inviter()
+    {
+        return $this->belongsTo(User::class, 'referred_by');
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(User::class, 'referred_by');
+    }
 
     public function pointTransactions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

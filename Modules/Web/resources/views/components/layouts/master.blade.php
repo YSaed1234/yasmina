@@ -406,6 +406,52 @@
                 });
             }
 
+            function copyToClipboard(text, btn) {
+                const copyAction = (txt) => {
+                    const originalHtml = btn.innerHTML;
+                    btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>';
+                    btn.classList.remove('bg-primary/10', 'text-primary');
+                    btn.classList.add('bg-green-500', 'text-white');
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: '{{ __("Copied!") }}',
+                        text: '{{ __("Referral code copied to clipboard") }}',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        position: 'top-end',
+                        toast: true
+                    });
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalHtml;
+                        btn.classList.add('bg-primary/10', 'text-primary');
+                        btn.classList.remove('bg-green-500', 'text-white');
+                    }, 2000);
+                };
+
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(text).then(() => copyAction(text));
+                } else {
+                    // Fallback
+                    const textArea = document.createElement("textarea");
+                    textArea.value = text;
+                    textArea.style.position = "fixed";
+                    textArea.style.left = "-999999px";
+                    textArea.style.top = "-999999px";
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        copyAction(text);
+                    } catch (err) {
+                        console.error('Fallback copy failed', err);
+                    }
+                    document.body.removeChild(textArea);
+                }
+            }
+
             function markAsRead(id, btn) {
                 fetch(`/notifications/${id}/read`, {
                     method: 'POST',

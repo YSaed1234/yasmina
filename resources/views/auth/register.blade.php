@@ -46,6 +46,13 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+        <!-- Referral Code -->
+        <div class="mt-4">
+            <x-input-label for="referral_code" :value="__('Referral Code (Optional)')" />
+            <x-text-input id="referral_code" class="block mt-1 w-full" type="text" name="referral_code" :value="old('referral_code')" />
+            <x-input-error :messages="$errors->get('referral_code')" class="mt-2" />
+        </div>
+
         <div class="flex items-center justify-end mt-8">
             <a class="underline text-sm text-gray-500 hover:text-[var(--yasmina-primary)] rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--yasmina-primary)] transition-colors" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
