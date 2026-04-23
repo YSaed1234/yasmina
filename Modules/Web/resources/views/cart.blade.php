@@ -27,7 +27,12 @@
                                     </div>
                                     <div class="flex-1">
                                         <div class="flex justify-between mb-2">
-                                            <h3 class="text-xl font-bold text-gray-900">{{ $details['name'] }}</h3>
+                                            <div>
+                                                <h3 class="text-xl font-bold text-gray-900">{{ $details['name'] }}</h3>
+                                                @if(isset($details['is_gift']) && $details['is_gift'])
+                                                    <span class="text-[10px] font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Free Gift') }}</span>
+                                                @endif
+                                            </div>
                                             <button onclick="removeFromCart({{ $id }})" class="text-gray-400 hover:text-red-500 transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16" />
@@ -35,23 +40,69 @@
                                             </button>
                                         </div>
                                         <div class="flex items-center justify-between mt-6">
-                                            <div class="flex items-center bg-gray-50 rounded-xl p-1 border border-gray-100">
-                                                <button onclick="updateQuantity({{ $id }}, {{ $details['quantity'] - 1 }})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary transition-colors">-</button>
-                                                <span class="w-10 text-center font-bold text-sm">{{ $details['quantity'] }}</span>
-                                                <button onclick="updateQuantity({{ $id }}, {{ $details['quantity'] + 1 }})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary transition-colors">+</button>
-                                            </div>
+                                            @if(!(isset($details['is_gift']) && $details['is_gift']))
+                                                <div class="flex items-center bg-gray-50 rounded-xl p-1 border border-gray-100">
+                                                    <button onclick="updateQuantity({{ $id }}, {{ $details['quantity'] - 1 }})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary transition-colors">-</button>
+                                                    <span class="w-10 text-center font-bold text-sm">{{ $details['quantity'] }}</span>
+                                                    <button onclick="updateQuantity({{ $id }}, {{ $details['quantity'] + 1 }})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary transition-colors">+</button>
+                                                </div>
+                                            @else
+                                                <div class="text-xs font-bold text-gray-400 italic">
+                                                    {{ __('Quantity: 1') }}
+                                                </div>
+                                            @endif
                                             <div class="flex flex-col items-end">
-                                                @if(isset($details['original_price']) && $details['price'] < $details['original_price'])
+                                                @if(isset($details['original_price']) && $details['price'] < $details['original_price'] && !(isset($details['is_gift']) && $details['is_gift']))
                                                     <span class="text-xs text-red-400 line-through">{{ $details['currency'] }}{{ number_format($details['original_price'] * $details['quantity'], 2) }}</span>
                                                 @endif
                                                 <div class="text-lg font-bold text-primary">
-                                                    {{ $details['currency'] }}{{ number_format($details['price'] * $details['quantity'], 2) }}
+                                                    @if(isset($details['is_gift']) && $details['is_gift'])
+                                                        {{ __('Free') }}
+                                                    @else
+                                                        {{ $details['currency'] }}{{ number_format($details['price'] * $details['quantity'], 2) }}
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
+
+                            @if(isset($availableGifts) && count($availableGifts) > 0)
+                                <div class="mt-12 bg-yasmina-50/30 rounded-[2.5rem] p-10 border-2 border-dashed border-yasmina-100">
+                                    <div class="flex items-center gap-4 mb-8">
+                                        <div class="w-12 h-12 bg-yasmina-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-yasmina-500/20">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h2 class="text-2xl font-bold text-gray-900">{{ __('Choose Your Free Gift') }}</h2>
+                                            <p class="text-gray-500 text-sm">{{ __('You\'ve reached a threshold to unlock these rewards!') }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                        @foreach($availableGifts as $gift)
+                                            <div class="bg-white p-6 rounded-3xl border border-yasmina-100 flex items-center gap-6 group hover:shadow-xl hover:shadow-yasmina-500/5 transition-all">
+                                                <div class="w-20 h-20 rounded-2xl overflow-hidden bg-gray-50 shrink-0">
+                                                    <img src="{{ asset('storage/' . $gift->image) }}" class="w-full h-full object-cover">
+                                                </div>
+                                                <div class="flex-1">
+                                                    <h4 class="font-bold text-gray-900 mb-1">{{ $gift->name }}</h4>
+                                                    <span class="text-[10px] font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Free Reward') }}</span>
+                                                    <form action="{{ route('web.cart.add', $gift->id) }}" method="POST" class="mt-3">
+                                                        @csrf
+                                                        <input type="hidden" name="quantity" value="1">
+                                                        <button type="submit" class="w-full py-2 bg-yasmina-50 text-yasmina-600 rounded-xl text-xs font-bold hover:bg-yasmina-500 hover:text-white transition-all">
+                                                            {{ __('Select Gift') }}
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="lg:col-span-1">

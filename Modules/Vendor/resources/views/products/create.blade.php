@@ -37,6 +37,44 @@
                     <input type="number" step="0.01" name="discount_price" class="w-full px-5 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none font-bold text-gray-700" placeholder="0.00">
                 </div>
 
+                <div class="p-6 bg-amber-50/50 rounded-3xl border border-amber-100 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="md:col-span-2">
+                        <h3 class="text-sm font-bold text-amber-600 uppercase tracking-widest mb-2 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {{ __('Flash Sale Settings') }}
+                        </h3>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-amber-500 mb-2 uppercase tracking-widest">{{ __('Flash Sale Price') }}</label>
+                        <input type="number" step="0.01" name="flash_sale_price" class="w-full px-5 py-4 bg-white border border-amber-100 rounded-2xl focus:ring-4 focus:ring-amber-100 outline-none font-bold text-gray-700" placeholder="0.00">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-amber-500 mb-2 uppercase tracking-widest">{{ __('Expiry Date') }}</label>
+                        <input type="datetime-local" name="flash_sale_expires_at" class="w-full px-5 py-4 bg-white border border-amber-100 rounded-2xl focus:ring-4 focus:ring-amber-100 outline-none font-bold text-gray-700">
+                    </div>
+                </div>
+
+                <div class="p-6 bg-primary/5 rounded-3xl border border-primary/10 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="md:col-span-2">
+                        <h3 class="text-sm font-bold text-primary uppercase tracking-widest mb-2 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                            {{ __('Gift Settings') }}
+                        </h3>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" name="is_gift" id="is_gift" value="1" class="w-5 h-5 text-primary border-gray-100 rounded focus:ring-primary">
+                        <label for="is_gift" class="text-sm font-bold text-gray-400 uppercase tracking-widest">{{ __('Designate as Gift') }}</label>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">{{ __('Minimum Order Threshold') }}</label>
+                        <input type="number" step="0.01" name="gift_threshold" class="w-full px-5 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none font-bold text-gray-700" placeholder="0.00">
+                    </div>
+                </div>
+
                 <div class="md:col-span-1">
                     <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">{{ __('Description (Arabic)') }}</label>
                     <textarea name="ar[description]" rows="4" class="w-full px-5 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none font-bold text-gray-700" placeholder="{{ __('وصف المنتج...') }}"></textarea>

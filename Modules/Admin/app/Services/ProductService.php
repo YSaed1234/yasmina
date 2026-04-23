@@ -34,6 +34,10 @@ class ProductService
         $product->currency_id = $data['currency_id'];
         $product->price = $data['price'];
         $product->discount_price = $data['discount_price'] ?? null;
+        $product->flash_sale_price = $data['flash_sale_price'] ?? null;
+        $product->flash_sale_expires_at = $data['flash_sale_expires_at'] ?? null;
+        $product->is_gift = isset($data['is_gift']) && $data['is_gift'];
+        $product->gift_threshold = $data['gift_threshold'] ?? null;
         $product->vendor_id = $data['vendor_id'] ?? null;
         $product->rank = $data['rank'] ?? 0;
 
@@ -61,6 +65,10 @@ class ProductService
         $product->currency_id = $data['currency_id'] ?? $product->currency_id;
         $product->price = $data['price'] ?? $product->price;
         $product->discount_price = array_key_exists('discount_price', $data) ? $data['discount_price'] : $product->discount_price;
+        $product->flash_sale_price = array_key_exists('flash_sale_price', $data) ? $data['flash_sale_price'] : $product->flash_sale_price;
+        $product->flash_sale_expires_at = array_key_exists('flash_sale_expires_at', $data) ? $data['flash_sale_expires_at'] : $product->flash_sale_expires_at;
+        $product->is_gift = isset($data['is_gift']) && $data['is_gift'];
+        $product->gift_threshold = array_key_exists('gift_threshold', $data) ? $data['gift_threshold'] : $product->gift_threshold;
         $product->vendor_id = $data['vendor_id'] ?? $product->vendor_id;
         $product->rank = $data['rank'] ?? $product->rank;
 

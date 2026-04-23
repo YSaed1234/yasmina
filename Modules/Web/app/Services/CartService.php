@@ -139,6 +139,10 @@ class CartService
             'productSavings' => $productSavings,
             'vendorDiscount' => $vendorDiscount,
             'appliedVendorDiscounts' => $appliedVendorDiscounts,
+            'availableGifts' => \App\Models\Product::where('is_gift', true)
+                                ->where('gift_threshold', '<=', $total)
+                                ->whereNotIn('id', array_keys($cart))
+                                ->get(),
             'freeShippingVendors' => $freeShippingVendors,
             'coupon' => $coupon,
             'discount' => $discount,
@@ -190,11 +194,21 @@ class CartService
         if (isset($cart[$productId])) {
             $cart[$productId]['quantity'] += $quantity;
         } else {
+            $price = $product->price;
+            if ($product->is_gift) {
+                $price = 0;
+            } elseif ($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture()) {
+                $price = $product->flash_sale_price;
+            } elseif ($product->discount_price && $product->discount_price < $product->price) {
+                $price = $product->discount_price;
+            }
+            
             $cart[$productId] = [
                 "name" => $product->name,
                 "quantity" => $quantity,
-                "price" => $product->discount_price ?? $product->price,
+                "price" => $price,
                 "original_price" => $product->price,
+                "is_gift" => $product->is_gift,
                 "image" => $product->image,
                 "currency" => $product->currency->symbol ?? '$'
             ];

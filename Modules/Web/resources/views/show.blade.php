@@ -32,7 +32,42 @@
                     </div>
 
                     <div class="flex flex-col">
-                        @if($product->discount_price && $product->discount_price < $product->price)
+                        @if($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture())
+                            <div class="mb-6 p-6 bg-amber-50 rounded-3xl border border-amber-100 flex flex-wrap items-center justify-between gap-6">
+                                <div>
+                                    <span class="text-xs font-bold text-amber-600 uppercase tracking-widest block mb-2">{{ __('Special Offer Ends In') }}:</span>
+                                    <div class="flex items-center gap-4 text-amber-700" data-countdown="{{ $product->flash_sale_expires_at->toIso8601String() }}">
+                                        <div class="text-center">
+                                            <span class="days block text-2xl font-black">00</span>
+                                            <span class="text-[10px] uppercase tracking-widest opacity-60">{{ __('Days') }}</span>
+                                        </div>
+                                        <span class="text-2xl font-light opacity-30">:</span>
+                                        <div class="text-center">
+                                            <span class="hours block text-2xl font-black">00</span>
+                                            <span class="text-[10px] uppercase tracking-widest opacity-60">{{ __('Hrs') }}</span>
+                                        </div>
+                                        <span class="text-2xl font-light opacity-30">:</span>
+                                        <div class="text-center">
+                                            <span class="minutes block text-2xl font-black">00</span>
+                                            <span class="text-[10px] uppercase tracking-widest opacity-60">{{ __('Min') }}</span>
+                                        </div>
+                                        <span class="text-2xl font-light opacity-30">:</span>
+                                        <div class="text-center">
+                                            <span class="seconds block text-2xl font-black">00</span>
+                                            <span class="text-[10px] uppercase tracking-widest opacity-60">{{ __('Sec') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-amber-500 text-white px-6 py-2 rounded-2xl font-black uppercase tracking-widest text-sm shadow-lg shadow-amber-500/20">
+                                    {{ __('Flash Sale') }}
+                                </div>
+                            </div>
+                            <span class="text-xl text-gray-400 line-through mb-1">{{ number_format($product->price, 2) }} {{ $product->currency?->symbol ?? '$' }}</span>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-6xl font-black text-amber-600">{{ number_format($product->flash_sale_price, 2) }}</span>
+                                <span class="text-3xl font-bold text-amber-600 opacity-60">{{ $product->currency?->symbol ?? '$' }}</span>
+                            </div>
+                        @elseif($product->discount_price && $product->discount_price < $product->price)
                             <span class="text-xl text-gray-400 line-through mb-1">{{ number_format($product->price, 2) }} {{ $product->currency?->symbol ?? '$' }}</span>
                             <div class="flex items-baseline gap-2">
                                 <span class="text-5xl font-black text-primary">{{ number_format($product->discount_price, 2) }}</span>

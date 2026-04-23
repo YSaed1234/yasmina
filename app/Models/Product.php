@@ -14,12 +14,21 @@ class Product extends Model implements TranslatableContract
     public $translatedAttributes = ['name', 'description'];
     protected $fillable = [
         'category_id',
-        'currency_id',
         'vendor_id',
         'price',
         'discount_price',
-        'image',
-        'rank'
+        'flash_sale_price',
+        'flash_sale_expires_at',
+        'is_gift',
+        'gift_threshold',
+        'currency_id',
+        'rank',
+        'image'
+    ];
+
+    protected $casts = [
+        'is_gift' => 'boolean',
+        'flash_sale_expires_at' => 'datetime',
     ];
 
     public function vendor()

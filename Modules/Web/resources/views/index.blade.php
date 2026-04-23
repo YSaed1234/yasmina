@@ -34,7 +34,32 @@
                                         </div>
                                     @endif
                                 </a>
-                                @if($product->discount_price && $product->discount_price < $product->price)
+                                @if($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture())
+                                    <div class="absolute top-4 left-4 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20 flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                        </svg>
+                                        {{ __('Flash Sale') }}
+                                    </div>
+                                    <div class="absolute bottom-4 left-0 right-0 px-4 z-20">
+                                        <div class="bg-white/90 backdrop-blur-md rounded-2xl p-2 shadow-xl border border-amber-100 flex items-center justify-center gap-3 text-amber-600" data-countdown="{{ $product->flash_sale_expires_at->toIso8601String() }}">
+                                            <div class="text-center">
+                                                <span class="hours block text-xs font-black">00</span>
+                                                <span class="text-[8px] uppercase tracking-tighter">{{ __('Hrs') }}</span>
+                                            </div>
+                                            <div class="w-px h-4 bg-amber-200"></div>
+                                            <div class="text-center">
+                                                <span class="minutes block text-xs font-black">00</span>
+                                                <span class="text-[8px] uppercase tracking-tighter">{{ __('Min') }}</span>
+                                            </div>
+                                            <div class="w-px h-4 bg-amber-200"></div>
+                                            <div class="text-center">
+                                                <span class="seconds block text-xs font-black">00</span>
+                                                <span class="text-[8px] uppercase tracking-tighter">{{ __('Sec') }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @elseif($product->discount_price && $product->discount_price < $product->price)
                                     <div class="absolute top-4 left-4 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20">
                                         {{ __('Sale') }}
                                     </div>
@@ -65,7 +90,13 @@
                                 </div>
                                 <div class="mt-6 flex flex-col gap-4">
                                     <div class="flex flex-col">
-                                        @if($product->discount_price && $product->discount_price < $product->price)
+                                        @if($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture())
+                                            <span class="text-xs text-gray-400 line-through">{{ number_format($product->price, 2) }}</span>
+                                            <div class="flex items-baseline gap-1">
+                                                <span class="text-2xl font-black text-amber-600">{{ number_format($product->flash_sale_price, 2) }}</span>
+                                                <span class="text-sm font-bold text-amber-600">{{ $product->currency?->symbol ?? '$' }}</span>
+                                            </div>
+                                        @elseif($product->discount_price && $product->discount_price < $product->price)
                                             <span class="text-xs text-gray-400 line-through">{{ number_format($product->price, 2) }}</span>
                                             <div class="flex items-baseline gap-1">
                                                 <span class="text-2xl font-black text-gray-900">{{ number_format($product->discount_price, 2) }}</span>
@@ -114,7 +145,7 @@
                             </div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                                    @foreach($category->products->sortBy('rank')->take(4) as $product)
+                                    @foreach($category->products->where('vendor_id', $vendor->id)->sortBy('rank')->take(4) as $product)
                                         <div class="group relative flex flex-col h-full">
                                             <div class="aspect-square w-full rounded-2xl overflow-hidden bg-rose-50 shadow-sm transition-all duration-500 hover:-translate-y-1 relative">
                                                 <a href="{{ route('web.products.show', [$product->id, 'vendor_id' => $product->vendor_id]) }}" class="block w-full h-full">
@@ -124,7 +155,14 @@
                                                         <div class="h-full w-full flex items-center justify-center text-primary opacity-20 text-4xl font-light">?</div>
                                                     @endif
                                                 </a>
-                                                @if($product->discount_price && $product->discount_price < $product->price)
+                                                @if($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture())
+                                                    <div class="absolute top-3 left-3 bg-amber-500 text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shadow-lg z-20 flex items-center gap-1">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-2 w-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                        </svg>
+                                                        {{ __('Flash Sale') }}
+                                                    </div>
+                                                @elseif($product->discount_price && $product->discount_price < $product->price)
                                                     <div class="absolute top-3 left-3 bg-red-500 text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shadow-lg z-20">
                                                         {{ __('Sale') }}
                                                     </div>
@@ -153,7 +191,13 @@
                                                         </div>
                                                     </div>
                                                     <div class="flex flex-col">
-                                                        @if($product->discount_price && $product->discount_price < $product->price)
+                                                        @if($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture())
+                                                            <span class="text-[10px] text-gray-400 line-through">{{ number_format($product->price, 2) }}</span>
+                                                            <div class="flex items-baseline gap-0.5">
+                                                                <span class="text-base font-bold text-amber-600">{{ number_format($product->flash_sale_price, 2) }}</span>
+                                                                <span class="text-[10px] font-bold text-amber-600">{{ $product->currency?->symbol ?? '$' }}</span>
+                                                            </div>
+                                                        @elseif($product->discount_price && $product->discount_price < $product->price)
                                                             <span class="text-[10px] text-gray-400 line-through">{{ number_format($product->price, 2) }}</span>
                                                             <div class="flex items-baseline gap-0.5">
                                                                 <span class="text-base font-bold text-gray-900">{{ number_format($product->discount_price, 2) }}</span>

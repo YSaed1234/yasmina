@@ -574,8 +574,37 @@
                         }
                     }
                 })
-                .catch(error => console.error('Error:', error));
+            function initCountdown() {
+                const timers = document.querySelectorAll('[data-countdown]');
+                timers.forEach(timer => {
+                    const target = new Date(timer.dataset.countdown).getTime();
+                    
+                    const update = () => {
+                        const now = new Date().getTime();
+                        const diff = target - now;
+                        
+                        if (diff <= 0) {
+                            timer.innerHTML = '{{ __("Offer Ended") }}';
+                            return;
+                        }
+                        
+                        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                        
+                        if(timer.querySelector('.days')) timer.querySelector('.days').innerText = String(days).padStart(2, '0');
+                        if(timer.querySelector('.hours')) timer.querySelector('.hours').innerText = String(hours).padStart(2, '0');
+                        if(timer.querySelector('.minutes')) timer.querySelector('.minutes').innerText = String(minutes).padStart(2, '0');
+                        if(timer.querySelector('.seconds')) timer.querySelector('.seconds').innerText = String(seconds).padStart(2, '0');
+                    };
+                    
+                    update();
+                    setInterval(update, 1000);
+                });
             }
+            
+            document.addEventListener('DOMContentLoaded', initCountdown);
         </script>
         @stack('scripts')
     </body>

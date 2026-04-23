@@ -21,7 +21,11 @@ class UpdateProductRequest extends FormRequest
             'en.description' => 'nullable|string',
             'price' => 'required|numeric',
             'discount_price' => 'nullable|numeric|lte:price',
-            'image' => 'nullable|image|max:2048',
+            'flash_sale_price' => 'nullable|numeric|lte:price',
+            'flash_sale_expires_at' => 'nullable|date',
+            'is_gift' => 'nullable|boolean',
+            'gift_threshold' => 'nullable|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }

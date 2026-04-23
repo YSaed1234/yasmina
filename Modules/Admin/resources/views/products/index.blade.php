@@ -101,7 +101,16 @@
                         </span>
                     </td>
                     <td class="px-8 py-5 whitespace-nowrap text-center">
-                        @if($product->discount_price && $product->discount_price < $product->price)
+                        @if($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture())
+                            <div class="flex flex-col items-center">
+                                <span class="text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-black uppercase mb-1">{{ __('Flash Sale') }}</span>
+                                <span class="text-xs text-amber-500 line-through">{{ number_format($product->price, 2) }}</span>
+                                <span class="text-lg font-black text-amber-600">{{ number_format($product->flash_sale_price, 2) }}</span>
+                                <span class="text-[10px] font-bold text-amber-500 tracking-tighter" data-countdown="{{ $product->flash_sale_expires_at->toIso8601String() }}">
+                                    <span class="hours">00</span>h <span class="minutes">00</span>m
+                                </span>
+                            </div>
+                        @elseif($product->discount_price && $product->discount_price < $product->price)
                             <div class="flex flex-col items-center">
                                 <span class="text-xs text-red-400 line-through">{{ number_format($product->price, 2) }}</span>
                                 <span class="text-lg font-black text-gray-900">{{ number_format($product->discount_price, 2) }}</span>

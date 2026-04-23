@@ -18,8 +18,7 @@ class HomeController extends Controller
         $vendor_id = $vendor ? $vendor->id : null;
 
         $categoriesQuery = \App\Models\Category::with('products')->orderBy('rank');
-        $featuredProductsQuery = \App\Models\Product::orderBy('rank');
-
+        $featuredProductsQuery = \App\Models\Product::where('vendor_id', $vendor_id)->orderBy('rank');
         if ($vendor_id) {
             $categoriesQuery->where('vendor_id', $vendor_id);
             $featuredProductsQuery->where('vendor_id', $vendor_id);
@@ -30,7 +29,6 @@ class HomeController extends Controller
 
         $categories = $categoriesQuery->get();
         $featuredProducts = $featuredProductsQuery->take(8)->get();
-
         $slidesQuery = \App\Models\Slide::where('active', true);
         if ($vendor_id) {
             $slidesQuery->where('vendor_id', $vendor_id);
@@ -39,7 +37,7 @@ class HomeController extends Controller
         }
         $slides = $slidesQuery->orderBy('order')->get();
 
-        return view('web::index', compact('categories', 'featuredProducts', 'slides'));
+        return view('web::index', compact('categories', 'featuredProducts', 'slides', 'vendor'));
     }
 
     public function about()
