@@ -12,7 +12,8 @@ class ProductDisplayController extends Controller
      */
     public function index(Request $request)
     {
-        $vendor_id = $request->get('vendor_id');
+        $vendor = $request->attributes->get('current_vendor');
+        $vendor_id = $vendor ? $vendor->id : null;
         $query = \App\Models\Product::with(['category', 'currency']);
 
         if ($vendor_id) {
@@ -77,16 +78,18 @@ class ProductDisplayController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $vendor_id = $request->get('vendor_id');
-        $query = \App\Models\Product::with(['category', 'currency']);
+        $product = \App\Models\Product::with(['category', 'currency'])->findOrFail($id);
         
-        if ($vendor_id) {
-            $query->where('vendor_id', $vendor_id);
-        } else {
-            $query->whereNull('vendor_id');
+        $vendor = $request->attributes->get('current_vendor');
+        
+        // If a vendor is specified in the URL, ensure the product belongs to it
+        if ($vendor && $product->vendor_id != $vendor->id) {
+            abort(404);
         }
-
-        $product = $query->findOrFail($id);
+        
+        // If no vendor is specified but the product belongs to one, 
+        // we might want to redirect or just show it. 
+        // For now, let's just show it.
         return view('web::show', compact('product'));
     }
 

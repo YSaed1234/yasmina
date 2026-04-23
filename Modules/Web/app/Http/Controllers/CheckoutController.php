@@ -14,7 +14,7 @@ class CheckoutController extends Controller
     {
         $cart = session()->get('cart', []);
         if (empty($cart)) {
-            return redirect()->route('web.shop')->with('error', __('Your cart is empty!'));
+            return redirect()->route('web.shop', ['vendor_id' => request('vendor_id')])->with('error', __('Your cart is empty!'));
         }
 
         $total = 0;
@@ -44,8 +44,9 @@ class CheckoutController extends Controller
         }
 
         $finalTotal = max(0, $total - $discount);
-        $vendor_id = ($request->vendor_id ?? null);
-        $addresses = \App\Models\Address::with(['governorate', 'region'])->where('user_id', auth()->id())->where('vendor_id', $vendor_id)->get();
+        $vendor = $request->attributes->get('current_vendor');
+        $vendor_id = $vendor ? ($vendor->slug ?? $vendor->id) : null;
+        $addresses = \App\Models\Address::with(['governorate', 'region'])->where('user_id', auth()->id())->where('vendor_id', $vendor->id)->get();
 
         return view('web::checkout', compact('cart', 'total', 'coupon', 'discount', 'finalTotal', 'addresses'));
     }
@@ -58,7 +59,8 @@ class CheckoutController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $vendor_id = $request->get('vendor_id');
+        $vendor = $request->attributes->get('current_vendor');
+        $vendor_id = $vendor ? ($vendor->slug ?? $vendor->id) : null;
         $address = \App\Models\Address::with(['governorate', 'region'])->findOrFail($request->address_id);
 
         $region = null;
@@ -82,7 +84,7 @@ class CheckoutController extends Controller
 
         $cart = session()->get('cart', []);
         if (empty($cart)) {
-            return redirect()->route('web.shop')->with('error', __('Your cart is empty!'));
+            return redirect()->route('web.shop', ['vendor_id' => request('vendor_id')])->with('error', __('Your cart is empty!'));
         }
 
         $total = 0;
@@ -111,7 +113,7 @@ class CheckoutController extends Controller
 
             $order = Order::create([
                 'user_id' => auth()->id(),
-                'vendor_id' => $vendor_id,
+                'vendor_id' => $vendor->id,
                 'total' => $finalTotal,
                 'shipping_amount' => $shippingCost,
                 'status' => 'new',
@@ -161,7 +163,7 @@ class CheckoutController extends Controller
 
             session()->forget(['cart', 'coupon']);
 
-            return redirect()->route('home')->with('success', __('Order placed successfully! Your order ID is :id', ['id' => $order->id]));
+            return redirect()->route('home', ['vendor_id' => $vendor->slug ?? $vendor->id ?? null])->with('success', __('Order placed successfully! Your order ID is :id', ['id' => $order->id]));
 
         } catch (\Exception $e) {
             DB::rollBack();

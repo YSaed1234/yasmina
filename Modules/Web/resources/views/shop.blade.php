@@ -1,11 +1,11 @@
 <x-web::layouts.master>
-    <x-slot:title>{{ __('Shop All Products') }} - Yasmina</x-slot:title>
+    <x-slot:title>{{ $currentVendor ? $currentVendor->name . ' - ' : '' }}{{ __('Shop All Products') }} - Yasmina</x-slot:title>
 
     <div class="pt-32 pb-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="mb-12">
-                <h1 class="text-4xl font-bold text-gray-900">{{ __('Our Collection') }}</h1>
+                <h1 class="text-4xl font-bold text-gray-900">{{ $currentVendor ? $currentVendor->name : __('Our Collection') }}</h1>
                 <p class="mt-4 text-gray-600">{{ __('Discover our range of luxury products carefully curated for you.') }}</p>
             </div>
 
@@ -13,6 +13,7 @@
                 <!-- Filters Sidebar -->
                 <aside class="w-full lg:w-64 flex-shrink-0">
                     <form action="{{ route('web.shop') }}" method="GET" class="space-y-8 sticky top-32">
+                        <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}">
                         <!-- Search -->
                         <div>
                             <label class="block text-sm font-bold text-gray-900 uppercase tracking-widest mb-4">{{ __('Search') }}</label>
@@ -73,7 +74,7 @@
                         @forelse($products as $product)
                             <div class="group bg-white rounded-3xl overflow-hidden soft-shadow transition-all duration-500 border border-rose-50 hover:-translate-y-2 flex flex-col relative">
                                 <div class="aspect-square w-full overflow-hidden bg-rose-50 relative">
-                                    <a href="{{ route('web.products.show', $product->id) }}" class="block w-full h-full">
+                                    <a href="{{ route('web.products.show', [$product->id, 'vendor_id' => request()->has('vendor_id') ? request('vendor_id') : $product->vendor_id]) }}" class="block w-full h-full">
                                         @if($product->image)
                                             <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
                                         @else
@@ -103,7 +104,7 @@
                                             <span class="text-[10px] font-bold text-gray-400">{{ number_format($product->averageRating(), 1) }}</span>
                                         </div>
                                     </div>
-                                    <a href="{{ route('web.products.show', $product->id) }}">
+                                    <a href="{{ route('web.products.show', [$product->id, 'vendor_id' => request()->has('vendor_id') ? request('vendor_id') : $product->vendor_id]) }}">
                                         <h3 class="mt-2 text-lg font-bold text-gray-900 mb-4 group-hover:text-primary transition-colors line-clamp-1">{{ $product->name }}</h3>
                                     </a>
                                     <div class="mt-auto flex justify-between items-center">

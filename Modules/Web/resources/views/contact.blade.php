@@ -132,7 +132,7 @@
 
                         <form action="{{ route('web.contact.submit') }}" method="POST" class="space-y-6">
                             @csrf
-                            <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}">
+                            <input type="hidden" name="vendor_id" value="{{ $currentVendor->id ?? '' }}">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Name') }}</label>
                                 <input type="text" name="name" value="{{ auth()->user()->name ?? '' }}" required class="w-full px-6 py-4 bg-white border border-rose-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">

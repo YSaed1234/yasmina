@@ -12,7 +12,8 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $vendor_id = $request->get('vendor_id');
+        $vendor = $request->attributes->get('current_vendor');
+        $vendor_id = $vendor ? $vendor->id : null;
         
         $categoriesQuery = \App\Models\Category::with('products')->orderBy('rank');
         $featuredProductsQuery = \App\Models\Product::orderBy('rank');
@@ -41,11 +42,8 @@ class HomeController extends Controller
 
     public function about()
     {
-        $vendor_id = request('vendor_id');
-        $vendor = null;
-        if ($vendor_id) {
-            $vendor = \App\Models\Vendor::find($vendor_id);
-        }
+        $vendor = request()->attributes->get('current_vendor');
+        $vendor_id = $vendor ? $vendor->id : null;
 
         $slidesQuery = \App\Models\Slide::where('active', true);
         if ($vendor_id) {
@@ -60,11 +58,8 @@ class HomeController extends Controller
 
     public function contact()
     {
-        $vendor_id = request('vendor_id');
-        $vendor = null;
-        if ($vendor_id) {
-            $vendor = \App\Models\Vendor::find($vendor_id);
-        }
+        $vendor = request()->attributes->get('current_vendor');
+        $vendor_id = $vendor ? $vendor->id : null;
 
         $slidesQuery = \App\Models\Slide::where('active', true);
         if ($vendor_id) {

@@ -20,7 +20,8 @@ class ProfileController extends Controller
 
     public function orders()
     {
-        $vendorId = request()->vendor_id;
+        $vendor = request()->attributes->get('current_vendor');
+        $vendorId = $vendor ? $vendor->id : null;
         $orders = Order::where('vendor_id', $vendorId)
             ->where('user_id', auth()->id())
             ->with([
@@ -34,7 +35,8 @@ class ProfileController extends Controller
 
     public function addresses()
     {
-        $vendorId = request()->vendor_id;
+        $vendor = request()->attributes->get('current_vendor');
+        $vendorId = $vendor ? $vendor->id : null;
         $addresses = auth()->user()->addresses()->with(['governorate', 'region'])->where('vendor_id', $vendorId)->latest()->get();
         $governorates = Governorate::orderBy('name')->get();
         return view('web::profile.addresses', compact('addresses', 'governorates'));
@@ -92,7 +94,8 @@ class ProfileController extends Controller
             'comment' => 'nullable|string|max:500',
         ]);
 
-        $vendor_id = request('vendor_id');
+        $vendor = request()->attributes->get('current_vendor');
+        $vendor_id = $vendor ? $vendor->id : null;
 
         // Check if user has an order with this product
         $hasOrdered = auth()->user()->orders()

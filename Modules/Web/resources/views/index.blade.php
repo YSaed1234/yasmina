@@ -1,4 +1,5 @@
 <x-web::layouts.master>
+    <x-slot:title>{{ $currentVendor ? $currentVendor->name . ' - ' : '' }}Yasmina</x-slot:title>
     <div class="relative overflow-hidden">
         <!-- Hero Section -->
         <x-web::sections.hero :slides="$slides" />
@@ -22,7 +23,7 @@
                     @forelse($featuredProducts as $product)
                         <div class="group relative bg-white rounded-3xl overflow-hidden soft-shadow transition-all duration-500 border border-rose-50 hover:-translate-y-2 flex flex-col h-full">
                             <div class="aspect-square w-full overflow-hidden bg-rose-50 relative">
-                                <a href="{{ route('web.products.show', $product->id) }}" class="block w-full h-full">
+                                <a href="{{ route('web.products.show', [$product->id, 'vendor_id' => $product->vendor_id]) }}" class="block w-full h-full">
                                     @if($product->image)
                                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
                                     @else
@@ -53,7 +54,7 @@
                                             <span class="text-[10px] font-bold text-gray-400">{{ number_format($product->averageRating(), 1) }}</span>
                                         </div>
                                     </div>
-                                    <a href="{{ route('web.products.show', $product->id) }}">
+                                    <a href="{{ route('web.products.show', [$product->id, 'vendor_id' => $product->vendor_id]) }}">
                                         <h3 class="mt-2 text-lg font-bold text-gray-900 group-hover:text-primary transition-colors line-clamp-1">{{ $product->name }}</h3>
                                     </a>
                                 </div>
@@ -101,7 +102,7 @@
                                     @foreach($category->products->sortBy('rank')->take(4) as $product)
                                         <div class="group relative flex flex-col h-full">
                                             <div class="aspect-square w-full rounded-2xl overflow-hidden bg-rose-50 shadow-sm transition-all duration-500 hover:-translate-y-1 relative">
-                                                <a href="{{ route('web.products.show', $product->id) }}" class="block w-full h-full">
+                                                <a href="{{ route('web.products.show', [$product->id, 'vendor_id' => $product->vendor_id]) }}" class="block w-full h-full">
                                                     @if($product->image)
                                                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
                                                     @else
@@ -121,7 +122,7 @@
                                             <div class="mt-4 flex-1 flex flex-col justify-between">
                                                 <div>
                                                     <div class="flex justify-between items-center mb-1">
-                                                        <a href="{{ route('web.products.show', $product->id) }}">
+                                                        <a href="{{ route('web.products.show', [$product->id, 'vendor_id' => $product->vendor_id]) }}">
                                                             <h3 class="text-sm font-bold text-gray-700 group-hover:text-primary transition-colors line-clamp-1">{{ $product->name }}</h3>
                                                         </a>
                                                         <div class="flex items-center gap-0.5">

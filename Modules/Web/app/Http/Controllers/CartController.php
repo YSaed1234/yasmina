@@ -31,7 +31,7 @@ class CartController extends Controller
                     }
                 } else {
                     session()->forget('coupon');
-                    return redirect()->route('web.cart')->with('error', __('Minimum order amount for this coupon is :amount', ['amount' => $coupon->min_order_amount]));
+                    return redirect()->route('web.cart', ['vendor_id' => request('vendor_id')]) ->with('error', __('Minimum order amount for this coupon is :amount', ['amount' => $coupon->min_order_amount]));
                 }
             } else {
                 session()->forget('coupon');

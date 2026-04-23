@@ -385,7 +385,7 @@
                     </div>
                 </div>
                 <div class="mt-20 pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
-                    &copy; 2026 {{ __('Yasmina Website') }}. All rights reserved.
+                    &copy; {{ date('Y') }} {{ $currentVendor ? $currentVendor->name : __('Yasmina Website') }}. All rights reserved.
                 </div>
             </div>
         </footer>

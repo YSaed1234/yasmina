@@ -6,7 +6,7 @@
 
                 <form action="{{ route('web.checkout.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                     @csrf
-                    <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}">
+                    <input type="hidden" name="vendor_id" value="{{ $currentVendor->id ?? '' }}">
                     <div class="lg:col-span-2 space-y-8">
                         <!-- Shipping Information -->
                         <div class="bg-white p-10 rounded-3xl shadow-sm border border-rose-50">
