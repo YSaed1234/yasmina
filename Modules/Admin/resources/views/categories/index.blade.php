@@ -2,7 +2,13 @@
     <div class="flex justify-between items-center mb-6">
         <div>
             <h1 class="text-3xl font-bold text-gray-800">{{ __('Categories') }} <span class="ml-2 px-3 py-1 bg-yasmina-50 text-yasmina-500 text-sm rounded-full font-bold shadow-sm">{{ $categories->total() }}</span></h1>
-            <p class="text-gray-500 mt-2">{{ __('Manage your product categories and their display order.') }}</p>
+            <p class="text-gray-500 mt-2">
+                @if(auth()->user()->vendor_id)
+                    {{ __('View global categories and manage your own.') }}
+                @else
+                    {{ __('Manage your product categories and their display order.') }}
+                @endif
+            </p>
         </div>
         @canany(['create categories'])
         <a href="{{ route('admin.categories.create') }}" class="px-6 py-3 bg-yasmina-500 text-white rounded-2xl font-bold hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100 flex items-center gap-2">
@@ -47,6 +53,7 @@
                     <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">#</th>
                     <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Rank') }}</th>
                     <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Name') }}</th>
+                    <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Status') }}</th>
                     @canany(['edit categories', 'delete categories'])
                     <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Actions') }}</th>
                     @endcanany
@@ -66,18 +73,42 @@
                     <td class="px-8 py-5 whitespace-nowrap text-sm font-bold text-gray-800 text-center">
                         {{ $category->name }}
                     </td>
+                    <td class="px-8 py-5 whitespace-nowrap text-center">
+                        @if($category->vendor_id)
+                            <span class="px-3 py-1 bg-green-50 text-green-600 text-xs rounded-full font-bold shadow-sm border border-green-100">
+                                {{ __('Owner') }}
+                            </span>
+                        @else
+                            <span class="px-3 py-1 bg-blue-50 text-blue-600 text-xs rounded-full font-bold shadow-sm border border-blue-100">
+                                {{ __('Read-only') }}
+                            </span>
+                        @endif
+                    </td>
                     @canany(['edit categories', 'delete categories'])
                     <td class="px-8 py-5 whitespace-nowrap text-center text-sm font-bold">
                         <div class="flex justify-center gap-3">
+                            @php
+                                $isOwner = !auth()->user()->vendor_id || (auth()->user()->vendor_id == $category->vendor_id);
+                            @endphp
+
                             @canany(['edit categories'])
+                            @if($isOwner)
                             <a href="{{ route('admin.categories.edit', $category) }}" class="p-2 text-yasmina-500 hover:bg-yasmina-50 rounded-xl transition-all">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                             </a>
+                            @else
+                            <span class="p-2 text-gray-300 cursor-not-allowed">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </span>
+                            @endif
                             @endcanany
                             
                             @canany(['delete categories'])
+                            @if($isOwner)
                             <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline-block">
                                 @csrf
                                 @method('DELETE')
@@ -87,6 +118,13 @@
                                     </svg>
                                 </button>
                             </form>
+                            @else
+                            <span class="p-2 text-gray-300 cursor-not-allowed">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </span>
+                            @endif
                             @endcanany
                         </div>
                     </td>

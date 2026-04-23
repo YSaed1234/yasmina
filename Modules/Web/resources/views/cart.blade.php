@@ -40,8 +40,13 @@
                                                 <span class="w-10 text-center font-bold text-sm">{{ $details['quantity'] }}</span>
                                                 <button onclick="updateQuantity({{ $id }}, {{ $details['quantity'] + 1 }})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary transition-colors">+</button>
                                             </div>
-                                            <div class="text-lg font-bold text-primary">
-                                                {{ $details['currency'] }}{{ number_format($details['price'] * $details['quantity'], 2) }}
+                                            <div class="flex flex-col items-end">
+                                                @if(isset($details['original_price']) && $details['price'] < $details['original_price'])
+                                                    <span class="text-xs text-red-400 line-through">{{ $details['currency'] }}{{ number_format($details['original_price'] * $details['quantity'], 2) }}</span>
+                                                @endif
+                                                <div class="text-lg font-bold text-primary">
+                                                    {{ $details['currency'] }}{{ number_format($details['price'] * $details['quantity'], 2) }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -83,18 +88,20 @@
                                 <div class="space-y-4 mb-8">
                                     <div class="flex justify-between text-gray-500">
                                         <span>{{ __('Subtotal') }}</span>
-                                        <span class="font-bold text-gray-900">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($total, 2) }}</span>
+                                        <span class="font-bold text-gray-900">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($totalOriginal, 2) }}</span>
                                     </div>
+                                    @if($productSavings > 0)
+                                        <div class="flex justify-between text-red-500">
+                                            <span>{{ __('Product Discount') }}</span>
+                                            <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($productSavings, 2) }}</span>
+                                        </div>
+                                    @endif
                                     @if($discount > 0)
                                         <div class="flex justify-between text-green-600">
-                                            <span>{{ __('Discount') }}</span>
+                                            <span>{{ __('Coupon Discount') }}</span>
                                             <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($discount, 2) }}</span>
                                         </div>
                                     @endif
-                                    {{-- <div class="flex justify-between text-gray-500">
-                                        <span>{{ __('Shipping') }}</span>
-                                        <span class="font-bold text-green-600 uppercase text-xs tracking-widest">{{ __('Free') }}</span>
-                                    </div> --}}
                                 </div>
                                 <div class="border-t border-rose-50 pt-6 mb-10">
                                     <div class="flex justify-between items-center">

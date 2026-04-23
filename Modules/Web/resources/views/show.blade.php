@@ -13,6 +13,11 @@
                             <div class="w-full h-full flex items-center justify-center text-primary opacity-20 text-6xl">?</div>
                         @endif
                     </div>
+                    @if($product->discount_price && $product->discount_price < $product->price)
+                        <div class="absolute top-8 left-8 bg-red-500 text-white text-sm font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-2xl z-20">
+                            {{ __('Sale') }}
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Product Details -->
@@ -26,9 +31,19 @@
                         </h1>
                     </div>
 
-                    <div class="flex items-baseline gap-2">
-                        <span class="text-4xl font-bold text-primary">{{ number_format($product->price, 2) }}</span>
-                        <span class="text-xl font-bold text-primary opacity-60">{{ $product->currency?->symbol ?? '$' }}</span>
+                    <div class="flex flex-col">
+                        @if($product->discount_price && $product->discount_price < $product->price)
+                            <span class="text-xl text-gray-400 line-through mb-1">{{ number_format($product->price, 2) }} {{ $product->currency?->symbol ?? '$' }}</span>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-5xl font-black text-primary">{{ number_format($product->discount_price, 2) }}</span>
+                                <span class="text-2xl font-bold text-primary opacity-60">{{ $product->currency?->symbol ?? '$' }}</span>
+                            </div>
+                        @else
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-4xl font-bold text-primary">{{ number_format($product->price, 2) }}</span>
+                                <span class="text-xl font-bold text-primary opacity-60">{{ $product->currency?->symbol ?? '$' }}</span>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="prose prose-rose max-w-none">

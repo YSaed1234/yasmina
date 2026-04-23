@@ -22,7 +22,7 @@
                     <select name="category_id" class="w-full px-5 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none font-bold text-gray-700 appearance-none" required>
                         <option value="">{{ __('Select Category') }}</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }} {{ $category->vendor_id ? '(' . __('Private') . ')' : '(' . __('Global') . ')' }}</option>
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -30,6 +30,11 @@
                 <div>
                     <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">{{ __('Price') }}</label>
                     <input type="number" step="0.01" name="price" class="w-full px-5 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none font-bold text-gray-700" placeholder="0.00" required>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">{{ __('Discount Price') }}</label>
+                    <input type="number" step="0.01" name="discount_price" class="w-full px-5 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none font-bold text-gray-700" placeholder="0.00">
                 </div>
 
                 <div class="md:col-span-1">

@@ -43,6 +43,11 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-bold text-yasmina-500 mb-2 uppercase tracking-widest">{{ __('Discount Price') }}</label>
+                    <input type="number" step="0.01" name="discount_price" class="w-full px-5 py-4 bg-yasmina-50/50 border border-yasmina-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-yasmina-100 focus:border-yasmina-300 transition-all outline-none font-bold text-gray-700" placeholder="0.00">
+                </div>
+
+                <div>
                     <label class="block text-sm font-bold text-yasmina-500 mb-2 uppercase tracking-widest">{{ __('Rank') }}</label>
                     <input type="number" name="rank" value="0" class="w-full px-5 py-4 bg-yasmina-50/50 border border-yasmina-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-yasmina-100 focus:border-yasmina-300 transition-all outline-none font-bold text-gray-700">
                 </div>

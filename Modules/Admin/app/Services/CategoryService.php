@@ -10,6 +10,15 @@ class CategoryService
     {
         $query = Category::with('translations')->orderBy('rank');
 
+        $user = auth()->user();
+        if ($user && $user->vendor_id) {
+            // Vendor: see global categories AND their own categories
+            $query->where(function($q) use ($user) {
+                $q->whereNull('vendor_id')
+                  ->orWhere('vendor_id', $user->vendor_id);
+            });
+        }
+
         if (!empty($filters['search'])) {
             $search = $filters['search'];
             $query->whereTranslationLike('name', "%{$search}%");
@@ -22,7 +31,13 @@ class CategoryService
     {
         $category = new Category();
         $category->rank = $data['rank'] ?? 0;
-        $category->vendor_id = $data['vendor_id'] ?? null;
+        
+        $user = auth()->user();
+        if ($user && $user->vendor_id) {
+            $category->vendor_id = $user->vendor_id;
+        } else {
+            $category->vendor_id = $data['vendor_id'] ?? null;
+        }
         
         foreach (['ar', 'en'] as $locale) {
             if (isset($data[$locale]['name'])) {
@@ -37,7 +52,13 @@ class CategoryService
     public function updateCategory(Category $category, array $data)
     {
         $category->rank = $data['rank'] ?? $category->rank;
-        $category->vendor_id = $data['vendor_id'] ?? $category->vendor_id;
+        
+        $user = auth()->user();
+        if ($user && $user->vendor_id) {
+            // Vendors can't change vendor_id
+        } else {
+            $category->vendor_id = $data['vendor_id'] ?? $category->vendor_id;
+        }
         
         foreach (['ar', 'en'] as $locale) {
             if (isset($data[$locale]['name'])) {

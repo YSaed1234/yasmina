@@ -17,6 +17,7 @@ class Product extends Model implements TranslatableContract
         'currency_id',
         'vendor_id',
         'price',
+        'discount_price',
         'image',
         'rank'
     ];

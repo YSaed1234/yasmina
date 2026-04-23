@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Admin\Http\Requests;
+namespace Modules\Vendor\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -15,16 +15,13 @@ class UpdateProductRequest extends FormRequest
     {
         return [
             'category_id' => 'required|exists:categories,id',
-            'currency_id' => 'required|exists:currencies,id',
             'ar.name' => 'required|string|max:255',
             'en.name' => 'required|string|max:255',
             'ar.description' => 'nullable|string',
             'en.description' => 'nullable|string',
             'price' => 'required|numeric',
             'discount_price' => 'nullable|numeric|lte:price',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'rank' => 'nullable|integer',
-            'vendor_id' => 'nullable|exists:vendors,id',
+            'image' => 'nullable|image|max:2048',
         ];
     }
 }

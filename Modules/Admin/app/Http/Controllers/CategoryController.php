@@ -60,6 +60,12 @@ class CategoryController extends Controller implements HasMiddleware
     public function edit(string $id)
     {
         $category = $this->categoryService->findCategory($id);
+        
+        $user = auth()->user();
+        if ($user->vendor_id && $category->vendor_id !== $user->vendor_id) {
+            abort(403, __('You cannot edit a global category.'));
+        }
+
         $vendors = \App\Models\Vendor::all();
         return view('admin::categories.edit', compact('category', 'vendors'));
     }
@@ -67,6 +73,12 @@ class CategoryController extends Controller implements HasMiddleware
     public function update(UpdateCategoryRequest $request, string $id)
     {
         $category = $this->categoryService->findCategory($id);
+
+        $user = auth()->user();
+        if ($user->vendor_id && $category->vendor_id !== $user->vendor_id) {
+            abort(403, __('You cannot update a global category.'));
+        }
+
         $this->categoryService->updateCategory($category, $request->validated());
 
         return redirect()->route('admin.categories.index')->with('success', __('Category updated successfully.'));
@@ -75,6 +87,12 @@ class CategoryController extends Controller implements HasMiddleware
     public function destroy(string $id)
     {
         $category = $this->categoryService->findCategory($id);
+
+        $user = auth()->user();
+        if ($user->vendor_id && $category->vendor_id !== $user->vendor_id) {
+            abort(403, __('You cannot delete a global category.'));
+        }
+
         $this->categoryService->deleteCategory($category);
 
         return redirect()->route('admin.categories.index')->with('success', __('Category deleted successfully.'));

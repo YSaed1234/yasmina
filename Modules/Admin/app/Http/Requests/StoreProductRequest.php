@@ -21,6 +21,7 @@ class StoreProductRequest extends FormRequest
             'ar.description' => 'nullable|string',
             'en.description' => 'nullable|string',
             'price' => 'required|numeric',
+            'discount_price' => 'nullable|numeric|lte:price',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'rank' => 'nullable|integer',
             'vendor_id' => 'nullable|exists:vendors,id',

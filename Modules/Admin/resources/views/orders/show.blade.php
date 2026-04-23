@@ -22,6 +22,9 @@
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="px-8 py-6 border-b border-gray-50 bg-gray-50/50">
                     <h2 class="text-lg font-bold text-gray-900">{{ __('Order Items') }}</h2>
+                    @if(auth()->user()->vendor_id)
+                        <p class="text-xs text-gray-400 mt-1">{{ __('Detailed view of items from your institution in this order.') }}</p>
+                    @endif
                 </div>
                 <table class="w-full text-left border-collapse">
                     <thead>

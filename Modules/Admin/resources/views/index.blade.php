@@ -1,7 +1,13 @@
 <x-admin::layouts.master>
     <div class="mb-10">
         <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ __('Dashboard Overview') }}</h1>
-        <p class="text-gray-500">{{ __('Welcome back! Here is what is happening with your store today.') }}</p>
+        <p class="text-gray-500">
+            @if(auth()->user()->vendor_id)
+                {{ __('Welcome back! Here is what is happening with your institution today.') }}
+            @else
+                {{ __('Welcome back! Here is what is happening with your store today.') }}
+            @endif
+        </p>
     </div>
 
     <!-- Statistics Grid -->
@@ -16,8 +22,33 @@
                 </div>
                 <span class="text-xs font-bold text-green-500 bg-green-50 px-3 py-1 rounded-full">+12%</span>
             </div>
-            <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">{{ __('Total Products') }}</h3>
+            <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">
+                @if(auth()->user()->vendor_id)
+                    {{ __('Your Items') }}
+                @else
+                    {{ __('Total Products') }}
+                @endif
+            </h3>
             <p class="text-3xl font-black text-gray-900">{{ $stats['products_count'] }}</p>
+        </div>
+
+        <!-- Revenue (New for Vendors/Admins) -->
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-yasmina-50 hover:shadow-xl hover:shadow-yasmina-100/50 transition-all group">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-14 h-14 bg-yasmina-50 rounded-2xl flex items-center justify-center text-yasmina-500 group-hover:bg-yasmina-500 group-hover:text-white transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+            <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">
+                @if(auth()->user()->vendor_id)
+                    {{ __('Your Revenue') }}
+                @else
+                    {{ __('Total Revenue') }}
+                @endif
+            </h3>
+            <p class="text-3xl font-black text-gray-900">{{ number_format($stats['total_revenue'], 2) }}</p>
         </div>
 
         <!-- Categories -->
@@ -113,8 +144,20 @@
 
         <div class="bg-yasmina-500 p-10 rounded-[3rem] shadow-xl shadow-yasmina-100 text-white flex flex-col justify-between">
             <div>
-                <h3 class="text-2xl font-bold mb-4">{{ __('Store Status') }}</h3>
-                <p class="text-yasmina-100 leading-relaxed">{{ __('Your store is currently live and performing well. We have detected a growth in user engagement this week.') }}</p>
+                <h3 class="text-2xl font-bold mb-4">
+                    @if(auth()->user()->vendor_id)
+                        {{ __('Institution Status') }}
+                    @else
+                        {{ __('Store Status') }}
+                    @endif
+                </h3>
+                <p class="text-yasmina-100 leading-relaxed">
+                    @if(auth()->user()->vendor_id)
+                        {{ __('Your institution is currently active. You can manage your products and track sales directly from this panel.') }}
+                    @else
+                        {{ __('Your store is currently live and performing well. We have detected a growth in user engagement this week.') }}
+                    @endif
+                </p>
             </div>
             <div class="mt-8">
                 <a href="/" target="_blank" class="inline-flex items-center gap-2 px-8 py-4 bg-white text-yasmina-600 rounded-2xl font-bold hover:bg-yasmina-50 transition-all">

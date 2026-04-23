@@ -5,8 +5,7 @@ namespace Modules\Web\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Web\Http\Requests\VendorRegistrationRequest;
-use Modules\Admin\Services\VendorService;
-use App\Notifications\VendorApplicationReceivedNotification;
+use Modules\Web\Services\VendorRegistrationService;
 
 class HomeController extends Controller
 {
@@ -134,25 +133,10 @@ class HomeController extends Controller
         return view('web::become_vendor');
     }
 
-    public function registerVendor(VendorRegistrationRequest $request, VendorService $vendorService)
+    public function registerVendor(VendorRegistrationRequest $request, VendorRegistrationService $registrationService)
     {
-        $data = $request->validated();
-        $data['status'] = 'inactive'; // Set as inactive by default
-
         $currentVendorContext = $request->attributes->get('current_vendor');
-        if ($currentVendorContext) {
-            $data['referred_by_id'] = $currentVendorContext->id;
-        }
-
-        $vendor = $vendorService->storeVendor($data);
-
-        // Send notification to the new vendor account
-        $vendor->notify(new VendorApplicationReceivedNotification($vendor));
-
-        // Send notification to the logged-in user (if any)
-        if (auth()->check()) {
-            auth()->user()->notify(new VendorApplicationReceivedNotification($currentVendorContext));
-        }
+        $registrationService->register($request->validated(), $currentVendorContext);
 
         return redirect()->route('home', ['vendor_id' => $request->get('vendor_id')])
             ->with('success', __('Your application has been submitted successfully! We will contact you soon.'));

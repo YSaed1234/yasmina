@@ -2,7 +2,13 @@
     <div class="flex justify-between items-center mb-6">
         <div>
             <h1 class="text-3xl font-bold text-gray-800">{{ __('Products') }} <span class="ml-2 px-3 py-1 bg-yasmina-50 text-yasmina-500 text-sm rounded-full font-bold shadow-sm">{{ $products->total() }}</span></h1>
-            <p class="text-gray-500 mt-2">{{ __('Manage your product catalog and inventory.') }}</p>
+            <p class="text-gray-500 mt-2">
+                @if(auth()->user()->vendor_id)
+                    {{ __('Manage your institution product catalog.') }}
+                @else
+                    {{ __('Manage your product catalog and inventory.') }}
+                @endif
+            </p>
         </div>
         @canany(['create products'])
         <a href="{{ route('admin.products.create') }}" class="px-6 py-3 bg-yasmina-500 text-white rounded-2xl font-bold hover:bg-yasmina-600 transition-all shadow-lg shadow-yasmina-100 flex items-center gap-2">
@@ -95,8 +101,16 @@
                         </span>
                     </td>
                     <td class="px-8 py-5 whitespace-nowrap text-center">
-                        <span class="text-lg font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
-                        <span class="text-sm font-bold text-yasmina-500 ml-1">{{ $product->currency?->symbol ?? '$' }}</span>
+                        @if($product->discount_price && $product->discount_price < $product->price)
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs text-red-400 line-through">{{ number_format($product->price, 2) }}</span>
+                                <span class="text-lg font-black text-gray-900">{{ number_format($product->discount_price, 2) }}</span>
+                                <span class="text-[10px] font-bold text-yasmina-500">{{ $product->currency?->symbol ?? '$' }}</span>
+                            </div>
+                        @else
+                            <span class="text-lg font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
+                            <span class="text-sm font-bold text-yasmina-500 ml-1">{{ $product->currency?->symbol ?? '$' }}</span>
+                        @endif
                     </td>
                     <td class="px-8 py-5 whitespace-nowrap text-center">
                         <div class="flex items-center justify-center gap-1">

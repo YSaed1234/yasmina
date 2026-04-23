@@ -85,6 +85,11 @@
                                             </div>
                                         @endif
                                     </a>
+                                    @if($product->discount_price && $product->discount_price < $product->price)
+                                        <div class="absolute top-4 left-4 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20">
+                                            {{ __('Sale') }}
+                                        </div>
+                                    @endif
                                     @auth
                                         @php $isFavorited = auth()->user()->wishlist()->where('product_id', $product->id)->exists(); @endphp
                                         <button onclick="toggleWishlist({{ $product->id }}, this)" class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-all group/wish">
@@ -108,9 +113,19 @@
                                         <h3 class="mt-2 text-lg font-bold text-gray-900 mb-4 group-hover:text-primary transition-colors line-clamp-1">{{ $product->name }}</h3>
                                     </a>
                                     <div class="mt-auto flex justify-between items-center">
-                                        <div class="flex items-baseline gap-1">
-                                            <span class="text-xl font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
-                                            <span class="text-sm font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
+                                        <div class="flex flex-col">
+                                            @if($product->discount_price && $product->discount_price < $product->price)
+                                                <span class="text-xs text-gray-400 line-through">{{ number_format($product->price, 2) }}</span>
+                                                <div class="flex items-baseline gap-1">
+                                                    <span class="text-xl font-black text-gray-900">{{ number_format($product->discount_price, 2) }}</span>
+                                                    <span class="text-sm font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
+                                                </div>
+                                            @else
+                                                <div class="flex items-baseline gap-1">
+                                                    <span class="text-xl font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
+                                                    <span class="text-sm font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
+                                                </div>
+                                            @endif
                                         </div>
                                         <form action="{{ route('web.cart.add', $product->id) }}" method="POST">
                                             @csrf

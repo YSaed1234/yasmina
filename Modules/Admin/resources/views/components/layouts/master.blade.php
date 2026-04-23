@@ -109,7 +109,7 @@
                             @endcan
                             @can('manage products')
                                 <a href="{{ route('admin.products.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.products.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Products') }}
+                                    • {{ auth()->user()->vendor_id ? __('Your Items') : __('Products') }}
                                 </a>
                             @endcan
                             @can('manage vendors')

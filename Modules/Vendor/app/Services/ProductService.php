@@ -1,41 +1,29 @@
 <?php
 
-namespace Modules\Admin\Services;
+namespace Modules\Vendor\Services;
 
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ProductService
 {
-    public function getAllProducts(array $filters = [])
+    public function getVendorProducts($vendorId)
     {
-        $query = Product::with(['category', 'translations', 'category.translations', 'currency'])->orderBy('rank');
-
-        if (!empty($filters['search'])) {
-            $search = $filters['search'];
-            $query->whereTranslationLike('name', "%{$search}%");
-        }
-
-        if (!empty($filters['category_id'])) {
-            $query->where('category_id', $filters['category_id']);
-        }
-
-        if (!empty($filters['vendor_id'])) {
-            $query->where('vendor_id', $filters['vendor_id']);
-        }
-
-        return $query->paginate($filters['per_page'] ?? 10);
+        return Product::where('vendor_id', $vendorId)
+            ->with(['category', 'translations'])
+            ->latest()
+            ->paginate(10);
     }
 
-    public function storeProduct(array $data)
+    public function storeProduct(array $data, $vendorId)
     {
         $product = new Product();
+        $product->vendor_id = $vendorId;
         $product->category_id = $data['category_id'];
-        $product->currency_id = $data['currency_id'];
         $product->price = $data['price'];
         $product->discount_price = $data['discount_price'] ?? null;
-        $product->vendor_id = $data['vendor_id'] ?? null;
-        $product->rank = $data['rank'] ?? 0;
+        $product->currency_id = 1;
 
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
             $product->image = $data['image']->store('products', 'public');
@@ -58,11 +46,8 @@ class ProductService
     public function updateProduct(Product $product, array $data)
     {
         $product->category_id = $data['category_id'] ?? $product->category_id;
-        $product->currency_id = $data['currency_id'] ?? $product->currency_id;
         $product->price = $data['price'] ?? $product->price;
         $product->discount_price = array_key_exists('discount_price', $data) ? $data['discount_price'] : $product->discount_price;
-        $product->vendor_id = $data['vendor_id'] ?? $product->vendor_id;
-        $product->rank = $data['rank'] ?? $product->rank;
 
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
             if ($product->image) {
@@ -91,10 +76,5 @@ class ProductService
             Storage::disk('public')->delete($product->image);
         }
         return $product->delete();
-    }
-
-    public function findProduct(string $id)
-    {
-        return Product::with('category')->findOrFail($id);
     }
 }

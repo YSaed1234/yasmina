@@ -3,7 +3,13 @@
         <div class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Contact Requests') }} <span class="ml-2 px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">{{ $requests->total() }}</span></h1>
-                <p class="text-gray-500 mt-2">{{ __('Manage and respond to customer inquiries.') }}</p>
+                <p class="text-gray-500 mt-2">
+                    @if(auth()->user()->vendor_id)
+                        {{ __('View messages sent to your boutique.') }}
+                    @else
+                        {{ __('Manage and respond to customer inquiries.') }}
+                    @endif
+                </p>
             </div>
         </div>
 
@@ -58,7 +64,7 @@
                             </td>
                             <td class="py-6 px-6 text-center text-sm font-bold text-gray-900">{{ $request->name }}</td>
                             <td class="py-6 px-6 text-center text-sm text-gray-600">{{ $request->email }}</td>
-                            <td class="py-6 px-6 text-center text-sm text-gray-600">{{ $request->subject ?? '-' }}</td>
+                            <td class="py-6 px-6 text-center text-sm text-gray-600">{{ $request->subject ?? __('No Subject') }}</td>
                             <td class="py-6 px-6 text-center text-sm text-gray-600">
                                 @if($request->vendor)
                                     <span class="font-bold text-primary">{{ $request->vendor->name }}</span>

@@ -95,6 +95,16 @@
                     </div>
                 </div>
 
+                <div class="px-6 pb-2">
+                    <a href="{{ route('web.shop', ['vendor_id' => auth('vendor')->user()->slug ?? auth('vendor')->id()]) }}" target="_blank" class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl transition-all bg-primary/5 text-primary hover:bg-primary hover:text-white font-bold text-xs border border-primary/10">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        {{ __('View Store') }}
+                    </a>
+                </div>
+
                 <nav class="flex-1 p-6 space-y-2 overflow-y-auto">
                     <a href="{{ route('vendor.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('vendor.dashboard') ? 'bg-primary text-white font-bold shadow-lg shadow-primary/20' : 'text-gray-500 hover:bg-gray-50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

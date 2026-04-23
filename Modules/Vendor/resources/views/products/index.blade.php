@@ -49,8 +49,15 @@
                             {{ $product->category->name ?? __('N/A') }}
                         </span>
                     </td>
-                    <td class="px-8 py-5 font-bold text-gray-800">
-                        {{ $product->price }}
+                    <td class="px-8 py-5">
+                        @if($product->discount_price && $product->discount_price < $product->price)
+                            <div class="flex flex-col">
+                                <span class="text-[10px] text-red-400 line-through">{{ number_format($product->price, 2) }}</span>
+                                <span class="font-bold text-gray-800">{{ number_format($product->discount_price, 2) }}</span>
+                            </div>
+                        @else
+                            <span class="font-bold text-gray-800">{{ number_format($product->price, 2) }}</span>
+                        @endif
                     </td>
                     <td class="px-8 py-5">
                         <div class="flex items-center justify-center gap-3">

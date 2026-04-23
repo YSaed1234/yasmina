@@ -12,9 +12,23 @@ class CartService
     {
         $cart = Session::get('cart', []);
         $total = 0;
-        foreach ($cart as $item) {
-            $total += $item['price'] * $item['quantity'];
+        $totalOriginal = 0;
+        
+        $productIds = array_keys($cart);
+        $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
+
+        foreach ($cart as $id => &$item) {
+            if (isset($products[$id])) {
+                $product = $products[$id];
+                $item['price'] = $product->discount_price ?? $product->price;
+                $item['original_price'] = $product->price;
+                $total += $item['price'] * $item['quantity'];
+                $totalOriginal += $item['original_price'] * $item['quantity'];
+            }
         }
+        Session::put('cart', $cart);
+
+        $productSavings = $totalOriginal - $total;
 
         $coupon = null;
         $discount = 0;
@@ -51,6 +65,8 @@ class CartService
         return [
             'cart' => $cart,
             'total' => $total,
+            'totalOriginal' => $totalOriginal,
+            'productSavings' => $productSavings,
             'coupon' => $coupon,
             'discount' => $discount,
             'finalTotal' => $finalTotal
@@ -104,7 +120,8 @@ class CartService
             $cart[$productId] = [
                 "name" => $product->name,
                 "quantity" => $quantity,
-                "price" => $product->price,
+                "price" => $product->discount_price ?? $product->price,
+                "original_price" => $product->price,
                 "image" => $product->image,
                 "currency" => $product->currency->symbol ?? '$'
             ];

@@ -124,8 +124,13 @@
                                             <h4 class="text-sm font-bold text-gray-900 truncate">{{ $details['name'] }}</h4>
                                             <p class="text-xs text-gray-400 mt-1">x{{ $details['quantity'] }}</p>
                                         </div>
-                                        <div class="text-sm font-bold text-primary">
-                                            {{ $details['currency'] }}{{ number_format($details['price'] * $details['quantity'], 2) }}
+                                        <div class="flex flex-col items-end">
+                                            @if(isset($details['original_price']) && $details['price'] < $details['original_price'])
+                                                <span class="text-[10px] text-red-400 line-through">{{ $details['currency'] }}{{ number_format($details['original_price'] * $details['quantity'], 2) }}</span>
+                                            @endif
+                                            <div class="text-sm font-bold text-primary">
+                                                {{ $details['currency'] }}{{ number_format($details['price'] * $details['quantity'], 2) }}
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach
@@ -134,11 +139,17 @@
                             <div class="space-y-4 mb-8 border-t border-rose-50 pt-6">
                                 <div class="flex justify-between text-gray-500">
                                     <span>{{ __('Subtotal') }}</span>
-                                    <span class="font-bold text-gray-900">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($total, 2) }}</span>
+                                    <span class="font-bold text-gray-900">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($totalOriginal, 2) }}</span>
                                 </div>
+                                @if($productSavings > 0)
+                                    <div class="flex justify-between text-red-500">
+                                        <span>{{ __('Product Discount') }}</span>
+                                        <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($productSavings, 2) }}</span>
+                                    </div>
+                                @endif
                                 @if($discount > 0)
                                     <div class="flex justify-between text-green-600">
-                                        <span>{{ __('Discount') }}</span>
+                                        <span>{{ __('Coupon Discount') }}</span>
                                         <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($discount, 2) }}</span>
                                     </div>
                                 @endif
@@ -164,7 +175,8 @@
 
     @push('scripts')
     <script>
-        const subtotal = {{ $total }};
+        const subtotal = {{ $totalOriginal }};
+        const productSavings = {{ $productSavings }};
         const discount = {{ $discount }};
         const currency = "{{ reset($cart)['currency'] ?? '$' }}";
 
@@ -179,7 +191,7 @@
                 
                 if (isAvailable) {
                     document.getElementById('shipping-display').innerText = rate > 0 ? currency + rate.toFixed(2) : "{{ __('Free') }}";
-                    document.getElementById('total-display').innerText = currency + (subtotal - discount + rate).toFixed(2);
+                    document.getElementById('total-display').innerText = currency + (subtotal - productSavings - discount + rate).toFixed(2);
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 } else {
