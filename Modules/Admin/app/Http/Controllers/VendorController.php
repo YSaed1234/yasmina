@@ -25,6 +25,8 @@ class VendorController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'logo' => 'nullable|image|max:5120',
+            'about_image1' => 'nullable|image|max:5120',
+            'about_image2' => 'nullable|image|max:5120',
             'email' => 'required|email|unique:vendors,email',
             'phone' => 'nullable|string',
             'status' => 'required|in:active,inactive',
@@ -37,6 +39,14 @@ class VendorController extends Controller
 
         if ($request->hasFile('logo')) {
             $data['logo'] = $request->file('logo')->store('vendors', 'public');
+        }
+
+        if ($request->hasFile('about_image1')) {
+            $data['about_image1'] = $request->file('about_image1')->store('vendors/about', 'public');
+        }
+
+        if ($request->hasFile('about_image2')) {
+            $data['about_image2'] = $request->file('about_image2')->store('vendors/about', 'public');
         }
 
         Vendor::create($data);
@@ -54,6 +64,8 @@ class VendorController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'logo' => 'nullable|image|max:5120',
+            'about_image1' => 'nullable|image|max:5120',
+            'about_image2' => 'nullable|image|max:5120',
             'email' => 'required|email|unique:vendors,email,' . $vendor->id,
             'phone' => 'nullable|string',
             'status' => 'required|in:active,inactive',
@@ -69,6 +81,14 @@ class VendorController extends Controller
 
         if ($request->hasFile('logo')) {
             $data['logo'] = $request->file('logo')->store('vendors', 'public');
+        }
+
+        if ($request->hasFile('about_image1')) {
+            $data['about_image1'] = $request->file('about_image1')->store('vendors/about', 'public');
+        }
+
+        if ($request->hasFile('about_image2')) {
+            $data['about_image2'] = $request->file('about_image2')->store('vendors/about', 'public');
         }
 
         $vendor->update($data);

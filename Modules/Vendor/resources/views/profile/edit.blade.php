@@ -145,6 +145,23 @@
                                 class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900" placeholder="e.g. 201234567890">
                         </div>
                     </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-50">
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('About Image 1') }}</label>
+                            @if($vendor->about_image1)
+                                <img src="{{ asset('storage/' . $vendor->about_image1) }}" alt="About Image 1" class="w-20 h-20 rounded-2xl object-cover mb-3">
+                            @endif
+                            <input type="file" name="about_image1" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('About Image 2') }}</label>
+                            @if($vendor->about_image2)
+                                <img src="{{ asset('storage/' . $vendor->about_image2) }}" alt="About Image 2" class="w-20 h-20 rounded-2xl object-cover mb-3">
+                            @endif
+                            <input type="file" name="about_image2" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+                        </div>
+                    </div>
                 </div>
             </div>
 

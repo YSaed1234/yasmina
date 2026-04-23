@@ -29,10 +29,10 @@
                 </div>
                 <div class="grid grid-cols-2 gap-6">
                     <div class="aspect-square bg-rose-50 rounded-3xl overflow-hidden shadow-lg">
-                        <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Fashion">
+                        <img src="{{ ($vendor && $vendor->about_image1) ? asset('storage/' . $vendor->about_image1) : 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=600' }}" class="w-full h-full object-cover" alt="Fashion">
                     </div>
                     <div class="aspect-square bg-rose-50 rounded-3xl overflow-hidden shadow-lg translate-y-12">
-                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Product">
+                        <img src="{{ ($vendor && $vendor->about_image2) ? asset('storage/' . $vendor->about_image2) : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=600' }}" class="w-full h-full object-cover" alt="Product">
                     </div>
                 </div>
             </div>

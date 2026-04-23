@@ -22,6 +22,8 @@ class Vendor extends Authenticatable
         'instagram',
         'twitter',
         'whatsapp',
+        'about_image1',
+        'about_image2',
         'status',
         'password',
     ];

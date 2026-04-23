@@ -15,9 +15,19 @@
             @csrf
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Vendor Logo') }}</label>
-                    <input type="file" name="logo" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none">
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Vendor Logo') }}</label>
+                        <input type="file" name="logo" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('About Image 1') }}</label>
+                        <input type="file" name="about_image1" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('About Image 2') }}</label>
+                        <input type="file" name="about_image2" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none">
+                    </div>
                 </div>
 
                 <div>

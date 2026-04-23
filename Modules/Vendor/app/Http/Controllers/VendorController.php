@@ -76,6 +76,8 @@ class VendorController extends Controller
             'twitter' => 'nullable|url|max:255',
             'whatsapp' => 'nullable|string|max:20',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+            'about_image1' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+            'about_image2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
@@ -85,11 +87,24 @@ class VendorController extends Controller
         ]);
 
         if ($request->hasFile('logo')) {
-            // Delete old logo if exists
             if ($vendor->logo && \Storage::disk('public')->exists($vendor->logo)) {
                 \Storage::disk('public')->delete($vendor->logo);
             }
             $data['logo'] = $request->file('logo')->store('vendors/logos', 'public');
+        }
+
+        if ($request->hasFile('about_image1')) {
+            if ($vendor->about_image1 && \Storage::disk('public')->exists($vendor->about_image1)) {
+                \Storage::disk('public')->delete($vendor->about_image1);
+            }
+            $data['about_image1'] = $request->file('about_image1')->store('vendors/about', 'public');
+        }
+
+        if ($request->hasFile('about_image2')) {
+            if ($vendor->about_image2 && \Storage::disk('public')->exists($vendor->about_image2)) {
+                \Storage::disk('public')->delete($vendor->about_image2);
+            }
+            $data['about_image2'] = $request->file('about_image2')->store('vendors/about', 'public');
         }
 
         if ($request->filled('password')) {

@@ -644,5 +644,15 @@
     "Received On": "تم الاستلام في",
     "Reply via Email": "الرد عبر البريد الإلكتروني",
     "Delete Message": "حذف الرسالة",
-    "Contact Requests": "طلبات التواصل",
+    "About Image 1": "الصورة الأولى",
+    "About Image 2": "الصورة الثانية",
+    "Description": "الوصف",
+    "Detailed view of the customer inquiry.": "عرض تفصيلي لاستفسار العميل",
+    "Confirm Read": "تأكيد القراءة",
+    "Confirm Action": "تأكيد الإجراء",
+    "Message marked as replied.": "تم تحديد الرسالة كمردود عليها.",
+    "Are you sure you want to mark this message as read?": "هل أنت متأكد من تحديد هذه الرسالة كمقروءة؟",
+    "Are you sure you want to mark this message as replied?": "هل أنت متأكد من تحديد هذه الرسالة كمردود عليها؟",
+    "Mark as replied": "تحديد كمردود عليه"
+
 }

@@ -16,13 +16,33 @@
             @method('PUT')
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Vendor Logo') }}</label>
-                    <div class="flex items-center gap-6">
-                        @if($vendor->logo)
-                            <img src="{{ asset('storage/' . $vendor->logo) }}" class="w-20 h-20 rounded-2xl object-cover shadow-md">
-                        @endif
-                        <input type="file" name="logo" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none">
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Vendor Logo') }}</label>
+                        <div class="flex items-center gap-6">
+                            @if($vendor->logo)
+                                <img src="{{ asset('storage/' . $vendor->logo) }}" class="w-12 h-12 rounded-xl object-cover shadow-md">
+                            @endif
+                            <input type="file" name="logo" class="w-full px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl outline-none text-xs">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('About Image 1') }}</label>
+                        <div class="flex items-center gap-6">
+                            @if($vendor->about_image1)
+                                <img src="{{ asset('storage/' . $vendor->about_image1) }}" class="w-12 h-12 rounded-xl object-cover shadow-md">
+                            @endif
+                            <input type="file" name="about_image1" class="w-full px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl outline-none text-xs">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('About Image 2') }}</label>
+                        <div class="flex items-center gap-6">
+                            @if($vendor->about_image2)
+                                <img src="{{ asset('storage/' . $vendor->about_image2) }}" class="w-12 h-12 rounded-xl object-cover shadow-md">
+                            @endif
+                            <input type="file" name="about_image2" class="w-full px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl outline-none text-xs">
+                        </div>
                     </div>
                 </div>
 
