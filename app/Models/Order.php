@@ -17,6 +17,7 @@ class Order extends Model
         'payment_method',
         'shipping_details',
         'notes',
+        'rejection_reason',
     ];
 
     protected $casts = [

@@ -16,6 +16,7 @@
         <table class="w-full text-left rtl:text-right">
             <thead class="bg-gray-50/50 border-b border-gray-100">
                 <tr>
+                    <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">#</th>
                     <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">{{ __('Name') }}</th>
                     <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">{{ __('Owner') }}</th>
                     <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest text-center">{{ __('Actions') }}</th>
@@ -24,6 +25,9 @@
             <tbody class="divide-y divide-gray-100">
                 @forelse($categories as $category)
                 <tr class="hover:bg-gray-50/50 transition-colors group">
+                    <td class="px-8 py-5">
+                        <span class="text-xs font-bold text-gray-400">{{ $loop->iteration + ($categories->firstItem() - 1) }}</span>
+                    </td>
                     <td class="px-8 py-5">
                         <p class="font-bold text-gray-800">{{ $category->name }}</p>
                     </td>
@@ -63,7 +67,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="3" class="px-8 py-10 text-center text-gray-400 font-medium">
+                    <td colspan="4" class="px-8 py-10 text-center text-gray-400 font-medium">
                         {{ __('No categories found.') }}
                     </td>
                 </tr>

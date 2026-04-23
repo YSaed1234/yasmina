@@ -40,6 +40,7 @@
             <table class="w-full border-separate border-spacing-y-3">
                 <thead>
                     <tr class="text-center text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">
+                        <th class="pb-4 px-6">#</th>
                         <th class="pb-4 px-6">{{ __('Image') }}</th>
                         <th class="pb-4 px-6">{{ __('Name') }}</th>
                         <th class="pb-4 px-6">{{ __('Email') }}</th>
@@ -52,7 +53,10 @@
                 <tbody>
                     @foreach($users as $user)
                         <tr class="bg-gray-50/50 hover:bg-rose-50/30 transition-colors rounded-2xl">
-                            <td class="py-6 px-6 text-center first:rounded-l-2xl">
+                        <td class="py-6 px-6 text-center text-sm font-bold text-gray-400 first:rounded-l-2xl">
+                            {{ $loop->iteration + ($users->firstItem() - 1) }}
+                        </td>
+                        <td class="py-6 px-6 text-center">
                                 <div class="w-12 h-12 rounded-2xl overflow-hidden mx-auto border-2 border-white shadow-sm">
                                     @if($user->profile_image)
                                         <img src="{{ asset('storage/' . $user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">

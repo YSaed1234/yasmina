@@ -51,22 +51,22 @@
         <div class="bg-white p-10 rounded-[3rem] shadow-sm border border-gray-100">
             <h3 class="text-2xl font-bold text-gray-800 mb-6">{{ __('Quick Actions') }}</h3>
             <div class="grid grid-cols-2 gap-4">
-                <button class="flex flex-col items-center justify-center p-6 bg-primary/5 rounded-3xl hover:bg-primary/10 transition-all group border border-primary/10 cursor-not-allowed">
+                <a href="{{ route('vendor.products.create') }}" class="flex flex-col items-center justify-center p-6 bg-primary/5 rounded-3xl hover:bg-primary/10 transition-all group border border-primary/10">
                     <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-primary mb-3 shadow-sm group-hover:scale-110 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
                     </div>
                     <span class="text-sm font-bold text-gray-700">{{ __('Add Product') }}</span>
-                </button>
-                <button class="flex flex-col items-center justify-center p-6 bg-primary/5 rounded-3xl hover:bg-primary/10 transition-all group border border-primary/10 cursor-not-allowed">
+                </a>
+                <a href="{{ route('vendor.orders.index') }}" class="flex flex-col items-center justify-center p-6 bg-primary/5 rounded-3xl hover:bg-primary/10 transition-all group border border-primary/10">
                     <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-primary mb-3 shadow-sm group-hover:scale-110 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
                     </div>
                     <span class="text-sm font-bold text-gray-700">{{ __('View Orders') }}</span>
-                </button>
+                </a>
             </div>
         </div>
 

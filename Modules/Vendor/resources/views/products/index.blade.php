@@ -16,6 +16,7 @@
         <table class="w-full text-left rtl:text-right">
             <thead class="bg-gray-50/50 border-b border-gray-100">
                 <tr>
+                    <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">#</th>
                     <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">{{ __('Image') }}</th>
                     <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">{{ __('Name') }}</th>
                     <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">{{ __('Category') }}</th>
@@ -26,6 +27,9 @@
             <tbody class="divide-y divide-gray-100">
                 @forelse($products as $product)
                 <tr class="hover:bg-gray-50/50 transition-colors group">
+                    <td class="px-8 py-5">
+                        <span class="text-xs font-bold text-gray-400">{{ $loop->iteration + ($products->firstItem() - 1) }}</span>
+                    </td>
                     <td class="px-8 py-5">
                         @if($product->image)
                             <img src="{{ asset('storage/' . $product->image) }}" class="w-12 h-12 rounded-xl object-cover border border-gray-100">
@@ -69,7 +73,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="px-8 py-10 text-center text-gray-400 font-medium">
+                    <td colspan="6" class="px-8 py-10 text-center text-gray-400 font-medium">
                         {{ __('No products found.') }}
                     </td>
                 </tr>

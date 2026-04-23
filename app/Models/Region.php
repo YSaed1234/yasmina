@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Region extends Model
 {
-    protected $fillable = ['governorate_id', 'name', 'rate', 'is_active'];
+    protected $fillable = ['governorate_id', 'vendor_id', 'name', 'rate', 'is_active'];
 
     protected $casts = [
         'is_active' => 'boolean',
@@ -17,5 +17,10 @@ class Region extends Model
     public function governorate(): BelongsTo
     {
         return $this->belongsTo(Governorate::class);
+    }
+
+    public function vendor(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class);
     }
 }

@@ -21,6 +21,18 @@
 
                 <div class="space-y-8">
                     <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Institution (Optional)') }}</label>
+                        <select name="vendor_id" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium appearance-none">
+                            <option value="">{{ __('No Institution (Global)') }}</option>
+                            @foreach($vendors as $vendor)
+                                <option value="{{ $vendor->id }}" {{ (old('vendor_id', $region->vendor_id ?? '') == $vendor->id) ? 'selected' : '' }}>
+                                    {{ $vendor->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Governorate') }}</label>
                         <select name="governorate_id" required class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium appearance-none">
                             <option value="">{{ __('Select Governorate') }}</option>

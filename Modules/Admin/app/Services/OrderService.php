@@ -8,7 +8,7 @@ class OrderService
 {
     public function getAllPaginated($limit = 10, array $filters = [])
     {
-        $query = Order::with('user')->latest();
+        $query = Order::with(['user', 'items.product.vendor'])->latest();
 
         if (!empty($filters['search'])) {
             $search = $filters['search'];
@@ -27,20 +27,28 @@ class OrderService
 
     public function getOrderDetails(Order $order)
     {
-        return $order->load(['items.product', 'user']);
+        return $order->load(['items.product.vendor', 'user']);
     }
 
     public function updateStatus(Order $order, array $data)
     {
         $oldStatus = $order->status->value ?? $order->status;
         $newStatus = $data['status'];
+        $rejectionReason = $data['rejection_reason'] ?? null;
 
-        $updated = $order->update([
-            'status' => $newStatus,
-        ]);
+        $updateData = ['status' => $newStatus];
+        if ($newStatus === 'cancelled' && $rejectionReason) {
+            $updateData['rejection_reason'] = $rejectionReason;
+        }
+
+        $updated = $order->update($updateData);
 
         if ($updated && $order->user) {
-            $order->user->notify(new \App\Notifications\OrderStatusUpdatedNotification($order));
+            if ($newStatus === 'cancelled') {
+                $order->user->notify(new \App\Notifications\OrderCancelledNotification($order, $rejectionReason));
+            } else {
+                $order->user->notify(new \App\Notifications\OrderStatusUpdatedNotification($order));
+            }
             
             // Grant points logic
             $earningStatusSetting = \App\Models\PointSetting::getValue('points_earning_status', 'delivered');

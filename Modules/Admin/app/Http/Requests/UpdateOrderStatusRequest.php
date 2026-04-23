@@ -15,6 +15,7 @@ class UpdateOrderStatusRequest extends FormRequest
     {
         return [
             'status' => ['required', new \Illuminate\Validation\Rules\Enum(\App\Enums\OrderStatus::class)],
+            'rejection_reason' => ['required_if:status,cancelled', 'nullable', 'string', 'max:1000'],
         ];
     }
 }

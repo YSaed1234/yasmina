@@ -16,6 +16,7 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-gray-50 border-b border-gray-100">
+                    <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">#</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Name') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Regions Count') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">{{ __('Actions') }}</th>
@@ -24,6 +25,9 @@
             <tbody class="divide-y divide-gray-50">
                 @forelse($governorates as $gov)
                     <tr class="hover:bg-gray-50/50 transition-colors group">
+                        <td class="px-8 py-6">
+                            <span class="text-xs font-bold text-gray-400">{{ $loop->iteration + ($governorates->firstItem() - 1) }}</span>
+                        </td>
                         <td class="px-8 py-6 font-bold text-gray-900">{{ $gov->name }}</td>
                         <td class="px-8 py-6">
                             <span class="px-3 py-1 bg-rose-50 text-primary rounded-full text-xs font-bold">
@@ -51,7 +55,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3" class="px-8 py-20 text-center">
+                        <td colspan="4" class="px-8 py-20 text-center">
                             <p class="text-gray-400 font-bold uppercase tracking-widest text-xs">{{ __('No governorates found') }}</p>
                         </td>
                     </tr>

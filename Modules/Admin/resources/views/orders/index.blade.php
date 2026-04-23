@@ -30,8 +30,10 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-gray-50 border-b border-gray-100">
+                    <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">#</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Order ID') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Customer') }}</th>
+                    <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Institution') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Total') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Shipping') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Status') }}</th>
@@ -44,6 +46,9 @@
                 @forelse($orders as $order)
                     <tr class="hover:bg-gray-50/50 transition-colors group">
                         <td class="px-8 py-6">
+                            <span class="text-xs font-bold text-gray-400">{{ $loop->iteration + ($orders->firstItem() - 1) }}</span>
+                        </td>
+                        <td class="px-8 py-6">
                             <span class="font-bold text-gray-900">#{{ $order->id }}</span>
                         </td>
                         <td class="px-8 py-6">
@@ -51,6 +56,18 @@
                                 <span class="font-bold text-gray-900">{{ $order->shipping_details['name'] ?? 'Guest' }}</span>
                                 <span class="text-xs text-gray-400">{{ $order->shipping_details['email'] ?? '' }}</span>
                             </div>
+                        </td>
+                        <td class="px-8 py-6">
+                            @php
+                                $vendors = $order->items->map(fn($i) => $i->product->vendor)->filter()->unique('id');
+                            @endphp
+                            @foreach($vendors as $vendor)
+                                <div class="mb-1">
+                                    <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider border border-blue-100 whitespace-nowrap">
+                                        {{ $vendor->name }}
+                                    </span>
+                                </div>
+                            @endforeach
                         </td>
                         <td class="px-8 py-6 font-bold text-primary">
                             {{ number_format($order->total, 2) }}
@@ -62,7 +79,9 @@
                             <form action="{{ route('admin.orders.update-status', $order) }}" method="POST" class="status-update-form">
                                 @csrf
                                 @method('PUT')
-                                <select name="status" onchange="this.form.submit()" 
+                                <input type="hidden" name="rejection_reason" class="rejection-reason-input">
+                                <select name="status" onchange="handleStatusChange(this)" 
+                                    data-original-status="{{ $order->status->value }}"
                                     class="px-4 py-2 rounded-2xl text-[10px] font-bold uppercase tracking-widest border-none outline-none cursor-pointer transition-all {{ $order->status->color() }}">
                                     @foreach(\App\Enums\OrderStatus::cases() as $status)
                                         <option value="{{ $status->value }}" {{ $order->status == $status ? 'selected' : '' }} class="bg-white text-gray-700">
@@ -99,7 +118,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-8 py-20 text-center">
+                        <td colspan="10" class="px-8 py-20 text-center">
                             <div class="flex flex-col items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-200 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -115,4 +134,22 @@
             {{ $orders->appends(request()->query())->links() }}
         </div>
     </div>
+    <script>
+        function handleStatusChange(select) {
+            if (select.value === 'cancelled') {
+                const reason = prompt("{{ __('Please enter the reason for cancellation:') }}");
+                if (reason) {
+                    const form = select.closest('form');
+                    form.querySelector('.rejection-reason-input').value = reason;
+                    form.submit();
+                } else {
+                    // Reset to original value if cancelled
+                    select.value = select.getAttribute('data-original-status');
+                    return false;
+                }
+            } else {
+                select.form.submit();
+            }
+        }
+    </script>
 </x-admin::layouts.master>

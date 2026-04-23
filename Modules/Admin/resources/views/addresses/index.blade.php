@@ -49,6 +49,7 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-gray-50 border-b border-gray-100">
+                    <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">#</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Address Name') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Customer') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Address Details') }}</th>
@@ -59,6 +60,9 @@
             <tbody class="divide-y divide-gray-50">
                 @forelse($addresses as $address)
                     <tr class="hover:bg-gray-50/50 transition-colors group">
+                        <td class="px-8 py-6">
+                            <span class="text-xs font-bold text-gray-400">{{ $loop->iteration + ($addresses->firstItem() - 1) }}</span>
+                        </td>
                         <td class="px-8 py-6 font-bold text-gray-900">{{ $address->name }}</td>
                         <td class="px-8 py-6">
                             <div class="flex flex-col">
@@ -87,7 +91,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-8 py-20 text-center">
+                        <td colspan="6" class="px-8 py-20 text-center">
                             <p class="text-gray-400 font-bold uppercase tracking-widest text-xs">{{ __('No addresses found') }}</p>
                         </td>
                     </tr>

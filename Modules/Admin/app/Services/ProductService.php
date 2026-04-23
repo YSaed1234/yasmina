@@ -20,6 +20,10 @@ class ProductService
             $query->where('category_id', $filters['category_id']);
         }
 
+        if (!empty($filters['vendor_id'])) {
+            $query->where('vendor_id', $filters['vendor_id']);
+        }
+
         return $query->paginate($filters['per_page'] ?? 10);
     }
 

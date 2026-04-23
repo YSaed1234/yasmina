@@ -32,6 +32,7 @@
         <table class="min-w-full divide-y divide-yasmina-50">
             <thead>
                 <tr class="bg-yasmina-50/50">
+                    <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">#</th>
                     <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Name') }}</th>
                     <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Code') }}</th>
                     <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Symbol') }}</th>
@@ -43,6 +44,9 @@
             <tbody class="divide-y divide-yasmina-50">
                 @foreach($currencies as $currency)
                     <tr class="hover:bg-yasmina-50/30 transition-colors">
+                        <td class="px-8 py-5 whitespace-nowrap text-sm font-bold text-gray-400 text-center">
+                            {{ $loop->iteration + ($currencies->firstItem() - 1) }}
+                        </td>
                         <td class="px-8 py-5 whitespace-nowrap text-sm font-bold text-gray-800 text-center">
                             {{ $currency->name }}
                         </td>

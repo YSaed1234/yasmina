@@ -42,7 +42,12 @@
                                                 <img src="{{ asset('storage/' . $item->product->image) }}" class="w-full h-full object-cover">
                                             @endif
                                         </div>
-                                        <span class="font-bold text-gray-900">{{ $item->product->name ?? __('Product Not Found') }}</span>
+                                        <div>
+                                            <span class="block font-bold text-gray-900">{{ $item->product->name ?? __('Product Not Found') }}</span>
+                                            @if($item->product && $item->product->vendor)
+                                                <span class="text-[10px] font-black uppercase text-blue-500 tracking-widest bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100 mt-1 inline-block">{{ $item->product->vendor->name }}</span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="px-8 py-6 text-center font-bold text-gray-600">{{ $item->quantity }}</td>
@@ -121,11 +126,12 @@
                 <h3 class="text-lg font-bold text-gray-900 mb-8 border-b border-gray-50 pb-6">{{ __('Manage Order') }}</h3>
                 
                 <div class="space-y-6">
-                    <form action="{{ route('admin.orders.update-status', $order) }}" method="POST">
+                    <form action="{{ route('admin.orders.update-status', $order) }}" method="POST" id="statusForm">
                         @csrf
                         @method('PUT')
+                        <input type="hidden" name="rejection_reason" id="rejection_reason">
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Order Status') }}</label>
-                        <select name="status" onchange="this.form.submit()" class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none font-bold text-gray-700 transition-all appearance-none">
+                        <select name="status" onchange="handleStatusChange(this)" class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none font-bold text-gray-700 transition-all appearance-none">
                             @foreach(\App\Enums\OrderStatus::cases() as $status)
                                 <option value="{{ $status->value }}" {{ $order->status == $status ? 'selected' : '' }}>{{ $status->label() }}</option>
                             @endforeach
@@ -156,4 +162,20 @@
             </div>
         </div>
     </div>
+    <script>
+        function handleStatusChange(select) {
+            if (select.value === 'cancelled') {
+                const reason = prompt("{{ __('Please enter the reason for cancellation:') }}");
+                if (reason) {
+                    document.getElementById('rejection_reason').value = reason;
+                    document.getElementById('statusForm').submit();
+                } else {
+                    select.value = "{{ $order->status->value }}";
+                    return false;
+                }
+            } else {
+                select.form.submit();
+            }
+        }
+    </script>
 </x-admin::layouts.master>

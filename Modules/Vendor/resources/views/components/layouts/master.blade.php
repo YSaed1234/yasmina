@@ -16,10 +16,22 @@
                 theme: {
                     extend: {
                         colors: {
-                            primary: '#865d58',
-                            'primary-hover': '#75514c',
-                            secondary: '#d6a6a1',
-                            'bg-soft': '#fdf8f7',
+                            yasmina: {
+                                50: 'var(--yasmina-50)',
+                                100: 'var(--yasmina-100)',
+                                200: 'var(--yasmina-200)',
+                                300: 'var(--yasmina-300)',
+                                400: 'var(--yasmina-400)',
+                                500: 'var(--yasmina-500)',
+                                600: 'var(--yasmina-600)',
+                                700: 'var(--yasmina-700)',
+                                800: 'var(--yasmina-800)',
+                                900: 'var(--yasmina-900)',
+                            },
+                            primary: 'var(--yasmina-500)',
+                            'primary-hover': 'var(--yasmina-600)',
+                            secondary: 'var(--yasmina-400)',
+                            'bg-soft': 'var(--yasmina-50)',
                         },
                         fontFamily: {
                             sans: ['Outfit', 'Tajawal', 'sans-serif'],
@@ -30,12 +42,33 @@
         </script>
         <style>
             :root {
-                --yasmina-primary: #865d58;
-                --yasmina-secondary: #d6a6a1;
-                --yasmina-bg-soft: #fdf8f7;
+                /* Yasmina Rose (Default) */
+                --yasmina-50: #fdf8f7;
+                --yasmina-100: #f9eded;
+                --yasmina-200: #f2d8d5;
+                --yasmina-300: #e5bcba;
+                --yasmina-400: #d6a6a1;
+                --yasmina-500: #865d58;
+                --yasmina-600: #75514c;
+                --yasmina-700: #634541;
+                --yasmina-800: #523a37;
+                --yasmina-900: #422f2c;
+            }
+
+            [data-theme="barbie"] {
+                --yasmina-50: #fff0f7;
+                --yasmina-100: #ffe4f2;
+                --yasmina-200: #ffc9e7;
+                --yasmina-300: #ff9ed1;
+                --yasmina-400: #ff64b1;
+                --yasmina-500: #e0218a;
+                --yasmina-600: #c2146e;
+                --yasmina-700: #a20e58;
+                --yasmina-800: #86104a;
+                --yasmina-900: #701140;
             }
             body {
-                background-color: #f8fafc;
+                background-color: var(--yasmina-50);
                 font-family: 'Outfit', 'Tajawal', sans-serif;
             }
         </style>
@@ -45,7 +78,7 @@
     <body class="antialiased">
         <div class="flex min-h-screen">
             <!-- Sidebar -->
-            <aside class="w-72 bg-white border-r border-gray-100 flex flex-col fixed h-full z-40">
+            <aside class="w-72 bg-white border-e border-gray-100 flex flex-col fixed inset-y-0 start-0 h-full z-40">
                 <div class="p-8 border-b border-gray-50 flex items-center gap-4">
                     @if(auth('vendor')->user()->logo)
                         <img src="{{ asset('storage/' . auth('vendor')->user()->logo) }}" alt="Logo" class="w-12 h-12 rounded-2xl object-cover shadow-sm">
@@ -88,11 +121,19 @@
                         {{ __('Our Products') }}
                     </a>
 
-                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-gray-400 cursor-not-allowed">
+                    <a href="{{ route('vendor.orders.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('vendor.orders.*') ? 'bg-primary text-white font-bold shadow-lg shadow-primary/20' : 'text-gray-500 hover:bg-gray-50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
                         {{ __('Orders') }}
+                    </a>
+
+                    <a href="{{ route('vendor.shipping.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('vendor.shipping.*') ? 'bg-primary text-white font-bold shadow-lg shadow-primary/20' : 'text-gray-500 hover:bg-gray-50' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        {{ __('Shipping Rates') }}
                     </a>
                 </nav>
 
@@ -110,7 +151,7 @@
             </aside>
 
             <!-- Main Content -->
-            <main class="flex-1 ml-72 relative">
+            <main class="flex-1 ms-72 relative">
                 <!-- Header -->
                 <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-10 sticky top-0 z-30 backdrop-blur-md bg-white/80">
                     <div class="flex items-center gap-4">
@@ -118,6 +159,16 @@
                     </div>
 
                     <div class="flex items-center gap-6">
+                        <!-- Theme Switcher -->
+                        <div class="flex items-center bg-gray-50 rounded-2xl p-1 shadow-sm border border-gray-100">
+                            <button onclick="changeTheme('yasmina')" class="p-1.5 rounded-xl transition-all hover:bg-white group" title="Yasmina Rose">
+                                <div class="w-4 h-4 rounded-lg" style="background: linear-gradient(to right, #865d58, #d6a6a1);"></div>
+                            </button>
+                            <button onclick="changeTheme('barbie')" class="p-1.5 rounded-xl transition-all hover:bg-white group" title="Barbie Pink">
+                                <div class="w-4 h-4 rounded-lg" style="background: linear-gradient(to right, #e0218a, #ff64b1);"></div>
+                            </button>
+                        </div>
+
                         <!-- Language Switcher -->
                         <div class="flex items-center bg-gray-50 rounded-2xl p-1 shadow-sm border border-gray-100">
                             <a href="{{ route('lang.switch', 'en') }}" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all {{ app()->getLocale() == 'en' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-primary' }}">EN</a>
@@ -143,7 +194,10 @@
                                  x-transition:enter="transition ease-out duration-200"
                                  x-transition:enter-start="opacity-0 scale-95 translate-y-2"
                                  x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                                 class="absolute right-0 rtl:left-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                                 class="absolute end-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                                 <a href="{{ route('vendor.profile.edit') }}" class="w-full text-left rtl:text-right px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors block">
+                                    {{ __('Edit Profile') }}
+                                </a>
                                 <form method="POST" action="{{ route('vendor.logout') }}">
                                     @csrf
                                     <button type="submit" class="w-full text-left rtl:text-right px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-50 transition-colors">
@@ -163,6 +217,16 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            function changeTheme(themeName) {
+                document.documentElement.setAttribute('data-theme', themeName);
+                localStorage.setItem('yasmina-theme', themeName);
+            }
+
+            // Load saved theme
+            const savedTheme = localStorage.getItem('yasmina-theme') || 'yasmina';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        </script>
         @stack('scripts')
     </body>
 </html>

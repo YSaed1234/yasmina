@@ -39,6 +39,7 @@
         <table class="min-w-full divide-y divide-yasmina-50">
             <thead class="bg-yasmina-50/50">
                 <tr>
+                    <th class="px-6 py-4 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">#</th>
                     <th class="px-6 py-4 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Role Name') }}</th>
                     <th class="px-6 py-4 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Permissions') }}</th>
                     <th class="px-6 py-4 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Actions') }}</th>
@@ -47,6 +48,9 @@
             <tbody class="divide-y divide-yasmina-50">
                 @foreach($roles as $role)
                 <tr class="hover:bg-yasmina-50/30 transition-colors">
+                    <td class="px-6 py-4 text-center text-sm font-bold text-gray-400">
+                        {{ $loop->iteration + ($roles->firstItem() - 1) }}
+                    </td>
                     <td class="px-6 py-4 text-center">
                         <span class="font-bold text-gray-800">{{ $role->name }}</span>
                     </td>

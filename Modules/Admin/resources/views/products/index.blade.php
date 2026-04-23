@@ -50,6 +50,7 @@
         <table class="min-w-full divide-y divide-yasmina-50">
             <thead>
                 <tr class="bg-yasmina-50/50">
+                    <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">#</th>
                     <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Rank') }}</th>
                     <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Image') }}</th>
                     <th class="px-8 py-5 text-center text-xs font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Name') }}</th>
@@ -64,6 +65,9 @@
             <tbody class="divide-y divide-yasmina-50">
                 @foreach($products as $product)
                 <tr class="hover:bg-yasmina-50/30 transition-colors">
+                    <td class="px-8 py-5 whitespace-nowrap text-sm font-bold text-gray-400 text-center">
+                        {{ $loop->iteration + ($products->firstItem() - 1) }}
+                    </td>
                     <td class="px-8 py-5 whitespace-nowrap text-sm font-bold text-gray-700">
                         <div class="flex justify-center">
                             <span class="w-8 h-8 rounded-lg bg-yasmina-50 flex items-center justify-center text-yasmina-600">{{ $product->rank }}</span>

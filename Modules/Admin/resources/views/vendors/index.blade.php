@@ -16,6 +16,7 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-gray-50/50">
+                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">#</th>
                     <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Logo') }}</th>
                     <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Name') }}</th>
                     <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Status') }}</th>
@@ -25,6 +26,9 @@
             <tbody class="divide-y divide-gray-50">
                 @foreach($vendors as $vendor)
                 <tr class="hover:bg-gray-50/50 transition-colors group">
+                    <td class="px-8 py-6">
+                        <span class="text-xs font-bold text-gray-400">{{ $loop->iteration + ($vendors->firstItem() - 1) }}</span>
+                    </td>
                     <td class="px-8 py-6">
                         @if($vendor->logo)
                             <img src="{{ asset('storage/' . $vendor->logo) }}" class="w-12 h-12 rounded-2xl object-cover shadow-sm">
@@ -47,7 +51,18 @@
                     </td>
                     <td class="px-8 py-6 text-right">
                         <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                            <a href="{{ route('admin.vendors.edit', $vendor) }}" class="p-2 text-gray-400 hover:text-primary transition-colors">
+                            <a href="{{ route('admin.products.index', ['vendor_id' => $vendor->id]) }}" title="{{ __('Products') }}" class="p-2 text-gray-400 hover:text-blue-500 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-14v14m0-14L4 7m8 4v10M4 7v10l8 4" />
+                                </svg>
+                            </a>
+                            <a href="{{ route('admin.regions.index', ['vendor_id' => $vendor->id]) }}" title="{{ __('Shipping Rates') }}" class="p-2 text-gray-400 hover:text-green-500 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </a>
+                            <a href="{{ route('admin.vendors.edit', $vendor) }}" title="{{ __('Edit') }}" class="p-2 text-gray-400 hover:text-primary transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>

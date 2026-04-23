@@ -48,11 +48,48 @@ class VendorController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the vendor profile.
      */
-    public function edit($id)
+    public function editProfile()
     {
-        return view('vendor::edit');
+        $vendor = auth('vendor')->user();
+        return view('vendor::profile.edit', compact('vendor'));
+    }
+
+    /**
+     * Update the vendor profile.
+     */
+    public function updateProfile(Request $request)
+    {
+        $vendor = auth('vendor')->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:vendors,email,' . $vendor->id,
+            'phone' => 'nullable|string|max:20',
+            'description' => 'nullable|string',
+            'address' => 'nullable|string',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        $data = $request->only(['name', 'email', 'phone', 'description', 'address']);
+
+        if ($request->hasFile('logo')) {
+            // Delete old logo if exists
+            if ($vendor->logo && \Storage::disk('public')->exists($vendor->logo)) {
+                \Storage::disk('public')->delete($vendor->logo);
+            }
+            $data['logo'] = $request->file('logo')->store('vendors/logos', 'public');
+        }
+
+        if ($request->filled('password')) {
+            $data['password'] = \Hash::make($request->password);
+        }
+
+        $vendor->update($data);
+
+        return back()->with('success', __('Profile updated successfully.'));
     }
 
     /**

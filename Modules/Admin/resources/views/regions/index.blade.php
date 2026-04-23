@@ -16,8 +16,10 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-gray-50 border-b border-gray-100">
+                    <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">#</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Region Name') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Governorate') }}</th>
+                    <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Institution') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Rate') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Status') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">{{ __('Actions') }}</th>
@@ -26,9 +28,23 @@
             <tbody class="divide-y divide-gray-50">
                 @forelse($regions as $region)
                     <tr class="hover:bg-gray-50/50 transition-colors group">
+                        <td class="px-8 py-6">
+                            <span class="text-xs font-bold text-gray-400">{{ $loop->iteration + ($regions->firstItem() - 1) }}</span>
+                        </td>
                         <td class="px-8 py-6 font-bold text-gray-900">{{ $region->name }}</td>
                         <td class="px-8 py-6">
                             <span class="text-sm text-gray-600">{{ $region->governorate->name }}</span>
+                        </td>
+                        <td class="px-8 py-6">
+                            @if($region->vendor)
+                                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest">
+                                    {{ $region->vendor->name }}
+                                </span>
+                            @else
+                                <span class="px-3 py-1 bg-gray-50 text-gray-400 rounded-full text-[10px] font-black uppercase tracking-widest">
+                                    {{ __('Global') }}
+                                </span>
+                            @endif
                         </td>
                         <td class="px-8 py-6 font-bold text-primary">
                             {{ number_format($region->rate, 2) }}
@@ -65,7 +81,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-8 py-20 text-center">
+                        <td colspan="7" class="px-8 py-20 text-center">
                             <p class="text-gray-400 font-bold uppercase tracking-widest text-xs">{{ __('No regions found') }}</p>
                         </td>
                     </tr>

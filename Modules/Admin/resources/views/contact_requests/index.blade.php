@@ -8,7 +8,7 @@
         </div>
 
         <div class="mb-10 flex flex-wrap gap-4">
-            <form method="GET" action="{{ route('contact_requests.index') }}" class="flex-1 flex gap-4 min-w-[300px]">
+            <form method="GET" action="{{ route('admin.contact_requests.index') }}" class="flex-1 flex gap-4 min-w-[300px]">
                 <div class="relative flex-1">
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search by name, email or subject') }}..." 
                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 outline-none transition-all">
@@ -39,6 +39,7 @@
             <table class="w-full border-separate border-spacing-y-3">
                 <thead>
                     <tr class="text-center text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">
+                        <th class="pb-4 px-6">#</th>
                         <th class="pb-4 px-6">{{ __('Name') }}</th>
                         <th class="pb-4 px-6">{{ __('Email') }}</th>
                         <th class="pb-4 px-6">{{ __('Subject') }}</th>
@@ -51,7 +52,10 @@
                 <tbody>
                     @forelse($requests as $request)
                         <tr class="bg-gray-50/50 hover:bg-rose-50/30 transition-colors rounded-2xl">
-                            <td class="py-6 px-6 text-center text-sm font-bold text-gray-900 first:rounded-l-2xl">{{ $request->name }}</td>
+                            <td class="py-6 px-6 text-center text-sm font-bold text-gray-400 first:rounded-l-2xl">
+                                {{ $loop->iteration + ($requests->firstItem() - 1) }}
+                            </td>
+                            <td class="py-6 px-6 text-center text-sm font-bold text-gray-900">{{ $request->name }}</td>
                             <td class="py-6 px-6 text-center text-sm text-gray-600">{{ $request->email }}</td>
                             <td class="py-6 px-6 text-center text-sm text-gray-600">{{ $request->subject ?? '-' }}</td>
                             <td class="py-6 px-6 text-center text-sm text-gray-600 max-w-xs truncate" title="{{ $request->message }}">{{ $request->message }}</td>
@@ -86,7 +90,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="py-20 text-center">
+                            <td colspan="8" class="py-20 text-center">
                                 <div class="bg-gray-50 rounded-3xl p-10 inline-block border-2 border-dashed border-gray-100">
                                     <p class="text-gray-400 font-bold tracking-wider">{{ __('No contact requests found.') }}</p>
                                 </div>

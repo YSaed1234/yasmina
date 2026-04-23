@@ -51,6 +51,7 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-yasmina-50/50">
+                        <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">#</th>
                         <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Code') }}</th>
                         <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Type') }}</th>
                         <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Value') }}</th>
@@ -63,6 +64,9 @@
                 <tbody class="divide-y divide-yasmina-50">
                     @forelse($coupons as $coupon)
                         <tr class="hover:bg-yasmina-50/30 transition-colors">
+                            <td class="px-8 py-5 whitespace-nowrap text-sm font-bold text-gray-400">
+                                {{ $loop->iteration + ($coupons->firstItem() - 1) }}
+                            </td>
                             <td class="px-8 py-5 font-bold text-yasmina-600">{{ $coupon->code }}</td>
                             <td class="px-8 py-5">
                                 <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider {{ $coupon->type == 'fixed' ? 'bg-blue-50 text-blue-500' : 'bg-purple-50 text-purple-500' }}">
@@ -117,7 +121,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-8 py-20 text-center">
+                            <td colspan="8" class="px-8 py-20 text-center">
                                 <div class="flex flex-col items-center">
                                     <div class="w-20 h-20 bg-yasmina-50 rounded-full flex items-center justify-center mb-4">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-yasmina-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
