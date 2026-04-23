@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $cart = session()->get('cart', []);
         if (empty($cart)) {
@@ -27,7 +27,7 @@ class CheckoutController extends Controller
         if (session()->has('coupon')) {
             $couponData = session()->get('coupon');
             $coupon = \App\Models\Coupon::where('code', $couponData['code'])->first();
-            
+
             if ($coupon && $coupon->isValid()) {
                 if ($total >= $coupon->min_order_amount) {
                     if ($coupon->type === 'percentage') {
@@ -44,7 +44,8 @@ class CheckoutController extends Controller
         }
 
         $finalTotal = max(0, $total - $discount);
-        $addresses = auth()->user()->addresses;
+        $vendor_id = ($request->vendor_id ?? null);
+        $addresses = \App\Models\Address::with(['governorate', 'region'])->where('user_id', auth()->id())->where('vendor_id', $vendor_id)->get();
 
         return view('web::checkout', compact('cart', 'total', 'coupon', 'discount', 'finalTotal', 'addresses'));
     }
@@ -59,7 +60,7 @@ class CheckoutController extends Controller
 
         $vendor_id = $request->get('vendor_id');
         $address = \App\Models\Address::with(['governorate', 'region'])->findOrFail($request->address_id);
-        
+
         $region = null;
         if ($vendor_id) {
             $region = \App\Models\Region::where('vendor_id', $vendor_id)
@@ -153,10 +154,10 @@ class CheckoutController extends Controller
             }
 
             DB::commit();
-            
+
             // Send Notification to user
             auth()->user()->notify(new \App\Notifications\NewOrderNotification($order));
-            
+
             session()->forget(['cart', 'coupon']);
 
             return redirect()->route('home')->with('success', __('Order placed successfully! Your order ID is :id', ['id' => $order->id]));

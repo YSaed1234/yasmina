@@ -16,12 +16,12 @@
                                 {{ __('Add New Address') }}
                             </button>
                         </div>
-
                         <!-- Address Form (Hidden by default) -->
                         <div id="addressForm" class="hidden mb-12 bg-rose-50/30 p-8 rounded-[2.5rem] border border-rose-100">
                             <h3 class="text-xl font-bold text-gray-900 mb-6">{{ __('Add a New Address') }}</h3>
                             <form action="{{ route('web.profile.addresses.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 @csrf
+                        <input type="hidden" name="vendor_id" id="vendor_id" value="{{ request()->vendor_id ?? null}}">
                                 <div class="md:col-span-2">
                                     <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Address Name (e.g. Home, Office)') }}</label>
                                     <input type="text" name="name" required class="w-full px-5 py-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-primary outline-none text-sm">

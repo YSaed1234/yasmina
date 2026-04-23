@@ -21,6 +21,7 @@ class Address extends Model
         'is_default',
         'governorate_id',
         'region_id',
+        'vendor_id',
     ];
 
     protected $casts = [

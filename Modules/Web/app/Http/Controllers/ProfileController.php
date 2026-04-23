@@ -46,7 +46,6 @@ class ProfileController extends Controller
             'governorate_id.required' => __('Please select a governorate.'),
             'region_id.required' => __('Please select an area.')
         ]);
-
         auth()->user()->addresses()->create($request->all());
 
         return back()->with('success', __('Address added successfully.'));
@@ -54,7 +53,8 @@ class ProfileController extends Controller
 
     public function updateAddress(Request $request, Address $address)
     {
-        if ($address->user_id !== auth()->id()) abort(403);
+        if ($address->user_id !== auth()->id())
+            abort(403);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -85,7 +85,7 @@ class ProfileController extends Controller
 
         // Check if user has an order with this product
         $hasOrdered = auth()->user()->orders()
-            ->whereHas('items', function($q) use ($request) {
+            ->whereHas('items', function ($q) use ($request) {
                 $q->where('product_id', $request->product_id);
             })->exists();
 
