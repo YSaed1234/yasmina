@@ -7,7 +7,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-        <title>{{ __('Admin Dashboard 2026') }} - Yasmina</title>
+        <title>{{ env('APP_NAME') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -170,6 +170,22 @@
                         {{ __('Coupons') }}
                     </a>
                     @endcan
+
+                    @can('manage shipping')
+                    <a href="{{ route('governorates.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('governorates.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        {{ __('Governorates') }}
+                    </a>
+                    <a href="{{ route('regions.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('regions.*') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A2 2 0 013 15.491V6.509a2 2 0 011.553-1.943L9 3m0 17l6-3m-6 3V3m6 14l5.447 2.724A2 2 0 0021 17.509V8.509a2 2 0 00-1.553-1.943L15 3m0 17V3" />
+                        </svg>
+                        {{ __('Regions & Shipping') }}
+                    </a>
+                    @endcan
                 </nav>
 
                 <div class="p-4 border-t border-yasmina-50">
@@ -186,7 +202,7 @@
             <div class="flex-1 flex flex-col h-screen overflow-hidden">
                 <header class="bg-white border-b border-yasmina-50 h-20 flex items-center justify-between px-10 sticky top-0 z-50 backdrop-blur-md bg-white/80 shrink-0">
                     <div class="flex items-center gap-4">
-                        <h2 class="text-xl font-bold text-gray-800">{{ __('Admin Dashboard 2026') }}</h2>
+                        <h2 class="text-xl font-bold text-gray-800">{{ env('APP_NAME') }}</h2>
                     </div>
                     
                     <div class="flex items-center gap-6">

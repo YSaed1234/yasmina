@@ -19,6 +19,8 @@ class Address extends Model
         'postal_code',
         'country',
         'is_default',
+        'governorate_id',
+        'region_id',
     ];
 
     protected $casts = [
@@ -28,5 +30,15 @@ class Address extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function governorate(): BelongsTo
+    {
+        return $this->belongsTo(Governorate::class);
+    }
+
+    public function region(): BelongsTo
+    {
+        return $this->belongsTo(Region::class);
     }
 }

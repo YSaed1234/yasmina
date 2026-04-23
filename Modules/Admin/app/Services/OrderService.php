@@ -32,10 +32,28 @@ class OrderService
 
     public function updateStatus(Order $order, array $data)
     {
-        return $order->update([
+        $updated = $order->update([
             'status' => $data['status'],
-            'payment_status' => $data['payment_status']
         ]);
+
+        if ($updated && $order->user) {
+            $order->user->notify(new \App\Notifications\OrderStatusUpdatedNotification($order));
+        }
+
+        return $updated;
+    }
+
+    public function updatePaymentStatus(Order $order, string $status)
+    {
+        $updated = $order->update([
+            'payment_status' => $status
+        ]);
+
+        if ($updated && $order->user) {
+            $order->user->notify(new \App\Notifications\PaymentStatusUpdatedNotification($order));
+        }
+
+        return $updated;
     }
 
     public function delete(Order $order)

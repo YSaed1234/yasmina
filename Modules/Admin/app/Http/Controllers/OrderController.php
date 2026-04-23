@@ -31,7 +31,14 @@ class OrderController extends Controller
     public function updateStatus(UpdateOrderStatusRequest $request, Order $order)
     {
         $this->orderService->updateStatus($order, $request->validated());
-        return back()->with('success', __('Order updated successfully.'));
+        return back()->with('success', __('Order status updated successfully.'));
+    }
+
+    public function updatePaymentStatus(\Illuminate\Http\Request $request, Order $order)
+    {
+        $request->validate(['payment_status' => 'required|string|in:pending,paid,failed']);
+        $this->orderService->updatePaymentStatus($order, $request->payment_status);
+        return back()->with('success', __('Payment status updated successfully.'));
     }
 
     public function destroy(Order $order)

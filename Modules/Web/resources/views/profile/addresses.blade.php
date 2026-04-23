@@ -70,6 +70,25 @@
                                     <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Country') }}</label>
                                     <input type="text" name="country" value="Egypt" required class="w-full px-5 py-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-primary outline-none text-sm">
                                 </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
+                                    <div>
+                                        <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Governorate') }}</label>
+                                        <select name="governorate_id" id="governorate_select" required onchange="loadRegions(this.value)" class="w-full px-5 py-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-primary outline-none text-sm bg-white">
+                                            <option value="">{{ __('Select Governorate') }}</option>
+                                            @foreach($governorates as $gov)
+                                                <option value="{{ $gov->id }}">{{ $gov->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('governorate_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Area / Region') }}</label>
+                                        <select name="region_id" id="region_select" required class="w-full px-5 py-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-primary outline-none text-sm bg-white disabled:opacity-50" disabled>
+                                            <option value="">{{ __('Select area') }}</option>
+                                        </select>
+                                        @error('region_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                    </div>
+                                </div>
                                 <div class="md:col-span-2">
                                     <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Street Address') }}</label>
                                     <input type="text" name="address_line1" required class="w-full px-5 py-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-primary outline-none text-sm">
@@ -114,7 +133,7 @@
                                         </div>
                                         <p class="text-sm text-gray-600 leading-relaxed">
                                             {{ $address->address_line1 }}<br>
-                                            {{ $address->city }}, {{ $address->country }}<br>
+                                            {{ $address->region?->name ?? $address->city }}@if($address->governorate), {{ $address->governorate->name }}@endif, {{ $address->country }}<br>
                                             {{ $address->phone }}
                                         </p>
                                     </div>
@@ -136,6 +155,34 @@
         function toggleAddressForm() {
             const form = document.getElementById('addressForm');
             form.classList.toggle('hidden');
+        }
+
+        async function loadRegions(govId) {
+            const regionSelect = document.getElementById('region_select');
+            regionSelect.innerHTML = '<option value="">{{ __("Loading...") }}</option>';
+            regionSelect.disabled = true;
+
+            if (!govId) {
+                regionSelect.innerHTML = '<option value="">{{ __("Select area") }}</option>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/governorates/${govId}/regions`);
+                const regions = await response.json();
+                
+                regionSelect.innerHTML = '<option value="">{{ __("Select area") }}</option>';
+                regions.forEach(region => {
+                    const option = document.createElement('option');
+                    option.value = region.id;
+                    option.textContent = `${region.name} (${parseFloat(region.rate).toFixed(2)})`;
+                    regionSelect.appendChild(option);
+                });
+                regionSelect.disabled = false;
+            } catch (error) {
+                console.error('Error loading regions:', error);
+                regionSelect.innerHTML = '<option value="">{{ __("Error loading areas") }}</option>';
+            }
         }
     </script>
 </x-web::layouts.master>

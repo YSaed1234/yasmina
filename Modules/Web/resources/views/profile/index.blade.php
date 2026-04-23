@@ -86,10 +86,10 @@
                                                 </div>
                                             </div>
                                             <div class="flex items-center gap-8">
-                                                <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-rose-50 text-primary">
-                                                    {{ __($order->status) }}
+                                                <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest {{ $order->status->color() }}">
+                                                    {{ $order->status->label() }}
                                                 </span>
-                                                <span class="font-bold text-gray-900">{{ number_format($order->total_amount, 2) }} {{ $order->items->first()?->product?->currency?->symbol ?? '$' }}</span>
+                                                <span class="font-bold text-gray-900">{{ number_format($order->total, 2) }} {{ $order->items->first()?->product?->currency?->symbol ?? '$' }}</span>
                                                 <a href="{{ route('web.profile.orders') }}" class="text-gray-300 group-hover:text-primary transition-colors">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

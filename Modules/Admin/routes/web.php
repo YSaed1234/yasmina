@@ -29,12 +29,17 @@ Route::prefix('admin-dashboard-2026')->group(function () {
 
     Route::get('orders', [\Modules\Admin\Http\Controllers\OrderController::class, 'index'])->name('orders.index')->middleware('permission:manage orders');
     Route::get('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'show'])->name('orders.show')->middleware('permission:manage orders');
-    Route::post('orders/{order}/status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.update_status')->middleware('permission:manage orders');
+    Route::put('orders/{order}/status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.update-status')->middleware('permission:manage orders');
+    Route::put('orders/{order}/payment-status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updatePaymentStatus'])->name('orders.update-payment-status')->middleware('permission:manage orders');
     Route::delete('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy')->middleware('permission:manage orders');
 
     Route::resource('coupons', \Modules\Admin\Http\Controllers\CouponController::class)->middleware('permission:manage coupons');
 
-    Route::get('addresses', [\Modules\Admin\Http\Controllers\AddressController::class, 'index'])->name('addresses.index')->middleware('permission:manage addresses');
+    Route::resource('addresses', \Modules\Admin\Http\Controllers\AddressController::class)->names('addresses')->middleware('permission:manage addresses');
     Route::delete('addresses/{address}', [\Modules\Admin\Http\Controllers\AddressController::class, 'destroy'])->name('addresses.destroy')->middleware('permission:manage addresses');
+
+    Route::resource('shipping-zones', \Modules\Admin\Http\Controllers\ShippingZoneController::class)->names('shipping_zones')->middleware('permission:manage shipping');
+    Route::resource('governorates', \Modules\Admin\Http\Controllers\GovernorateController::class)->names('governorates')->middleware('permission:manage shipping');
+    Route::resource('regions', \Modules\Admin\Http\Controllers\RegionController::class)->names('regions')->middleware('permission:manage shipping');
     });
 });

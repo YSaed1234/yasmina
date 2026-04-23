@@ -110,6 +110,71 @@
                             @endif
                         </a>
 
+                        <!-- Notifications -->
+                        @auth
+                            <div class="relative group">
+                                <button class="relative p-2 hover:bg-rose-50 rounded-xl transition-all">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                    </svg>
+                                    @php $unreadCount = auth()->user()->unreadNotifications->count(); @endphp
+                                    @if($unreadCount > 0)
+                                        <span id="notification-badge" class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full border border-white">
+                                            {{ $unreadCount }}
+                                        </span>
+                                    @endif
+                                </button>
+                                
+                                <div class="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-rose-50 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-[60] overflow-hidden">
+                                    <div class="p-4 border-b border-rose-50 flex justify-between items-center bg-rose-50/10">
+                                        <span class="font-bold text-gray-900 text-sm">{{ __('Notifications') }}</span>
+                                        @if($unreadCount > 0)
+                                            <form action="{{ route('web.notifications.mark-all-read') }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="text-[10px] font-bold text-primary hover:underline">{{ __('Mark all as read') }}</button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                    <div class="max-h-96 overflow-y-auto">
+                                        @forelse(auth()->user()->notifications->take(10) as $notification)
+                                            <div id="notification-{{ $notification->id }}" class="p-4 border-b border-rose-50/50 hover:bg-rose-50/30 transition-all {{ $notification->read_at ? 'opacity-60' : 'bg-rose-50/10' }}">
+                                                <div class="flex gap-3">
+                                                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+                                                    </div>
+                                                    <div class="flex-1">
+                                                        @if(isset($notification->data['action_url']))
+                                                            <a href="{{ $notification->data['action_url'] }}" class="block">
+                                                                <p class="text-xs font-bold text-gray-800 leading-relaxed hover:text-primary transition-colors">{{ $notification->data['message'] ?? '' }}</p>
+                                                            </a>
+                                                        @else
+                                                            <p class="text-xs font-bold text-gray-800 leading-relaxed">{{ $notification->data['message'] ?? '' }}</p>
+                                                        @endif
+                                                        <span class="text-[10px] text-gray-400 mt-1 block">{{ $notification->created_at->diffForHumans() }}</span>
+                                                    </div>
+                                                    @unless($notification->read_at)
+                                                        <button onclick="markAsRead('{{ $notification->id }}', this)" class="w-2 h-2 bg-primary rounded-full mt-2" title="{{ __('Mark as read') }}"></button>
+                                                    @endunless
+                                                </div>
+                                            </div>
+                                        @empty
+                                            <div class="p-8 text-center text-gray-400">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-3 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                                </svg>
+                                                <p class="text-xs">{{ __('No notifications yet') }}</p>
+                                            </div>
+                                        @endforelse
+                                    </div>
+                                    <a href="{{ route('web.notifications') }}" class="block py-3 text-center text-xs font-bold text-primary bg-rose-50/20 hover:bg-rose-50/50 transition-all border-t border-rose-50">
+                                        {{ __('View All Notifications') }}
+                                    </a>
+                                </div>
+                            </div>
+                        @endauth
+
                         @guest
                             <a href="{{ route('login') }}" class="hover:text-primary transition-colors">{{ __('Login') }}</a>
                         @else
@@ -305,6 +370,36 @@
                         confirmButtonColor: 'var(--yasmina-primary)',
                     });
                 });
+            }
+
+            function markAsRead(id, btn) {
+                fetch(`/notifications/${id}/read`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const item = document.getElementById(`notification-${id}`);
+                        item.classList.add('opacity-60');
+                        item.classList.remove('bg-rose-50/10');
+                        btn.remove();
+                        
+                        const badge = document.getElementById('notification-badge');
+                        if (badge) {
+                            let count = parseInt(badge.innerText);
+                            if (count > 1) {
+                                badge.innerText = count - 1;
+                            } else {
+                                badge.remove();
+                            }
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
             }
         </script>
         @stack('scripts')

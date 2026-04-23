@@ -57,7 +57,13 @@ class CheckoutController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $address = \App\Models\Address::findOrFail($request->address_id);
+        $address = \App\Models\Address::with(['governorate', 'region'])->findOrFail($request->address_id);
+        
+        if (!$address->region || !$address->region->is_active) {
+            return back()->with('error', __('Shipping is not available for the selected address / area.'));
+        }
+
+        $shippingCost = $address->region->rate;
 
         $cart = session()->get('cart', []);
         if (empty($cart)) {
@@ -83,7 +89,7 @@ class CheckoutController extends Controller
             }
         }
 
-        $finalTotal = max(0, $total - $discount);
+        $finalTotal = max(0, $total - $discount) + $shippingCost;
 
         try {
             DB::beginTransaction();
@@ -91,6 +97,7 @@ class CheckoutController extends Controller
             $order = Order::create([
                 'user_id' => auth()->id(),
                 'total' => $finalTotal,
+                'shipping_amount' => $shippingCost,
                 'status' => 'new',
                 'payment_status' => 'pending',
                 'payment_method' => $request->payment_method,
@@ -101,6 +108,7 @@ class CheckoutController extends Controller
                     'address' => $address->address_line1 . ($address->address_line2 ? ', ' . $address->address_line2 : ''),
                     'city' => $address->city,
                     'country' => $address->country,
+                    'shipping_zone' => $address->shippingZone ? $address->shippingZone->name : null
                 ],
                 'notes' => $request->notes,
                 'coupon_id' => $coupon ? $coupon->id : null,
@@ -131,6 +139,10 @@ class CheckoutController extends Controller
             }
 
             DB::commit();
+            
+            // Send Notification to user
+            auth()->user()->notify(new \App\Notifications\NewOrderNotification($order));
+            
             session()->forget(['cart', 'coupon']);
 
             return redirect()->route('home')->with('success', __('Order placed successfully! Your order ID is :id', ['id' => $order->id]));

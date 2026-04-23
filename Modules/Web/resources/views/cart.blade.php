@@ -91,10 +91,10 @@
                                             <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($discount, 2) }}</span>
                                         </div>
                                     @endif
-                                    <div class="flex justify-between text-gray-500">
+                                    {{-- <div class="flex justify-between text-gray-500">
                                         <span>{{ __('Shipping') }}</span>
                                         <span class="font-bold text-green-600 uppercase text-xs tracking-widest">{{ __('Free') }}</span>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <div class="border-t border-rose-50 pt-6 mb-10">
                                     <div class="flex justify-between items-center">

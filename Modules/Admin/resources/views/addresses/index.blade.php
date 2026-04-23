@@ -69,7 +69,7 @@
                         <td class="px-8 py-6">
                             <p class="text-sm text-gray-600 leading-relaxed">
                                 {{ $address->address_line1 }}<br>
-                                {{ $address->city }}, {{ $address->country }}
+                                {{ $address->city }}@if($address->shippingZone), {{ $address->shippingZone->name }}@endif, {{ $address->country }}
                             </p>
                         </td>
                         <td class="px-8 py-6 text-sm font-medium text-gray-900">{{ $address->phone }}</td>

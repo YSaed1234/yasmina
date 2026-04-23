@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Address;
 use App\Models\Order;
 use App\Models\Review;
+use App\Models\Governorate;
+use App\Models\Region;
 
 class ProfileController extends Controller
 {
@@ -24,8 +26,9 @@ class ProfileController extends Controller
 
     public function addresses()
     {
-        $addresses = auth()->user()->addresses()->latest()->get();
-        return view('web::profile.addresses', compact('addresses'));
+        $addresses = auth()->user()->addresses()->with(['governorate', 'region'])->latest()->get();
+        $governorates = Governorate::orderBy('name')->get();
+        return view('web::profile.addresses', compact('addresses', 'governorates'));
     }
 
     public function storeAddress(Request $request)
@@ -36,8 +39,12 @@ class ProfileController extends Controller
             'address_line1' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'country' => 'required|string|max:255',
+            'governorate_id' => 'required|exists:governorates,id',
+            'region_id' => 'required|exists:regions,id',
         ], [
-            'phone.regex' => __('Please enter a valid Egyptian or Saudi phone number.')
+            'phone.regex' => __('Please enter a valid Egyptian or Saudi phone number.'),
+            'governorate_id.required' => __('Please select a governorate.'),
+            'region_id.required' => __('Please select an area.')
         ]);
 
         auth()->user()->addresses()->create($request->all());
@@ -47,7 +54,7 @@ class ProfileController extends Controller
 
     public function updateAddress(Request $request, Address $address)
     {
-        $this->authorize('update', $address);
+        if ($address->user_id !== auth()->id()) abort(403);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -55,8 +62,12 @@ class ProfileController extends Controller
             'address_line1' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'country' => 'required|string|max:255',
+            'governorate_id' => 'required|exists:governorates,id',
+            'region_id' => 'required|exists:regions,id',
         ], [
-            'phone.regex' => __('Please enter a valid Egyptian or Saudi phone number.')
+            'phone.regex' => __('Please enter a valid Egyptian or Saudi phone number.'),
+            'governorate_id.required' => __('Please select a governorate.'),
+            'region_id.required' => __('Please select an area.')
         ]);
 
         $address->update($request->all());
@@ -88,5 +99,16 @@ class ProfileController extends Controller
         );
 
         return back()->with('success', __('Thank you for your review!'));
+    }
+
+    public function deleteAddress(Address $address)
+    {
+        if ($address->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $address->delete();
+
+        return back()->with('success', __('Address deleted successfully.'));
     }
 }

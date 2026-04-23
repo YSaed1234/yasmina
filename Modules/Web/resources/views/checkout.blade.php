@@ -22,13 +22,21 @@
                             @if($addresses->count() > 0)
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                                     @foreach($addresses as $address)
-                                        <label class="relative flex p-6 border-2 rounded-2xl cursor-pointer hover:bg-rose-50/50 transition-all border-rose-50 has-[:checked]:border-primary has-[:checked]:bg-rose-50/50">
-                                            <input type="radio" name="address_id" value="{{ $address->id }}" {{ $loop->first ? 'checked' : '' }} class="peer hidden">
+                                        @php $isAvailable = $address->region && $address->region->is_active; @endphp
+                                        <label class="relative flex p-6 border-2 rounded-2xl cursor-pointer hover:bg-rose-50/50 transition-all border-rose-50 has-[:checked]:border-primary has-[:checked]:bg-rose-50/50 {{ !$isAvailable ? 'opacity-60 cursor-not-allowed grayscale' : '' }}"
+                                               data-shipping-rate="{{ $address->region ? $address->region->rate : 0 }}"
+                                               data-shipping-available="{{ $isAvailable ? 'true' : 'false' }}">
+                                            <input type="radio" name="address_id" value="{{ $address->id }}" {{ $loop->first ? 'checked' : '' }} onchange="updateSummary()" class="peer hidden" {{ !$isAvailable ? 'disabled' : '' }}>
                                             <div class="flex-1">
-                                                <div class="font-bold text-gray-900 mb-1">{{ $address->name }}</div>
+                                                <div class="font-bold text-gray-900 mb-1 flex justify-between">
+                                                    {{ $address->name }}
+                                                    @if(!$isAvailable)
+                                                        <span class="text-[10px] text-red-500 font-bold uppercase tracking-widest bg-red-50 px-2 py-0.5 rounded-lg">{{ __('Not Available') }}</span>
+                                                    @endif
+                                                </div>
                                                 <div class="text-xs text-gray-500 leading-relaxed">
                                                     {{ $address->address_line1 }}<br>
-                                                    {{ $address->city }}, {{ $address->country }}<br>
+                                                    {{ $address->region?->name ?? $address->city }}@if($address->governorate), {{ $address->governorate->name }}@endif, {{ $address->country }}<br>
                                                     {{ $address->phone }}
                                                 </div>
                                             </div>
@@ -122,11 +130,11 @@
                                 @endif
                                 <div class="flex justify-between text-gray-500">
                                     <span>{{ __('Shipping') }}</span>
-                                    <span class="font-bold text-green-600 uppercase text-xs tracking-widest">{{ __('Free') }}</span>
+                                    <span id="shipping-display" class="font-bold text-gray-900"></span>
                                 </div>
                                 <div class="border-t border-rose-50 pt-6 flex justify-between items-center">
                                     <span class="text-lg font-bold text-gray-900">{{ __('Total') }}</span>
-                                    <span class="text-3xl font-bold text-primary">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($finalTotal, 2) }}</span>
+                                    <span id="total-display" class="text-3xl font-bold text-primary"></span>
                                 </div>
                             </div>
 
@@ -139,4 +147,41 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        const subtotal = {{ $total }};
+        const discount = {{ $discount }};
+        const currency = "{{ reset($cart)['currency'] ?? '$' }}";
+
+        function updateSummary() {
+            const selectedAddress = document.querySelector('input[name="address_id"]:checked');
+            const submitBtn = document.querySelector('button[type="submit"]');
+            
+            if (selectedAddress) {
+                const label = selectedAddress.closest('label');
+                const rate = parseFloat(label.dataset.shippingRate || 0);
+                const isAvailable = label.dataset.shippingAvailable === 'true';
+                
+                if (isAvailable) {
+                    document.getElementById('shipping-display').innerText = rate > 0 ? currency + rate.toFixed(2) : "{{ __('Free') }}";
+                    document.getElementById('total-display').innerText = currency + (subtotal - discount + rate).toFixed(2);
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    document.getElementById('shipping-display').innerText = "{{ __('Not Available') }}";
+                    document.getElementById('total-display').innerText = "{{ __('N/A') }}";
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', updateSummary);
+    </script>
+    @endpush
 </x-web::layouts.master>

@@ -14,8 +14,7 @@ class UpdateOrderStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'required|string|in:new,processing,shipped,delivered,cancelled',
-            'payment_status' => 'required|string|in:pending,paid,failed'
+            'status' => ['required', new \Illuminate\Validation\Rules\Enum(\App\Enums\OrderStatus::class)],
         ];
     }
 }

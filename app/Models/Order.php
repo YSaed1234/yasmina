@@ -11,6 +11,7 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'total',
+        'shipping_amount',
         'status',
         'payment_status',
         'payment_method',
@@ -21,6 +22,7 @@ class Order extends Model
     protected $casts = [
         'shipping_details' => 'array',
         'total' => 'decimal:2',
+        'status' => \App\Enums\OrderStatus::class,
     ];
 
     public function user(): BelongsTo

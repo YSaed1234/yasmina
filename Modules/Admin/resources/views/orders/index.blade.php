@@ -19,8 +19,8 @@
             </div>
             <select name="status" onchange="this.form.submit()" class="px-6 py-3 bg-white border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary/20 outline-none transition-all min-w-[200px]">
                 <option value="">{{ __('All Statuses') }}</option>
-                @foreach(['new', 'processing', 'shipped', 'delivered', 'cancelled'] as $status)
-                    <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ __($status) }}</option>
+                @foreach(\App\Enums\OrderStatus::cases() as $status)
+                    <option value="{{ $status->value }}" {{ request('status') == $status->value ? 'selected' : '' }}>{{ $status->label() }}</option>
                 @endforeach
             </select>
         </form>
@@ -33,6 +33,7 @@
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Order ID') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Customer') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Total') }}</th>
+                    <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Shipping') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Status') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Payment') }}</th>
                     <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Date') }}</th>
@@ -54,24 +55,34 @@
                         <td class="px-8 py-6 font-bold text-primary">
                             {{ number_format($order->total, 2) }}
                         </td>
-                        <td class="px-8 py-6">
-                            @php
-                                $statusColors = [
-                                    'new' => 'bg-blue-50 text-blue-600',
-                                    'processing' => 'bg-amber-50 text-amber-600',
-                                    'shipped' => 'bg-indigo-50 text-indigo-600',
-                                    'delivered' => 'bg-green-50 text-green-600',
-                                    'cancelled' => 'bg-red-50 text-red-600',
-                                ];
-                            @endphp
-                            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest {{ $statusColors[$order->status] ?? 'bg-gray-50 text-gray-600' }}">
-                                {{ __($order->status) }}
-                            </span>
+                        <td class="px-8 py-6 text-sm text-gray-500 font-bold">
+                            {{ number_format($order->shipping_amount, 2) }}
                         </td>
                         <td class="px-8 py-6">
-                            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest {{ $order->payment_status === 'paid' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600' }}">
-                                {{ __($order->payment_status) }}
-                            </span>
+                            <form action="{{ route('orders.update-status', $order) }}" method="POST" class="status-update-form">
+                                @csrf
+                                @method('PUT')
+                                <select name="status" onchange="this.form.submit()" 
+                                    class="px-4 py-2 rounded-2xl text-[10px] font-bold uppercase tracking-widest border-none outline-none cursor-pointer transition-all {{ $order->status->color() }}">
+                                    @foreach(\App\Enums\OrderStatus::cases() as $status)
+                                        <option value="{{ $status->value }}" {{ $order->status == $status ? 'selected' : '' }} class="bg-white text-gray-700">
+                                            {{ $status->label() }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </form>
+                        </td>
+                        <td class="px-8 py-6">
+                            <form action="{{ route('orders.update-payment-status', $order) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <select name="payment_status" onchange="this.form.submit()" 
+                                    class="px-4 py-2 rounded-2xl text-[10px] font-bold uppercase tracking-widest border-none outline-none cursor-pointer transition-all {{ $order->payment_status === 'paid' ? 'bg-green-50 text-green-600' : ($order->payment_status === 'failed' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-600') }}">
+                                    <option value="pending" {{ $order->payment_status === 'pending' ? 'selected' : '' }}>{{ __('pending') }}</option>
+                                    <option value="paid" {{ $order->payment_status === 'paid' ? 'selected' : '' }}>{{ __('paid') }}</option>
+                                    <option value="failed" {{ $order->payment_status === 'failed' ? 'selected' : '' }}>{{ __('failed') }}</option>
+                                </select>
+                            </form>
                         </td>
                         <td class="px-8 py-6 text-sm text-gray-500 font-medium">
                             {{ $order->created_at->format('M d, Y') }}

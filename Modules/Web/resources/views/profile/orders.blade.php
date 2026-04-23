@@ -60,7 +60,7 @@
                                                 </div>
                                                 <div>
                                                     <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">{{ __('Total Amount') }}</span>
-                                                    <p class="text-sm font-bold text-primary">{{ number_format($order->total_amount, 2) }} {{ $order->items->first()?->product?->currency?->symbol ?? '$' }}</p>
+                                                    <p class="text-sm font-bold text-primary">{{ number_format($order->total, 2) }} {{ $order->items->first()?->product?->currency?->symbol ?? '$' }}</p>
                                                 </div>
                                                 <div>
                                                     <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">{{ __('Order ID') }}</span>
@@ -68,8 +68,11 @@
                                                 </div>
                                             </div>
                                             <div class="flex items-center gap-4">
-                                                <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-white text-primary border border-primary/10 shadow-sm">
-                                                    {{ __($order->status) }}
+                                                <button onclick="showOrderDetails({{ json_encode($order->load('items.product')) }})" class="px-6 py-2 bg-white text-gray-700 rounded-xl text-xs font-bold hover:bg-primary hover:text-white transition-all border border-primary/10 shadow-sm">
+                                                    {{ __('View Details') }}
+                                                </button>
+                                                <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest {{ $order->status->color() }} shadow-sm">
+                                                    {{ $order->status->label() }}
                                                 </span>
                                             </div>
                                         </div>
@@ -166,11 +169,160 @@
             </div>
         </div>
     </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="orderDetailsModal" class="fixed inset-0 z-[100] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500/75 backdrop-blur-sm transition-opacity" aria-hidden="true" onclick="closeOrderDetails()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-[3rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-rose-50">
+                <div class="bg-white px-8 pt-10 pb-8 sm:p-10 sm:pb-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900" id="modal-order-id"></h3>
+                        <button onclick="closeOrderDetails()" class="text-gray-400 hover:text-gray-500">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l18 18" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-8">
+                        <!-- Items -->
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">{{ __('Items Ordered') }}</h4>
+                            <div id="modal-items-list" class="space-y-4">
+                                <!-- JS will fill this -->
+                            </div>
+                        </div>
+
+                        <!-- Summary -->
+                        <div class="bg-rose-50/30 rounded-3xl p-6 border border-rose-100">
+                            <div class="space-y-3">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">{{ __('Subtotal') }}</span>
+                                    <span id="modal-subtotal" class="font-bold text-gray-900"></span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">{{ __('Discount') }}</span>
+                                    <span id="modal-discount" class="font-bold text-green-600"></span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">{{ __('Shipping') }}</span>
+                                    <span id="modal-shipping" class="font-bold text-gray-900"></span>
+                                </div>
+                                <div class="border-t border-rose-100 pt-3 flex justify-between">
+                                    <span class="font-bold text-gray-900">{{ __('Total') }}</span>
+                                    <span id="modal-total" class="font-bold text-primary text-lg"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment info -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Payment Method') }}</h4>
+                                <div class="px-4 py-3 bg-gray-50 rounded-2xl border border-gray-100 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                    </svg>
+                                    <span id="modal-payment-method" class="text-xs font-bold text-gray-700 uppercase"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Payment Status') }}</h4>
+                                <div id="modal-payment-status-wrapper" class="px-4 py-3 rounded-2xl border flex items-center gap-2">
+                                    <span id="modal-payment-status" class="text-[10px] font-black uppercase tracking-widest"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shipping info -->
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">{{ __('Shipping Address') }}</h4>
+                            <div class="p-6 bg-gray-50 rounded-3xl border border-gray-100">
+                                <p id="modal-shipping-name" class="font-bold text-gray-900 mb-1"></p>
+                                <p id="modal-shipping-address" class="text-sm text-gray-500 leading-relaxed"></p>
+                                <p id="modal-shipping-phone" class="text-sm text-gray-500 mt-2"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-8 py-6 sm:px-10 flex justify-end">
+                    <button type="button" onclick="closeOrderDetails()" class="px-8 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-bold hover:bg-gray-50 transition-all">
+                        {{ __('Close') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
     <script>
         function toggleRatingForm(id) {
             const form = document.getElementById(`rating-form-${id}`);
             form.classList.toggle('hidden');
+        }
+
+        function showOrderDetails(order) {
+            document.getElementById('modal-order-id').innerText = `{{ __('Order') }} #${order.id}`;
+            
+            const list = document.getElementById('modal-items-list');
+            list.innerHTML = '';
+            
+            order.items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-4 py-2 border-b border-gray-50 last:border-0';
+                div.innerHTML = `
+                    <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-50 border border-gray-100 shrink-0">
+                        <img src="/storage/${item.product.image}" class="w-full h-full object-cover" onerror="this.src='/placeholder.png'">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-bold text-gray-900 truncate">${item.product.name}</p>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">${item.quantity} × ${parseFloat(item.price).toFixed(2)}</p>
+                    </div>
+                    <div class="text-sm font-bold text-gray-900">
+                        ${(item.quantity * item.price).toFixed(2)}
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+
+            const shippingAmount = parseFloat(order.shipping_amount || 0);
+            const discountAmount = parseFloat(order.discount_amount || 0);
+            const totalAmount = parseFloat(order.total);
+            const subtotalAmount = totalAmount - shippingAmount + discountAmount;
+
+            document.getElementById('modal-subtotal').innerText = subtotalAmount.toFixed(2);
+            document.getElementById('modal-shipping').innerText = shippingAmount.toFixed(2);
+            document.getElementById('modal-discount').innerText = `-${discountAmount.toFixed(2)}`;
+            document.getElementById('modal-total').innerText = totalAmount.toFixed(2);
+            
+            // Payment info
+            document.getElementById('modal-payment-method').innerText = order.payment_method === 'cod' ? '{{ __("Cash on Delivery") }}' : '{{ __("Credit Card") }}';
+            
+            const pStatus = document.getElementById('modal-payment-status');
+            const pWrapper = document.getElementById('modal-payment-status-wrapper');
+            pStatus.innerText = order.payment_status === 'paid' ? '{{ __("paid") }}' : '{{ __("pending") }}';
+            
+            if (order.payment_status === 'paid') {
+                pWrapper.className = 'px-4 py-3 rounded-2xl border border-green-100 bg-green-50 flex items-center gap-2 text-green-600';
+            } else {
+                pWrapper.className = 'px-4 py-3 rounded-2xl border border-amber-100 bg-amber-50 flex items-center gap-2 text-amber-600';
+            }
+
+            const shipping = order.shipping_details;
+            document.getElementById('modal-shipping-name').innerText = shipping.name;
+            document.getElementById('modal-shipping-address').innerText = `${shipping.address}, ${shipping.city}, ${shipping.country}`;
+            document.getElementById('modal-shipping-phone').innerText = shipping.phone;
+
+            document.getElementById('orderDetailsModal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeOrderDetails() {
+            document.getElementById('orderDetailsModal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
         }
     </script>
     @endpush
