@@ -55,7 +55,7 @@
                                 
                                 <!-- Coupon Input -->
                                 <div class="mb-8">
-                                    <form action="{{ route('web.cart.coupon.apply') }}" method="POST" class="flex gap-2">
+                                    <form action="{{ route('web.cart.coupon.apply', ['vendor_id' => request('vendor_id')]) }}" method="POST" class="flex gap-2">
                                         @csrf
                                         <input type="text" name="code" placeholder="{{ __('Coupon code...') }}" class="flex-1 px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-primary outline-none text-sm shadow-sm" {{ session()->has('coupon') ? 'disabled' : '' }} value="{{ session()->get('coupon.code') }}">
                                         @if(session()->has('coupon'))
@@ -68,7 +68,7 @@
                                             </button>
                                         @endif
                                     </form>
-                                    <form id="remove-coupon-form" action="{{ route('web.cart.coupon.remove') }}" method="POST" class="hidden">
+                                    <form id="remove-coupon-form" action="{{ route('web.cart.coupon.remove', ['vendor_id' => request('vendor_id')]) }}" method="POST" class="hidden">
                                         @csrf
                                         @method('DELETE')
                                     </form>
@@ -102,7 +102,7 @@
                                         <span class="text-3xl font-bold text-primary">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($finalTotal, 2) }}</span>
                                     </div>
                                 </div>
-                                <a href="{{ route('web.checkout') }}" class="block w-full py-5 bg-primary text-white text-center rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">
+                                <a href="{{ route('web.checkout', ['vendor_id' => request('vendor_id')]) }}" class="block w-full py-5 bg-primary text-white text-center rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">
                                     {{ __('Proceed to Checkout') }}
                                 </a>
                                 <p class="text-center text-gray-400 text-xs mt-6">
@@ -120,7 +120,7 @@
                         </div>
                         <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('Your bag is empty') }}</h2>
                         <p class="text-gray-500 mb-10 max-w-md mx-auto">{{ __('Looks like you haven\'t added any luxury pieces to your bag yet. Start exploring our latest collections.') }}</p>
-                        <a href="{{ route('web.shop') }}" class="inline-block px-10 py-4 bg-primary text-white rounded-2xl font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+                        <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="inline-block px-10 py-4 bg-primary text-white rounded-2xl font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20">
                             {{ __('Explore Shop') }}
                         </a>
                     </div>
@@ -133,7 +133,7 @@
     <script>
         function updateQuantity(id, quantity) {
             if(quantity < 1) return;
-            fetch("{{ route('web.cart.update') }}", {
+            fetch("{{ route('web.cart.update', ['vendor_id' => request('vendor_id')]) }}", {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -145,7 +145,7 @@
 
         function removeFromCart(id) {
             if(!confirm('{{ __("Are you sure?") }}')) return;
-            fetch("{{ route('web.cart.remove') }}", {
+            fetch("{{ route('web.cart.remove', ['vendor_id' => request('vendor_id')]) }}", {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

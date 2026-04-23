@@ -118,7 +118,10 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                     </svg>
-                                    @php $unreadCount = auth()->user()->unreadNotifications->count(); @endphp
+                                    @php 
+                                        $vendorId = request()->vendor_id;
+                                        $unreadCount = auth()->user()->vendorUnreadNotifications($vendorId)->count(); 
+                                    @endphp
                                     @if($unreadCount > 0)
                                         <span id="notification-badge" class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full border border-white">
                                             {{ $unreadCount }}
@@ -130,14 +133,14 @@
                                     <div class="p-4 border-b border-rose-50 flex justify-between items-center bg-rose-50/10">
                                         <span class="font-bold text-gray-900 text-sm">{{ __('Notifications') }}</span>
                                         @if($unreadCount > 0)
-                                            <form action="{{ route('web.notifications.mark-all-read') }}" method="POST">
+                                            <form action="{{ route('web.notifications.mark-all-read', ['vendor_id' => request('vendor_id')]) }}" method="POST">
                                                 @csrf
                                                 <button type="submit" class="text-[10px] font-bold text-primary hover:underline">{{ __('Mark all as read') }}</button>
                                             </form>
                                         @endif
                                     </div>
                                     <div class="max-h-96 overflow-y-auto">
-                                        @forelse(auth()->user()->notifications->take(10) as $notification)
+                                        @forelse(auth()->user()->vendorNotifications($vendorId)->take(10)->get() as $notification)
                                             <div id="notification-{{ $notification->id }}" class="p-4 border-b border-rose-50/50 hover:bg-rose-50/30 transition-all {{ $notification->read_at ? 'opacity-60' : 'bg-rose-50/10' }}">
                                                 <div class="flex gap-3">
                                                     <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
@@ -169,7 +172,7 @@
                                             </div>
                                         @endforelse
                                     </div>
-                                    <a href="{{ route('web.notifications') }}" class="block py-3 text-center text-xs font-bold text-primary bg-rose-50/20 hover:bg-rose-50/50 transition-all border-t border-rose-50">
+                                    <a href="{{ route('web.notifications', ['vendor_id' => request('vendor_id')]) }}" class="block py-3 text-center text-xs font-bold text-primary bg-rose-50/20 hover:bg-rose-50/50 transition-all border-t border-rose-50">
                                         {{ __('View All Notifications') }}
                                     </a>
                                 </div>
@@ -177,7 +180,7 @@
                         @endauth
 
                         @guest
-                            <a href="{{ route('login') }}" class="hover:text-primary transition-colors">{{ __('Login') }}</a>
+                            <a href="{{ route('login', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors">{{ __('Login') }}</a>
                         @else
                             <div class="relative group">
                                 <button class="flex items-center gap-2 hover:text-primary transition-colors py-2">
@@ -213,7 +216,7 @@
                                             </a>
                                         @endif
                                         
-                                        <a href="{{ route('web.profile') }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
+                                        <a href="{{ route('web.profile', ['vendor_id' => request('vendor_id')]) }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
                                             <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover/item:text-primary transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -222,7 +225,7 @@
                                             <span class="font-bold text-gray-700 text-xs">{{ __('My Account') }}</span>
                                         </a>
 
-                                        <a href="{{ route('web.profile.orders') }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
+                                        <a href="{{ route('web.profile.orders', ['vendor_id' => request('vendor_id')]) }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
                                             <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover/item:text-primary transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -231,7 +234,7 @@
                                             <span class="font-bold text-gray-700 text-xs">{{ __('My Orders') }}</span>
                                         </a>
 
-                                        <a href="{{ route('web.profile.addresses') }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
+                                        <a href="{{ route('web.profile.addresses', ['vendor_id' => request('vendor_id')]) }}" class="px-4 py-2.5 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-3 group/item">
                                             <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover/item:text-primary transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -284,7 +287,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
                     <div>
-                        <img src="{{ ($currentVendor && $currentVendor->logo) ? asset('storage/' . $currentVendor->logo) : asset('logo.png') }}" alt="{{ ($currentVendor) ? $currentVendor->name : 'Yasmina Logo' }}" class="h-12 w-auto object-contain mb-6 {{ (!$currentVendor || !$currentVendor->logo) ? 'grayscale invert brightness-0' : '' }}">
+                        <img src="{{ ($currentVendor && $currentVendor->logo) ? asset('storage/' . $currentVendor->logo) : asset('logo.png') }}" alt="{{ ($currentVendor) ? $currentVendor->name : 'Yasmina Logo' }}" class="h-16 w-auto object-contain mb-6 {{ (!$currentVendor || !$currentVendor->logo) ? 'grayscale invert brightness-0' : '' }}">
                         <p class="mt-6 text-gray-400">{{ ($currentVendor && $currentVendor->description) ? $currentVendor->description : __('Defining elegance and quality since 2026.') }}</p>
                     </div>
                     <div>
@@ -379,7 +382,7 @@
             });
 
             function toggleWishlist(productId, btn) {
-                fetch(`/wishlist/toggle/${productId}`, {
+                fetch(`/wishlist/toggle/${productId}?vendor_id={{ request()->vendor_id }}`, {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -464,7 +467,7 @@
             }
 
             function markAsRead(id, btn) {
-                fetch(`/notifications/${id}/read`, {
+                fetch(`/notifications/${id}/read?vendor_id={{ request()->vendor_id }}`, {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',

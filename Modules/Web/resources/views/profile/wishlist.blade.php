@@ -18,7 +18,7 @@
                                     @php $product = $item->product; @endphp
                                     <div id="wishlist-item-{{ $product->id }}" class="group bg-white rounded-3xl overflow-hidden soft-shadow transition-all duration-500 border border-rose-50 hover:-translate-y-2 flex flex-col relative">
                                         <div class="aspect-square w-full overflow-hidden bg-rose-50 relative">
-                                            <a href="{{ route('web.products.show', $product->id) }}" class="block w-full h-full">
+                                            <a href="{{ route('web.products.show', ['id' => $product->id, 'vendor_id' => request('vendor_id')]) }}" class="block w-full h-full">
                                                 @if($product->image)
                                                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
                                                 @else
@@ -45,7 +45,7 @@
                                                     <span class="text-[10px] font-bold text-gray-400">{{ number_format($product->averageRating(), 1) }}</span>
                                                 </div>
                                             </div>
-                                            <a href="{{ route('web.products.show', $product->id) }}">
+                                            <a href="{{ route('web.products.show', ['id' => $product->id, 'vendor_id' => request('vendor_id')]) }}">
                                                 <h3 class="mt-2 text-lg font-bold text-gray-900 mb-4 group-hover:text-primary transition-colors line-clamp-1">{{ $product->name }}</h3>
                                             </a>
                                             <div class="mt-auto flex justify-between items-center">
@@ -53,7 +53,7 @@
                                                     <span class="text-xl font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
                                                     <span class="text-sm font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
                                                 </div>
-                                                <form action="{{ route('web.cart.add', $product->id) }}" method="POST">
+                                                <form action="{{ route('web.cart.add', ['id' => $product->id, 'vendor_id' => request('vendor_id')]) }}" method="POST">
                                                     @csrf
                                                     <button type="submit" class="p-3 rounded-2xl bg-rose-50 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm flex items-center gap-2 group/btn">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,7 +75,7 @@
                                 </div>
                                 <h3 class="text-xl font-bold text-gray-900 mb-2">{{ __('No favorites yet') }}</h3>
                                 <p class="text-gray-500 mb-8">{{ __('Items you favorite will appear here for easy access.') }}</p>
-                                <a href="{{ route('web.shop') }}" class="inline-block px-8 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:opacity-90 transition-all">
+                                 <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="inline-block px-8 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:opacity-90 transition-all">
                                     {{ __('Discover Products') }}
                                 </a>
                             </div>

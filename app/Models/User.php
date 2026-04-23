@@ -68,7 +68,7 @@ class User extends Authenticatable
     public function convertPointsToBalance(int $pointsToConvert)
     {
         $minPoints = (int) PointSetting::getValue('min_points_to_convert', 100);
-        
+
         if ($pointsToConvert < $minPoints) {
             throw new \Exception(__('Minimum points to convert is :min', ['min' => $minPoints]));
         }
@@ -83,7 +83,7 @@ class User extends Authenticatable
         return \DB::transaction(function () use ($pointsToConvert, $moneyValue) {
             $this->subtractPoints($pointsToConvert, 'spending', __('Converted to wallet balance'));
             $this->increment('balance', $moneyValue);
-            
+
             return $moneyValue;
         });
     }
@@ -91,7 +91,7 @@ class User extends Authenticatable
     public function addPoints(int $points, string $type, string $description = null, $reference = null)
     {
         $this->increment('points', $points);
-        
+
         return $this->pointTransactions()->create([
             'points' => $points,
             'type' => $type,
@@ -141,6 +141,24 @@ class User extends Authenticatable
     public function wishlist(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Wishlist::class);
+    }
+
+    public function vendorNotifications($vendorId = null)
+    {
+        $query = $this->notifications();
+        if ($vendorId) {
+            $query->where('vendor_id', (int) $vendorId);
+        }
+        return $query;
+    }
+
+    public function vendorUnreadNotifications($vendorId = null)
+    {
+        $query = $this->unreadNotifications();
+        if ($vendorId) {
+            $query->where('vendor_id', (int) $vendorId);
+        }
+        return $query;
     }
 
     /**

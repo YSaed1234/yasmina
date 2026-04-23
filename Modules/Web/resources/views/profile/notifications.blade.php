@@ -12,7 +12,7 @@
                     <div class="bg-white rounded-3xl p-10 shadow-sm border border-rose-50">
                         <div class="flex justify-between items-center mb-8">
                             <h1 class="text-3xl font-bold text-gray-900">{{ __('Notifications') }}</h1>
-                            <form action="{{ route('web.notifications.mark-all-read') }}" method="POST">
+                            <form action="{{ route('web.notifications.mark-all-read', ['vendor_id' => request('vendor_id')]) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="text-sm font-bold text-primary hover:underline">{{ __('Mark all as read') }}</button>
                             </form>

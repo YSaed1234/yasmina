@@ -28,20 +28,53 @@ class HomeController extends Controller
         $categories = $categoriesQuery->get();
         $featuredProducts = $featuredProductsQuery->take(8)->get();
         
-        $slides = \App\Models\Slide::where('active', true)->orderBy('order')->get();
+        $slidesQuery = \App\Models\Slide::where('active', true);
+        if ($vendor_id) {
+            $slidesQuery->where('vendor_id', $vendor_id);
+        } else {
+            $slidesQuery->whereNull('vendor_id');
+        }
+        $slides = $slidesQuery->orderBy('order')->get();
+
         return view('web::index', compact('categories', 'featuredProducts', 'slides'));
     }
 
     public function about()
     {
-        $slides = \App\Models\Slide::where('active', true)->orderBy('order')->get();
-        return view('web::about', compact('slides'));
+        $vendor_id = request('vendor_id');
+        $vendor = null;
+        if ($vendor_id) {
+            $vendor = \App\Models\Vendor::find($vendor_id);
+        }
+
+        $slidesQuery = \App\Models\Slide::where('active', true);
+        if ($vendor_id) {
+            $slidesQuery->where('vendor_id', $vendor_id);
+        } else {
+            $slidesQuery->whereNull('vendor_id');
+        }
+        $slides = $slidesQuery->orderBy('order')->get();
+
+        return view('web::about', compact('slides', 'vendor'));
     }
 
     public function contact()
     {
-        $slides = \App\Models\Slide::where('active', true)->orderBy('order')->get();
-        return view('web::contact', compact('slides'));
+        $vendor_id = request('vendor_id');
+        $vendor = null;
+        if ($vendor_id) {
+            $vendor = \App\Models\Vendor::find($vendor_id);
+        }
+
+        $slidesQuery = \App\Models\Slide::where('active', true);
+        if ($vendor_id) {
+            $slidesQuery->where('vendor_id', $vendor_id);
+        } else {
+            $slidesQuery->whereNull('vendor_id');
+        }
+        $slides = $slidesQuery->orderBy('order')->get();
+
+        return view('web::contact', compact('slides', 'vendor'));
     }
 
     public function submitContact(Request $request)
@@ -52,6 +85,8 @@ class HomeController extends Controller
             'subject' => 'nullable|string|max:255',
             'message' => 'required|string',
         ]);
+
+        $validated['vendor_id'] = $request->get('vendor_id');
 
         \App\Models\ContactRequest::create($validated);
 

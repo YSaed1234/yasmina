@@ -9,7 +9,12 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = auth()->user()->notifications()->paginate(15);
+        $vendorId = request()->vendor_id;
+        $query = auth()->user()->notifications();
+
+        $query->where('vendor_id', $vendorId);
+
+        $notifications = $query->paginate(15);
         return view('web::profile.notifications', compact('notifications'));
     }
 

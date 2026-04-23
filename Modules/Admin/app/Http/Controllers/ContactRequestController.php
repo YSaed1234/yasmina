@@ -10,7 +10,7 @@ class ContactRequestController extends Controller
 {
     public function index(Request $request)
     {
-        $query = ContactRequest::latest();
+        $query = ContactRequest::with('vendor')->latest();
 
         if ($request->filled('search')) {
             $search = $request->search;

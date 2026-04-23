@@ -68,12 +68,21 @@ class VendorController extends Controller
             'email' => 'required|email|unique:vendors,email,' . $vendor->id,
             'phone' => 'nullable|string|max:20',
             'description' => 'nullable|string',
+            'about_ar' => 'nullable|string',
+            'about_en' => 'nullable|string',
             'address' => 'nullable|string',
+            'facebook' => 'nullable|url|max:255',
+            'instagram' => 'nullable|url|max:255',
+            'twitter' => 'nullable|url|max:255',
+            'whatsapp' => 'nullable|string|max:20',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        $data = $request->only(['name', 'email', 'phone', 'description', 'address']);
+        $data = $request->only([
+            'name', 'email', 'phone', 'description', 'about_ar', 'about_en', 
+            'address', 'facebook', 'instagram', 'twitter', 'whatsapp'
+        ]);
 
         if ($request->hasFile('logo')) {
             // Delete old logo if exists

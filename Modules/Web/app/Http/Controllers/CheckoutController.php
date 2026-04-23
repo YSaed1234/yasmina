@@ -111,6 +111,7 @@ class CheckoutController extends Controller
 
             $order = Order::create([
                 'user_id' => auth()->id(),
+                'vendor_id' => $vendor_id,
                 'total' => $finalTotal,
                 'shipping_amount' => $shippingCost,
                 'status' => 'new',

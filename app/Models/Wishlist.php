@@ -9,6 +9,7 @@ class Wishlist extends Model
     protected $fillable = [
         'user_id',
         'product_id',
+        'vendor_id',
     ];
 
     public function user()

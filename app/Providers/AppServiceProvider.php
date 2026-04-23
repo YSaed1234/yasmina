@@ -22,5 +22,11 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
             return $user->hasRole('admin') ? true : null;
         });
+
+        \Illuminate\Notifications\DatabaseNotification::creating(function ($notification) {
+            if (isset($notification->data['vendor_id'])) {
+                $notification->vendor_id = $notification->data['vendor_id'];
+            }
+        });
     }
 }

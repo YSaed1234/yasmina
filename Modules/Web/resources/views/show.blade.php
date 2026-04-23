@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="pt-8 border-t border-rose-50 space-y-6">
-                        <form action="{{ route('web.cart.add', $product->id) }}" method="POST">
+                        <form action="{{ route('web.cart.add', ['id' => $product->id, 'vendor_id' => request('vendor_id')]) }}" method="POST">
                             @csrf
                             <button type="submit" class="w-full py-5 bg-primary text-white rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

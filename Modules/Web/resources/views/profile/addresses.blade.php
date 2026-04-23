@@ -19,7 +19,7 @@
                         <!-- Address Form (Hidden by default) -->
                         <div id="addressForm" class="hidden mb-12 bg-rose-50/30 p-8 rounded-[2.5rem] border border-rose-100">
                             <h3 class="text-xl font-bold text-gray-900 mb-6">{{ __('Add a New Address') }}</h3>
-                            <form action="{{ route('web.profile.addresses.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <form action="{{ route('web.profile.addresses.store', ['vendor_id' => request('vendor_id')]) }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 @csrf
                         <input type="hidden" name="vendor_id" id="vendor_id" value="{{ request()->vendor_id ?? null}}">
                                 <div class="md:col-span-2">
@@ -85,7 +85,7 @@
                                                 </div>
                                                 <h4 class="font-bold text-gray-900">{{ $address->name }}</h4>
                                             </div>
-                                            <form action="{{ route('web.profile.addresses.delete', $address->id) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure?') }}')">
+                                            <form action="{{ route('web.profile.addresses.delete', ['address' => $address->id, 'vendor_id' => request('vendor_id')]) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure?') }}')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-gray-300 hover:text-red-500 transition-colors">

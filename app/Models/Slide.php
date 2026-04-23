@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Slide extends Model
 {
     protected $fillable = [
+        'vendor_id',
         'image',
         'title_ar',
         'title_en',

@@ -43,6 +43,7 @@
                         <th class="pb-4 px-6">{{ __('Name') }}</th>
                         <th class="pb-4 px-6">{{ __('Email') }}</th>
                         <th class="pb-4 px-6">{{ __('Subject') }}</th>
+                        <th class="pb-4 px-6">{{ __('Vendor') }}</th>
                         <th class="pb-4 px-6">{{ __('Message') }}</th>
                         <th class="pb-4 px-6">{{ __('Status') }}</th>
                         <th class="pb-4 px-6">{{ __('Date') }}</th>
@@ -58,6 +59,13 @@
                             <td class="py-6 px-6 text-center text-sm font-bold text-gray-900">{{ $request->name }}</td>
                             <td class="py-6 px-6 text-center text-sm text-gray-600">{{ $request->email }}</td>
                             <td class="py-6 px-6 text-center text-sm text-gray-600">{{ $request->subject ?? '-' }}</td>
+                            <td class="py-6 px-6 text-center text-sm text-gray-600">
+                                @if($request->vendor)
+                                    <span class="font-bold text-primary">{{ $request->vendor->name }}</span>
+                                @else
+                                    <span class="text-gray-400 italic text-xs">{{ __('Global') }}</span>
+                                @endif
+                            </td>
                             <td class="py-6 px-6 text-center text-sm text-gray-600 max-w-xs truncate" title="{{ $request->message }}">{{ $request->message }}</td>
                             <td class="py-6 px-6 text-center">
                                 @if($request->status == 'new')

@@ -66,7 +66,7 @@
                                                                     </svg>
                                                                     {{ $existingReview ? __('Rated') : __('Rate') }}
                                                                 </button>
-                                                                <a href="{{ route('web.products.show', $item->product->id) }}" class="px-6 py-2 bg-gray-50 text-gray-600 rounded-xl text-xs font-bold hover:bg-primary hover:text-white transition-all">
+                                                                <a href="{{ route('web.products.show', ['id' => $item->product->id, 'vendor_id' => request('vendor_id')]) }}" class="px-6 py-2 bg-gray-50 text-gray-600 rounded-xl text-xs font-bold hover:bg-primary hover:text-white transition-all">
                                                                     {{ __('Buy Again') }}
                                                                 </a>
                                                             @endif
@@ -75,7 +75,7 @@
                                                     
                                                     @if($item->product)
                                                         <div id="rating-form-{{ $item->id }}" class="hidden mt-4 p-6 bg-gray-50 rounded-2xl border border-gray-100">
-                                                            <form action="{{ route('web.reviews.store') }}" method="POST">
+                                                            <form action="{{ route('web.reviews.store', ['vendor_id' => request('vendor_id')]) }}" method="POST">
                                                                 @csrf
                                                                 <input type="hidden" name="product_id" value="{{ $item->product->id }}">
                                                                 <div class="flex flex-wrap gap-6">
@@ -123,7 +123,7 @@
                                 </div>
                                 <h3 class="text-xl font-bold text-gray-900 mb-2">{{ __('No orders yet') }}</h3>
                                 <p class="text-gray-500 mb-8">{{ __('Your order history will appear here once you make your first purchase.') }}</p>
-                                <a href="{{ route('web.shop') }}" class="inline-block px-8 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:opacity-90 transition-all">
+                                <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="inline-block px-8 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:opacity-90 transition-all">
                                     {{ __('Start Shopping') }}
                                 </a>
                             </div>

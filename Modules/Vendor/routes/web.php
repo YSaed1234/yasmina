@@ -32,6 +32,16 @@ Route::prefix('vendor-panel')->group(function () {
         // Shipping
         Route::resource('shipping', \Modules\Vendor\Http\Controllers\RegionController::class)->names('vendor.shipping');
 
+        // Sliders
+        Route::resource('sliders', \Modules\Vendor\Http\Controllers\SliderController::class)->names('vendor.sliders');
+
+        // Contact Requests
+        Route::get('contact-requests', [\Modules\Vendor\Http\Controllers\ContactController::class, 'index'])->name('vendor.contacts.index');
+        Route::get('contact-requests/{contact}', [\Modules\Vendor\Http\Controllers\ContactController::class, 'show'])->name('vendor.contacts.show');
+        Route::put('contact-requests/{contact}/read', [\Modules\Vendor\Http\Controllers\ContactController::class, 'markAsRead'])->name('vendor.contacts.read');
+        Route::put('contact-requests/{contact}/replied', [\Modules\Vendor\Http\Controllers\ContactController::class, 'markAsReplied'])->name('vendor.contacts.replied');
+        Route::delete('contact-requests/{contact}', [\Modules\Vendor\Http\Controllers\ContactController::class, 'destroy'])->name('vendor.contacts.destroy');
+
         // Profile
         Route::get('profile', [VendorController::class, 'editProfile'])->name('vendor.profile.edit');
         Route::put('profile', [VendorController::class, 'updateProfile'])->name('vendor.profile.update');

@@ -20,13 +20,22 @@ class ProfileController extends Controller
 
     public function orders()
     {
-        $orders = auth()->user()->orders()->latest()->paginate(10);
+        $vendorId = request()->vendor_id;
+        $orders = Order::where('vendor_id', $vendorId)
+            ->where('user_id', auth()->id())
+            ->with([
+                'items.product'
+            ])
+            ->latest()
+            ->paginate(10);
+
         return view('web::profile.orders', compact('orders'));
     }
 
     public function addresses()
     {
-        $addresses = auth()->user()->addresses()->with(['governorate', 'region'])->latest()->get();
+        $vendorId = request()->vendor_id;
+        $addresses = auth()->user()->addresses()->with(['governorate', 'region'])->where('vendor_id', $vendorId)->latest()->get();
         $governorates = Governorate::orderBy('name')->get();
         return view('web::profile.addresses', compact('addresses', 'governorates'));
     }
@@ -83,6 +92,8 @@ class ProfileController extends Controller
             'comment' => 'nullable|string|max:500',
         ]);
 
+        $vendor_id = request('vendor_id');
+
         // Check if user has an order with this product
         $hasOrdered = auth()->user()->orders()
             ->whereHas('items', function ($q) use ($request) {
@@ -94,7 +105,7 @@ class ProfileController extends Controller
         }
 
         Review::updateOrCreate(
-            ['user_id' => auth()->id(), 'product_id' => $request->product_id],
+            ['user_id' => auth()->id(), 'product_id' => $request->product_id, 'vendor_id' => $vendor_id],
             ['rating' => $request->rating, 'comment' => $request->comment]
         );
 

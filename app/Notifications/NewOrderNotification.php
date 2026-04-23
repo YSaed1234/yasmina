@@ -39,12 +39,13 @@ class NewOrderNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'vendor_id' => $this->order->vendor_id,
             'order_id' => $this->order->id,
             'message' => __('Your order #:id has been placed successfully. Total: :total', [
                 'id' => $this->order->id,
                 'total' => number_format($this->order->total, 2)
             ]),
-            'action_url' => route('web.profile.orders'),
+            'action_url' => route('web.profile.orders', ['vendor_id' => $this->order->vendor_id]),
         ];
     }
 }

@@ -100,6 +100,54 @@
                 </div>
             </div>
 
+            <!-- New Section: About Us & Social Links -->
+            <div class="mt-10 pt-10 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="space-y-8">
+                    <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest">{{ __('About Us Content') }}</h3>
+                    
+                    <div>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('About Us (Arabic)') }}</label>
+                        <textarea name="about_ar" rows="6" 
+                            class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900">{{ old('about_ar', $vendor->about_ar) }}</textarea>
+                        @error('about_ar') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('About Us (English)') }}</label>
+                        <textarea name="about_en" rows="6" 
+                            class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900">{{ old('about_en', $vendor->about_en) }}</textarea>
+                        @error('about_en') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest">{{ __('Social Media Links') }}</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Facebook URL') }}</label>
+                            <input type="url" name="facebook" value="{{ old('facebook', $vendor->facebook) }}" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Instagram URL') }}</label>
+                            <input type="url" name="instagram" value="{{ old('instagram', $vendor->instagram) }}" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Twitter URL') }}</label>
+                            <input type="url" name="twitter" value="{{ old('twitter', $vendor->twitter) }}" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('WhatsApp Number') }}</label>
+                            <input type="text" name="whatsapp" value="{{ old('whatsapp', $vendor->whatsapp) }}" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900" placeholder="e.g. 201234567890">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="mt-12 flex justify-end">
                 <button type="submit" class="px-12 py-5 bg-primary text-white rounded-2xl font-black shadow-xl shadow-primary/20 hover:opacity-90 transition-all flex items-center gap-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

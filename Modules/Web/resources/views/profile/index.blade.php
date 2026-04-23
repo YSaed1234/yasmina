@@ -29,7 +29,7 @@
                                     
                                     @php $minPoints = (int) \App\Models\PointSetting::getValue('min_points_to_convert', 100); @endphp
                                     @if($user->points >= $minPoints)
-                                        <form action="{{ route('web.profile.convert-points') }}" method="POST" class="flex gap-2">
+                                        <form action="{{ route('web.profile.convert-points', ['vendor_id' => request('vendor_id')]) }}" method="POST" class="flex gap-2">
                                             @csrf
                                             <input type="number" name="points" max="{{ $user->points }}" min="{{ $minPoints }}" value="{{ $user->points }}" 
                                                 class="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl outline-none text-sm placeholder:text-white/40" placeholder="{{ __('Points to convert') }}">
@@ -122,7 +122,7 @@
                                                     {{ $order->status->label() }}
                                                 </span>
                                                 <span class="font-bold text-gray-900">{{ number_format($order->total, 2) }} {{ $order->items->first()?->product?->currency?->symbol ?? '$' }}</span>
-                                                <a href="{{ route('web.profile.orders') }}" class="text-gray-300 group-hover:text-primary transition-colors">
+                                                <a href="{{ route('web.profile.orders', ['vendor_id' => request('vendor_id')]) }}" class="text-gray-300 group-hover:text-primary transition-colors">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                                     </svg>

@@ -64,7 +64,7 @@
                             @else
                                 <div class="p-8 bg-rose-50/50 rounded-2xl border border-dashed border-rose-200 text-center mb-8">
                                     <p class="text-sm text-gray-500 mb-4">{{ __('No saved addresses found.') }}</p>
-                                    <a href="{{ route('web.profile.addresses') }}" class="inline-block px-6 py-3 bg-primary text-white rounded-xl font-bold text-sm shadow-lg shadow-primary/20">
+                                    <a href="{{ route('web.profile.addresses', ['vendor_id' => request('vendor_id')]) }}" class="inline-block px-6 py-3 bg-primary text-white rounded-xl font-bold text-sm shadow-lg shadow-primary/20">
                                         {{ __('Add New Address') }}
                                     </a>
                                 </div>
@@ -94,8 +94,7 @@
                                         <div class="w-2 h-2 bg-white rounded-full"></div>
                                     </div>
                                 </label>
-
-                                <label class="relative flex items-center p-6 border-2 rounded-2xl cursor-pointer hover:bg-rose-50/50 transition-all border-rose-50 has-[:checked]:border-primary has-[:checked]:bg-rose-50/50">
+                                {{-- <label class="relative flex items-center p-6 border-2 rounded-2xl cursor-pointer hover:bg-rose-50/50 transition-all border-rose-50 has-[:checked]:border-primary has-[:checked]:bg-rose-50/50">
                                     <input type="radio" name="payment_method" value="card" class="peer hidden">
                                     <div class="flex-1">
                                         <div class="font-bold text-gray-900">{{ __('Credit Card') }}</div>
@@ -104,7 +103,7 @@
                                     <div class="w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center bg-white peer-checked:bg-primary transition-all">
                                         <div class="w-2 h-2 bg-white rounded-full"></div>
                                     </div>
-                                </label>
+                                </label> --}}
                             </div>
                         </div>
                     </div>
