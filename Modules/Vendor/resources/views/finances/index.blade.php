@@ -5,7 +5,7 @@
     </div>
 
     <!-- Statistics Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         <!-- Total Sales -->
         <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-primary/10 transition-all group">
             <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">{{ __('Total Sales') }}</h3>
@@ -16,6 +16,12 @@
         <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-rose-100 transition-all group">
             <h3 class="text-rose-400 text-xs font-bold uppercase tracking-widest mb-1">{{ __('Yasmina Commission') }}</h3>
             <p class="text-3xl font-black text-rose-500">-{{ number_format($stats['total_commission'], 2) }} <span class="text-sm font-bold text-rose-300">LE</span></p>
+        </div>
+
+        <!-- Promotional Discounts -->
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-amber-100 transition-all group">
+            <h3 class="text-amber-400 text-xs font-bold uppercase tracking-widest mb-1">{{ __('Promotional Discounts') }}</h3>
+            <p class="text-3xl font-black text-amber-500">{{ number_format($stats['total_promotional_discounts'], 2) }} <span class="text-sm font-bold text-amber-400">LE</span></p>
         </div>
 
         <!-- Vendor Net -->

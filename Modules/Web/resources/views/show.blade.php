@@ -13,7 +13,11 @@
                             <div class="w-full h-full flex items-center justify-center text-primary opacity-20 text-6xl">?</div>
                         @endif
                     </div>
-                    @if($product->discount_price && $product->discount_price < $product->price)
+                    @if($product->stock <= 0)
+                        <div class="absolute top-8 left-8 bg-gray-500 text-white text-sm font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-2xl z-20">
+                            {{ __('Out of Stock') }}
+                        </div>
+                    @elseif($product->discount_price && $product->discount_price < $product->price)
                         <div class="absolute top-8 left-8 bg-red-500 text-white text-sm font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-2xl z-20">
                             {{ __('Sale') }}
                         </div>
@@ -83,11 +87,18 @@
                     <div class="pt-8 border-t border-rose-50 space-y-6">
                         <form action="{{ route('web.cart.add', ['id' => $product->id, 'vendor_id' => request('vendor_id')]) }}" method="POST">
                             @csrf
-                            <button type="submit" class="w-full py-5 bg-primary text-white rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                </svg>
-                                {{ __('Add to Bag') }}
+                            <button type="submit" @if($product->stock <= 0) disabled @endif class="w-full py-5 {{ $product->stock <= 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-primary text-white hover:opacity-90 shadow-primary/20' }} rounded-2xl font-bold text-lg transition-all shadow-xl flex items-center justify-center gap-3">
+                                @if($product->stock <= 0)
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                    </svg>
+                                    {{ __('Sold Out') }}
+                                @else
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                    </svg>
+                                    {{ __('Add to Bag') }}
+                                @endif
                             </button>
                         </form>
                         

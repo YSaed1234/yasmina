@@ -108,9 +108,15 @@ class CheckoutService
                 'discount_amount' => $cartData['discount'],
                 'vendor_discount_amount' => $cartData['vendorDiscount'],
                 'vendor_discount_type' => count($cartData['appliedVendorDiscounts']) > 0 ? $cartData['appliedVendorDiscounts'][0]['type'] : null,
+                'promotional_discount_amount' => $cartData['promotionalDiscount'],
             ]);
 
             foreach ($cartData['cart'] as $id => $details) {
+                $product = \App\Models\Product::lockForUpdate()->find($id);
+                if (!$product || !$product->hasStock($details['quantity'])) {
+                    throw new \Exception(__('One or more items in your cart are no longer available in the requested quantity.'));
+                }
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $id,
@@ -118,6 +124,9 @@ class CheckoutService
                     'price' => $details['price'],
                     'is_gift' => $details['is_gift'] ?? false,
                 ]);
+
+                // Decrement stock
+                $product->decrement('stock', $details['quantity']);
             }
 
             if ($cartData['coupon']) {
@@ -145,7 +154,7 @@ class CheckoutService
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return ['success' => false, 'error' => __('Something went wrong! Please try again.')];
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 }

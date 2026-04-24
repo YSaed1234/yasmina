@@ -22,10 +22,21 @@ class ProductDisplayController extends Controller
     {
         $vendor = $request->attributes->get('current_vendor');
         $vendorId = $vendor ? $vendor->id : null;
-        
         $data = $this->productService->getShopData($request, $vendorId);
 
         return view('web::shop', $data);
+    }
+
+    /**
+     * Display a listing of promotions.
+     */
+    public function promotions(Request $request)
+    {
+        $vendor = $request->attributes->get('current_vendor');
+        $vendorId = $vendor ? $vendor->id : null;
+        $data = $this->productService->getPromotionsData($request, $vendorId);
+
+        return view('web::promotions.index', $data);
     }
 
     /**
@@ -35,13 +46,13 @@ class ProductDisplayController extends Controller
     {
         $vendor = $request->attributes->get('current_vendor');
         $vendorId = $vendor ? $vendor->id : null;
-        
+
         $product = $this->productService->getProductDetails($id, $vendorId);
-        
+
         if (!$product) {
             abort(404);
         }
-        
+
         return view('web::show', compact('product'));
     }
 
@@ -54,9 +65,28 @@ class ProductDisplayController extends Controller
     }
 
     /**
+     * Show the specified promotion.
+     */
+    public function showPromotion(Request $request, $id)
+    {
+        $vendor = $request->attributes->get('current_vendor');
+        $vendorId = $vendor ? $vendor->id : null;
+
+        $promotion = $this->productService->getPromotionDetails($id, $vendorId);
+
+        if (!$promotion) {
+            abort(404);
+        }
+
+        return view('web::promotions.show', compact('promotion'));
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
+    public function store(Request $request)
+    {
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -69,10 +99,14 @@ class ProductDisplayController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id) {}
+    public function update(Request $request, $id)
+    {
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id) {}
+    public function destroy($id)
+    {
+    }
 }

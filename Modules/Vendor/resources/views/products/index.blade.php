@@ -20,6 +20,7 @@
                     <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">{{ __('Image') }}</th>
                     <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">{{ __('Name') }}</th>
                     <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">{{ __('Category') }}</th>
+                    <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">{{ __('Inventory') }}</th>
                     <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">{{ __('Price') }}</th>
                     <th class="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest text-center">{{ __('Actions') }}</th>
                 </tr>
@@ -27,7 +28,7 @@
             <tbody class="divide-y divide-gray-100">
                 @forelse($products as $product)
                 <tr class="hover:bg-gray-50/50 transition-colors group">
-                    <td class="px-8 py-5">
+                <td class="px-8 py-5">
                         <span class="text-xs font-bold text-gray-400">{{ $loop->iteration + ($products->firstItem() - 1) }}</span>
                     </td>
                     <td class="px-8 py-5">
@@ -48,6 +49,37 @@
                         <span class="px-4 py-1.5 rounded-full bg-primary/5 text-primary text-xs font-bold border border-primary/10">
                             {{ $product->category->name ?? __('N/A') }}
                         </span>
+                    </td>
+                    <td class="px-8 py-5">
+                        <div class="flex items-center gap-2">
+                            <input type="number" 
+                                   value="{{ $product->stock }}" 
+                                   onchange="updateStock({{ $product->id }}, this.value)"
+                                   class="w-20 px-3 py-1 bg-gray-50 border border-gray-100 rounded-lg focus:ring-2 focus:ring-primary/20 outline-none font-bold text-gray-700 text-center transition-all"
+                                   min="0">
+                            
+                            <div id="stock-status-{{ $product->id }}">
+                                @if($product->stock <= 0)
+                                    <span class="p-1 rounded-full bg-red-50 text-red-600 border border-red-100 block" title="{{ __('Out of Stock') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </span>
+                                @elseif($product->stock <= 5)
+                                    <span class="p-1 rounded-full bg-amber-50 text-amber-600 border border-amber-100 block" title="{{ __('Low Stock') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                        </svg>
+                                    </span>
+                                @else
+                                    <span class="p-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 block" title="{{ __('In Stock') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
                     </td>
                     <td class="px-8 py-5">
                         @php $currencyCode = $product->currency->code ?? 'LE'; @endphp
@@ -104,4 +136,69 @@
         {{ $products->links() }}
     </div>
     @endif
+
+    <script>
+        function updateStock(id, value) {
+            const input = event.target;
+            input.classList.add('opacity-50', 'pointer-events-none');
+            
+            fetch(`{{ url('vendor-panel/products') }}/${id}/update-stock`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ stock: value })
+            })
+            .then(response => response.json())
+            .then(data => {
+                input.classList.remove('opacity-50', 'pointer-events-none');
+                if (data.success) {
+                    const statusContainer = document.getElementById(`stock-status-${id}`);
+                    let iconHtml = '';
+                    
+                    if (data.stock <= 0) {
+                        iconHtml = `
+                            <span class="p-1 rounded-full bg-red-50 text-red-600 border border-red-100 block" title="{{ __('Out of Stock') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </span>
+                        `;
+                    } else if (data.stock <= 5) {
+                        iconHtml = `
+                            <span class="p-1 rounded-full bg-amber-50 text-amber-600 border border-amber-100 block" title="{{ __('Low Stock') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </span>
+                        `;
+                    } else {
+                        iconHtml = `
+                            <span class="p-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 block" title="{{ __('In Stock') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </span>
+                        `;
+                    }
+                    statusContainer.innerHTML = iconHtml;
+                    
+                    // Show a small toast or notification
+                    const toast = document.createElement('div');
+                    toast.className = 'fixed bottom-10 left-10 bg-gray-900 text-white px-6 py-3 rounded-2xl font-bold shadow-2xl z-[100] animate-bounce';
+                    toast.innerText = data.message;
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 2000);
+                } else {
+                    alert(data.message || 'Error updating stock');
+                }
+            })
+            .catch(error => {
+                input.classList.remove('opacity-50', 'pointer-events-none');
+                console.error('Error:', error);
+                alert('An error occurred while updating stock');
+            });
+        }
+    </script>
 </x-vendor::layouts.master>

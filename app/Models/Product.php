@@ -23,7 +23,10 @@ class Product extends Model implements TranslatableContract
         'gift_threshold',
         'currency_id',
         'rank',
-        'image'
+        'image',
+        'stock',
+        'is_enabled',
+        'vendor_deactivated_at'
     ];
 
     protected $casts = [
@@ -61,14 +64,40 @@ class Product extends Model implements TranslatableContract
         return $this->hasMany(Wishlist::class);
     }
 
+    public function promotions()
+    {
+        return $this->hasMany(Promotion::class, 'buy_product_id');
+    }
+
+    public function activePromotion()
+    {
+        return $this->promotions()
+            ->where('is_active', true)
+            ->where(function ($query) {
+                $query->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function ($query) {
+                $query->whereNull('expires_at')->orWhere('expires_at', '>=', now());
+            })
+            ->first();
+    }
+
+    /**
+     * Check if the product has enough stock.
+     */
+    public function hasStock(int $quantity): bool
+    {
+        return $this->stock >= $quantity;
+    }
+
     /**
      * Check if the product has an active flash sale.
      */
     public function hasActiveFlashSale(): bool
     {
-        return $this->flash_sale_price && 
-               $this->flash_sale_expires_at && 
-               $this->flash_sale_expires_at->isFuture();
+        return $this->flash_sale_price &&
+            $this->flash_sale_expires_at &&
+            $this->flash_sale_expires_at->isFuture();
     }
 
     /**
@@ -100,12 +129,22 @@ class Product extends Model implements TranslatableContract
      */
     public function scopeWithValidPrice($query)
     {
+
         return $query->where('price', '>', 0)
-            ->where(function($q) {
+            ->orwhere(function ($q) {
                 $q->whereNull('discount_price')->orWhere('discount_price', '>', 0);
             })
-            ->where(function($q) {
+            ->orwhere(function ($q) {
                 $q->whereNull('flash_sale_price')->orWhere('flash_sale_price', '>', 0);
             });
+    }
+
+    /**
+     * Scope a query to only include active products (enabled and not on global sale).
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_enabled', true)
+            ->whereNull('vendor_deactivated_at');
     }
 }

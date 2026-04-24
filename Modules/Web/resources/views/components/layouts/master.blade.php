@@ -94,6 +94,8 @@
 
                         <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.shop') ? 'text-primary' : '' }}">{{ __('Shop') }}</a>
                         
+                        <a href="{{ route('web.promotions.index', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.promotions.index') ? 'text-primary' : '' }}">{{ __('Promotions') }}</a>
+                        
                         <a href="{{ route('web.about', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.about') ? 'text-primary' : '' }}">{{ __('About Us') }}</a>
                         
                         <a href="{{ route('web.contact', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.contact') ? 'text-primary' : '' }}">{{ __('Contact Us') }}</a>
@@ -154,7 +156,7 @@
                                                     </div>
                                                     <div class="flex-1">
                                                         @if(isset($notification->data['action_url']))
-                                                            <a href="{{ $notification->data['action_url'] }}" class="block">
+                                                            <a href="{{ $notification->data['action_url'] }}" onclick="markAsRead('{{ $notification->id }}', this)" class="block">
                                                                 <p class="text-xs font-bold text-gray-800 leading-relaxed hover:text-primary transition-colors">{{ $notification->data['message'] ?? '' }}</p>
                                                             </a>
                                                         @else
@@ -548,6 +550,10 @@
             }
 
             function markAsRead(id, btn) {
+                // If it's already marked as read in UI, don't do anything
+                const item = document.getElementById(`notification-${id}`);
+                if (item && item.classList.contains('opacity-60')) return;
+
                 fetch(`/notifications/${id}/read?vendor_id={{ request()->vendor_id }}`, {
                     method: 'POST',
                     headers: {
@@ -558,10 +564,14 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        const item = document.getElementById(`notification-${id}`);
-                        item.classList.add('opacity-60');
-                        item.classList.remove('bg-rose-50/10');
-                        btn.remove();
+                        if (item) {
+                            item.classList.add('opacity-60');
+                            item.classList.remove('bg-rose-50/10');
+                            
+                            // Remove the blue dot if exists
+                            const dot = item.querySelector('button.bg-primary');
+                            if (dot) dot.remove();
+                        }
                         
                         const badge = document.getElementById('notification-badge');
                         if (badge) {

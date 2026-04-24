@@ -80,4 +80,23 @@ class ProductController extends Controller
 
         return redirect()->route('vendor.products.index')->with('success', __('Product deleted successfully.'));
     }
+
+    public function updateStock(Request $request, Product $product)
+    {
+        if ($product->vendor_id !== Auth::guard('vendor')->id()) {
+            return response()->json(['success' => false, 'message' => __('Unauthorized')], 403);
+        }
+
+        $validated = $request->validate([
+            'stock' => 'required|integer|min:0'
+        ]);
+
+        $product->update(['stock' => $validated['stock']]);
+
+        return response()->json([
+            'success' => true, 
+            'message' => __('Stock updated successfully'),
+            'stock' => $product->stock
+        ]);
+    }
 }

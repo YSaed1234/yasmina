@@ -50,6 +50,11 @@ class CartController extends Controller
     public function add(Request $request, $id)
     {
         $result = $this->cartService->addToCart($id);
+        
+        if (!$result['success']) {
+            return redirect()->back()->with('error', $result['error'] ?? __('Error adding product to cart'));
+        }
+
         return redirect()->back()->with('success', $result['message']);
     }
 
@@ -60,6 +65,7 @@ class CartController extends Controller
             if ($result['success']) {
                 return response()->json(['success' => true, 'message' => $result['message']]);
             }
+            return response()->json(['success' => false, 'message' => $result['error'] ?? __('Error updating quantity')], 400);
         }
         return response()->json(['success' => false], 400);
     }

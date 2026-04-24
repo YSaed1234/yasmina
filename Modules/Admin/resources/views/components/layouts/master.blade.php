@@ -143,6 +143,9 @@
                                 <a href="{{ route('admin.coupons.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.coupons.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
                                     • {{ __('Coupons') }}
                                 </a>
+                                <a href="{{ route('admin.promotions.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.promotions.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                    • {{ __('Promotions') }}
+                                </a>
                             @endcan
                             @can('manage vendors')
                                 <a href="{{ route('admin.finances.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.finances.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">

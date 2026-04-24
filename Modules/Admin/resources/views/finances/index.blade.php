@@ -5,10 +5,15 @@
     </div>
 
     <!-- Grand Totals -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-primary/10 transition-all group">
             <h3 class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">{{ __('Total Platform Sales') }}</h3>
             <p class="text-3xl font-black text-gray-900">{{ number_format($grand_stats->total_sales, 2) }} <span class="text-xs font-bold text-gray-400">LE</span></p>
+        </div>
+
+        <div class="bg-amber-50 p-8 rounded-[2.5rem] shadow-sm border border-amber-100 hover:shadow-xl hover:shadow-amber-100 transition-all group">
+            <h3 class="text-amber-500 text-[10px] font-black uppercase tracking-widest mb-1">{{ __('Total Promotional Discounts') }}</h3>
+            <p class="text-3xl font-black text-amber-600">{{ number_format($grand_stats->total_promotions, 2) }} <span class="text-xs font-bold text-amber-400">LE</span></p>
         </div>
 
         <div class="bg-indigo-50 p-8 rounded-[2.5rem] shadow-sm border border-indigo-100 hover:shadow-xl hover:shadow-indigo-100 transition-all group">

@@ -27,8 +27,9 @@ class ProfileController extends Controller
         $vendor = request()->attributes->get('current_vendor');
         $vendorId = $vendor ? $vendor->id : null;
         $orders = $this->profileService->getOrders($vendorId);
-
-        return view('web::profile.orders', compact('orders'));
+        $totalPromotionalSavings = $this->profileService->getTotalPromotionalSavings($vendorId);
+        
+        return view('web::profile.orders', compact('orders', 'totalPromotionalSavings'));
     }
 
     public function addresses()

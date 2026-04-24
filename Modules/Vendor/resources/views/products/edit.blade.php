@@ -75,6 +75,14 @@
                     @enderror
                 </div>
 
+                <div>
+                    <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">{{ __('Inventory Stock') }}</label>
+                    <input type="number" name="stock" class="w-full px-5 py-4 bg-gray-50/50 border {{ $errors->has('stock') ? 'border-red-500' : 'border-gray-100' }} rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none font-bold text-gray-700" placeholder="0" value="{{ old('stock', $product->stock) }}" required>
+                    @error('stock')
+                        <p class="mt-1 text-xs font-bold text-red-500 uppercase tracking-widest">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <div class="p-6 bg-amber-50/50 rounded-3xl border border-amber-100 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="md:col-span-2">
                         <h3 class="text-sm font-bold text-amber-600 uppercase tracking-widest mb-2 flex items-center gap-2">

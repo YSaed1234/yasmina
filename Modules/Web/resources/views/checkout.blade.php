@@ -4,6 +4,27 @@
             <div class="max-w-6xl mx-auto">
                 <h1 class="text-4xl font-bold text-gray-900 mb-12 tracking-tight">{{ __('Checkout') }}</h1>
 
+                @php
+                    $hasStockIssues = collect($cart)->contains(fn($item) => isset($item['in_stock']) && !$item['in_stock']);
+                @endphp
+
+                @if($hasStockIssues)
+                    <div class="mb-8 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-4 text-red-700">
+                        <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-bold">{{ __('Some items in your cart are no longer available in the requested quantity.') }}</p>
+                            <p class="text-sm opacity-80">{{ __('Please update your cart before proceeding.') }}</p>
+                        </div>
+                        <a href="{{ route('web.cart') }}" class="ms-auto px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-red-600/20">
+                            {{ __('Back to Cart') }}
+                        </a>
+                    </div>
+                @endif
+
                 <form action="{{ route('web.checkout.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                     @csrf
                     <input type="hidden" name="vendor_id" value="{{ $currentVendor->id ?? '' }}">
@@ -129,7 +150,14 @@
                                         </div>
                                         <div class="flex-1 min-w-0">
                                             <h4 class="text-sm font-bold text-gray-900 truncate">{{ $details['name'] }}</h4>
-                                            <p class="text-xs text-gray-400 mt-1">x{{ $details['quantity'] }}</p>
+                                            <div class="flex items-center gap-2 mt-1">
+                                                <p class="text-xs text-gray-400">x{{ $details['quantity'] }}</p>
+                                                @if(isset($details['in_stock']) && !$details['in_stock'])
+                                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-red-50 text-red-600 rounded text-[8px] font-black uppercase tracking-wider border border-red-100">
+                                                        {{ __('Insufficient Stock') }} ({{ $details['available_stock'] ?? 0 }})
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
                                         <div class="flex flex-col items-end">
                                             @if(isset($details['is_gift']) && $details['is_gift'])
@@ -165,13 +193,24 @@
                                     </div>
                                 @endif
                                 @foreach($appliedVendorDiscounts as $applied)
-                                    <div class="flex justify-between text-yasmina-600">
+                                    <div class="flex justify-between text-red-600">
                                         <span>{{ $applied['label'] }} ({{ $applied['vendor_name'] }})</span>
                                         <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($applied['amount'], 2) }}</span>
                                     </div>
                                 @endforeach
+                                @foreach($appliedPromotions as $promo)
+                                    <div class="flex justify-between text-red-600 bg-red-50/50 p-3 rounded-xl border border-red-100/50">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs font-black uppercase tracking-wider">{{ $promo['name'] }}</span>
+                                            @if(isset($promo['details']))
+                                                <span class="text-[10px] opacity-70">{{ $promo['details'] }}</span>
+                                            @endif
+                                        </div>
+                                        <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($promo['amount'], 2) }}</span>
+                                    </div>
+                                @endforeach
                                 @if($discount > 0)
-                                    <div class="flex justify-between text-green-600">
+                                    <div class="flex justify-between text-red-600 font-bold">
                                         <span>{{ __('Coupon Discount') }}</span>
                                         <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($discount, 2) }}</span>
                                     </div>
@@ -186,7 +225,9 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="w-full py-5 bg-primary text-white rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">
+                            <button type="submit" 
+                                    @if($hasStockIssues) disabled @endif
+                                    class="w-full py-5 bg-primary text-white rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20 {{ $hasStockIssues ? 'opacity-50 cursor-not-allowed grayscale' : '' }}">
                                 {{ __('Place Order') }}
                             </button>
                         </div>
@@ -200,15 +241,23 @@
     <script>
         const subtotal = {{ $totalOriginal }};
         const productSavings = {{ $productSavings }};
+        const promotionalDiscount = {{ $promotionalDiscount }};
         const vendorDiscount = {{ $vendorDiscount }};
         const discount = {{ $discount }};
         const isFreeShipping = {{ (isset($currentVendor) && in_array($currentVendor->id, $freeShippingVendors)) ? 'true' : 'false' }};
         const currency = "{{ reset($cart)['currency'] ?? '$' }}";
+        const hasStockIssues = {{ $hasStockIssues ? 'true' : 'false' }};
 
         function updateSummary() {
             const selectedAddress = document.querySelector('input[name="address_id"]:checked');
             const submitBtn = document.querySelector('button[type="submit"]');
             
+            if (hasStockIssues) {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed', 'grayscale');
+                // Even if address is selected, stock issues take priority for disabling
+            }
+
             if (selectedAddress) {
                 const label = selectedAddress.closest('label');
                 const rate = parseFloat(label.dataset.shippingRate || 0);
@@ -217,7 +266,7 @@
                 if (isAvailable) {
                     const finalRate = isFreeShipping ? 0 : rate;
                     document.getElementById('shipping-display').innerText = finalRate > 0 ? currency + finalRate.toFixed(2) : "{{ __('Free') }}";
-                    document.getElementById('total-display').innerText = currency + (subtotal - productSavings - vendorDiscount - discount + finalRate).toFixed(2);
+                    document.getElementById('total-display').innerText = currency + (subtotal - productSavings - promotionalDiscount - vendorDiscount - discount + finalRate).toFixed(2);
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 } else {

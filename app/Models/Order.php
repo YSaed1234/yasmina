@@ -23,6 +23,7 @@ class Order extends Model
         'discount_amount',
         'vendor_discount_amount',
         'vendor_discount_type',
+        'promotional_discount_amount',
         'commission_amount',
         'vendor_net_amount',
     ];

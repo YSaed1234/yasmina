@@ -30,7 +30,7 @@ class ProductController extends Controller implements HasMiddleware
         return [
             new Middleware('permission:view products|manage products', only: ['index', 'show']),
             new Middleware('permission:create products|manage products', only: ['create', 'store']),
-            new Middleware('permission:edit products|manage products', only: ['edit', 'update']),
+            new Middleware('permission:edit products|manage products', only: ['edit', 'update', 'updateStock']),
             new Middleware('permission:delete products|manage products', only: ['destroy']),
         ];
     }
@@ -89,5 +89,22 @@ class ProductController extends Controller implements HasMiddleware
         $this->productService->deleteProduct($product);
 
         return redirect()->route('admin.products.index')->with('success', __('Product deleted successfully.'));
+    }
+
+    public function updateStock(\Illuminate\Http\Request $request, string $id)
+    {
+        $product = $this->productService->findProduct($id);
+        
+        $validated = $request->validate([
+            'stock' => 'required|integer|min:0'
+        ]);
+
+        $product->update(['stock' => $validated['stock']]);
+
+        return response()->json([
+            'success' => true, 
+            'message' => __('Stock updated successfully'),
+            'stock' => $product->stock
+        ]);
     }
 }

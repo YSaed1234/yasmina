@@ -22,6 +22,7 @@ class VendorController extends Controller
             'total_sales' => (clone $orderQuery)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('total'),
             'net_earnings' => (clone $orderQuery)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('vendor_net_amount'),
             'total_commission' => (clone $orderQuery)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('commission_amount'),
+            'total_promotional_discounts' => (clone $orderQuery)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum(\DB::raw('vendor_discount_amount + promotional_discount_amount')),
             'orders_count' => (clone $orderQuery)->count(),
             'products_count' => $vendor->products()->count(),
         ];
@@ -80,6 +81,7 @@ class VendorController extends Controller
         $stats = [
             'total_sales' => \App\Models\Order::where('vendor_id', $vendor->id)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('total'),
             'total_commission' => \App\Models\Order::where('vendor_id', $vendor->id)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('commission_amount'),
+            'total_promotional_discounts' => \App\Models\Order::where('vendor_id', $vendor->id)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum(\DB::raw('vendor_discount_amount + promotional_discount_amount')),
             'net_earnings' => \App\Models\Order::where('vendor_id', $vendor->id)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('vendor_net_amount'),
         ];
 

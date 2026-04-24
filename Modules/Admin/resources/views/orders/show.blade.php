@@ -82,14 +82,20 @@
                         @php $currency = $order->items->first()?->product?->currency?->symbol ?? __('LE'); @endphp
                         <tr class="bg-gray-50/50">
                             <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Subtotal') }}</td>
-                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->total - $order->shipping_amount + $order->discount_amount + $order->vendor_discount_amount, 2) }} {{ $currency }}</td>
-                        </tr>
+                                                   <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->items->sum(fn($i) => $i->price * $i->quantity), 2) }} {{ $currency }}</td>
+ </tr>
                         @if($order->vendor_discount_amount > 0)
                         <tr class="bg-gray-50/50">
                             <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">
                                 {{ $order->vendor_discount_type === 'threshold' ? __('Order Threshold Discount') : __('Multi-item Discount') }}
                             </td>
                             <td class="px-8 py-4 text-right font-bold text-yasmina-600">-{{ number_format($order->vendor_discount_amount, 2) }} {{ $currency }}</td>
+                        </tr>
+                        @endif
+                        @if($order->promotional_discount_amount > 0)
+                        <tr class="bg-gray-50/50">
+                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Promotional Discount') }}</td>
+                            <td class="px-8 py-4 text-right font-bold text-amber-600">-{{ number_format($order->promotional_discount_amount, 2) }} {{ $currency }}</td>
                         </tr>
                         @endif
                         @if($order->discount_amount > 0)

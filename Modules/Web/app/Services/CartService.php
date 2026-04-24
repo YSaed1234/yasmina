@@ -31,6 +31,10 @@ class CartService
                 $itemTotal = $item['price'] * $item['quantity'];
                 $itemTotalOriginal = $item['original_price'] * $item['quantity'];
                 
+                // Stock Validation
+                $item['in_stock'] = $product->hasStock($item['quantity']);
+                $item['available_stock'] = $product->stock;
+
                 $total += $itemTotal;
                 $totalOriginal += $itemTotalOriginal;
                 $totalItemsCount += $item['quantity'];
@@ -48,6 +52,84 @@ class CartService
             }
         }
         Session::put('cart', $cart);
+
+        // Calculate BOGO & Cross-sell Promotions
+        $promotionalDiscount = 0;
+        $appliedPromotions = [];
+        $activePromotions = \App\Models\Promotion::where('is_active', true)
+            ->whereIn('buy_product_id', $productIds)
+            ->where(function($q) {
+                $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
+            })
+            ->get();
+
+        foreach ($activePromotions as $promo) {
+            if (isset($cart[$promo->buy_product_id])) {
+                $buyQtyInCart = $cart[$promo->buy_product_id]['quantity'];
+                
+                if ($promo->type === 'bogo_same') {
+                    // Logic for "Buy 2 Get 1 Free" (Total 3 items, 1 free)
+                    $cycle = $promo->buy_quantity + $promo->get_quantity;
+                    $eligibleQty = floor($buyQtyInCart / $cycle) * $promo->get_quantity;
+                } else {
+                    // Logic for "Buy A Get B at discount"
+                    $timesApplicable = floor($buyQtyInCart / $promo->buy_quantity);
+                    if (isset($cart[$promo->get_product_id])) {
+                        $getQtyInCart = $cart[$promo->get_product_id]['quantity'];
+                        $eligibleQty = min($timesApplicable * $promo->get_quantity, $getQtyInCart);
+                    } else {
+                        $eligibleQty = 0;
+                    }
+                }
+
+                if ($eligibleQty > 0) {
+                    $targetProduct = $products[$promo->get_product_id] ?? null;
+                    if ($targetProduct) {
+                        // Validate if "Get" items are available in stock
+                        // For bogo_same, it's already checked in the items loop
+                        // For different product, check if the getQtyInCart is within stock
+                        $isFulfillable = true;
+                        if ($promo->type !== 'bogo_same') {
+                            $isFulfillable = $targetProduct->hasStock($cart[$promo->get_product_id]['quantity']);
+                        }
+
+                        if ($isFulfillable) {
+                            $unitPrice = $targetProduct->effective_price;
+                            $discountForThisPromo = 0;
+
+                            if ($promo->discount_type === 'free') {
+                                $discountForThisPromo = $unitPrice * $eligibleQty;
+                            } elseif ($promo->discount_type === 'percentage') {
+                                $discountForThisPromo = ($unitPrice * $promo->discount_value / 100) * $eligibleQty;
+                            } else {
+                                $discountForThisPromo = min($promo->discount_value * $eligibleQty, $unitPrice * $eligibleQty);
+                            }
+
+                            $promotionalDiscount += $discountForThisPromo;
+                            $appliedPromotions[] = [
+                                'name' => $promo->name ?: ($promo->type === 'bogo_same' ? __('BOGO Deal') : __('Bundle Deal')),
+                                'amount' => $discountForThisPromo,
+                                'details' => $promo->type === 'bogo_same' 
+                                    ? __('Buy :buy get :get free', ['buy' => $promo->buy_quantity, 'get' => $promo->get_quantity])
+                                    : __('Discount on :product', ['product' => $targetProduct->name])
+                            ];
+                        } else {
+                            $appliedPromotions[] = [
+                                'name' => $promo->name,
+                                'amount' => 0,
+                                'error' => __('Insufficient stock for the free/discounted items in this deal.'),
+                                'details' => __('Deal cannot be applied due to stock limits.')
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+
+        $totalAfterPromotions = max(0, $total - $promotionalDiscount);
 
         $productSavings = $totalOriginal - $total;
 
@@ -104,7 +186,7 @@ class CartService
         $coupon = null;
         $discount = 0;
         
-        $totalAfterVendorDiscounts = max(0, $total - $vendorDiscount);
+        $totalAfterVendorDiscounts = max(0, $totalAfterPromotions - $vendorDiscount);
         $freeShippingVendors = [];
         foreach ($vendorGroups as $vId => $group) {
             if ($group['vendor']->free_shipping_threshold && $group['total'] >= $group['vendor']->free_shipping_threshold) {
@@ -138,6 +220,8 @@ class CartService
             'total' => $total,
             'totalOriginal' => $totalOriginal,
             'productSavings' => $productSavings,
+            'promotionalDiscount' => $promotionalDiscount,
+            'appliedPromotions' => $appliedPromotions,
             'vendorDiscount' => $vendorDiscount,
             'appliedVendorDiscounts' => $appliedVendorDiscounts,
             'availableGifts' => \App\Models\Product::where('is_gift', true)
@@ -193,8 +277,15 @@ class CartService
         $cart = Session::get('cart', []);
 
         if (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] += $quantity;
+            $newQuantity = $cart[$productId]['quantity'] + $quantity;
+            if (!$product->hasStock($newQuantity)) {
+                return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
+            }
+            $cart[$productId]['quantity'] = $newQuantity;
         } else {
+            if (!$product->hasStock($quantity)) {
+                return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
+            }
             $price = $product->is_gift ? 0 : $product->effective_price;
             
             $cart[$productId] = [
@@ -217,6 +308,10 @@ class CartService
     {
         $cart = Session::get('cart', []);
         if (isset($cart[$productId])) {
+            $product = Product::find($productId);
+            if ($product && !$product->hasStock($quantity)) {
+                return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
+            }
             $cart[$productId]["quantity"] = $quantity;
             Session::put('cart', $cart);
             return ['success' => true, 'message' => __('Cart updated successfully')];

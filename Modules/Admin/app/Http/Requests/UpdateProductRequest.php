@@ -29,6 +29,7 @@ class UpdateProductRequest extends FormRequest
             'gift_threshold' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'rank' => 'nullable|integer',
+            'stock' => 'required|integer|min:0',
             'vendor_id' => 'nullable|exists:vendors,id',
         ];
     }

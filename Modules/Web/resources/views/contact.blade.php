@@ -135,22 +135,26 @@
                             <input type="hidden" name="vendor_id" value="{{ $currentVendor->id ?? '' }}">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Name') }}</label>
-                                <input type="text" name="name" value="{{ auth()->user()->name ?? '' }}" required class="w-full px-6 py-4 bg-white border border-rose-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
+                                <input type="text" name="name" value="{{ old('name', auth()->user()->name ?? '') }}" required class="w-full px-6 py-4 bg-white border @error('name') border-red-500 @else border-rose-100 @enderror rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
+                                @error('name') <p class="mt-1 text-xs text-red-500 font-bold">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Email') }}</label>
-                                <input type="email" name="email" value="{{ auth()->user()->email ?? '' }}" required class="w-full px-6 py-4 bg-white border border-rose-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
+                                <input type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" required class="w-full px-6 py-4 bg-white border @error('email') border-red-500 @else border-rose-100 @enderror rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
+                                @error('email') <p class="mt-1 text-xs text-red-500 font-bold">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Subject') }}</label>
-                                <input type="text" name="subject" class="w-full px-6 py-4 bg-white border border-rose-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
+                                <input type="text" name="subject" value="{{ old('subject') }}" class="w-full px-6 py-4 bg-white border @error('subject') border-red-500 @else border-rose-100 @enderror rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">
+                                @error('subject') <p class="mt-1 text-xs text-red-500 font-bold">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Message') }}</label>
-                                <textarea name="message" rows="5" required class="w-full px-6 py-4 bg-white border border-rose-100 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm"></textarea>
+                                <textarea name="message" rows="5" required class="w-full px-6 py-4 bg-white border @error('message') border-red-500 @else border-rose-100 @enderror rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm">{{ old('message') }}</textarea>
+                                @error('message') <p class="mt-1 text-xs text-red-500 font-bold">{{ $message }}</p> @enderror
                             </div>
 
                             <button type="submit" class="w-full py-5 bg-primary text-white rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">

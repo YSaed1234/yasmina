@@ -26,6 +26,7 @@ class StoreProductRequest extends FormRequest
             'is_gift' => 'nullable|boolean',
             'gift_threshold' => 'nullable|numeric|min:0',
             'currency_id' => 'required|exists:currencies,id',
+            'stock' => 'required|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }

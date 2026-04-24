@@ -19,6 +19,7 @@ Route::prefix('vendor-panel')->group(function () {
         Route::get('finances', [VendorController::class, 'finances'])->name('vendor.finances.index');
 
         // Products
+        Route::patch('products/{product}/update-stock', [ProductController::class, 'updateStock'])->name('vendor.products.update-stock');
         Route::resource('products', ProductController::class)->names('vendor.products');
 
         // Categories
@@ -35,6 +36,9 @@ Route::prefix('vendor-panel')->group(function () {
 
         // Sliders
         Route::resource('sliders', \Modules\Vendor\Http\Controllers\SliderController::class)->names('vendor.sliders');
+
+        // Promotions (BOGO)
+        Route::resource('promotions', \Modules\Vendor\Http\Controllers\PromotionController::class)->names('vendor.promotions');
 
         // Contact Requests
         Route::get('contact-requests', [\Modules\Vendor\Http\Controllers\ContactController::class, 'index'])->name('vendor.contacts.index');

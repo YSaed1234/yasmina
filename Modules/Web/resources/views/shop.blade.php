@@ -110,6 +110,10 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    @elseif($product->stock <= 0)
+                                        <div class="absolute top-4 left-4 bg-gray-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20">
+                                            {{ __('Out of Stock') }}
+                                        </div>
                                     @elseif($product->discount_price && $product->discount_price < $product->price)
                                         <div class="absolute top-4 left-4 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20">
                                             {{ __('Sale') }}
@@ -160,10 +164,14 @@
                                         </div>
                                         <form action="{{ route('web.cart.add', $product->id) }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="p-3 rounded-2xl bg-rose-50 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm flex items-center gap-2 group/btn">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                                </svg>
+                                            <button type="submit" @if($product->stock <= 0) disabled @endif class="p-3 rounded-2xl {{ $product->stock <= 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-rose-50 text-primary hover:bg-primary hover:text-white' }} transition-all duration-300 shadow-sm flex items-center gap-2 group/btn">
+                                                @if($product->stock <= 0)
+                                                    <span class="text-[8px] font-black uppercase tracking-widest">{{ __('Sold Out') }}</span>
+                                                @else
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                                    </svg>
+                                                @endif
                                             </button>
                                         </form>
                                     </div>

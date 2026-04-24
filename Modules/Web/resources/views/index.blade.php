@@ -4,6 +4,83 @@
         <!-- Hero Section -->
         <x-web::sections.hero :slides="$slides" />
 
+        @if($promotions->count() > 0)
+        <!-- Promotions Section -->
+        <section class="py-24 bg-rose-50/50 relative overflow-hidden">
+            <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+            
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-16">
+                    <span class="text-primary font-black text-xs uppercase tracking-[0.3em] mb-4 block">{{ __('Exclusive Deals') }}</span>
+                    <h2 class="text-4xl font-bold text-gray-900">{{ __('Special Offers for You') }}</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto mt-6 rounded-full"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    @foreach($promotions as $promotion)
+                        <div class="group relative bg-white rounded-[2.5rem] p-8 soft-shadow border border-rose-100 hover:border-primary/20 transition-all duration-500 overflow-hidden">
+                            <!-- Background Pattern -->
+                            <div class="absolute -top-10 -right-10 w-40 h-40 bg-rose-50 rounded-full group-hover:scale-150 transition-transform duration-700 opacity-50"></div>
+                            
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-8">
+                                    <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                                        </svg>
+                                    </div>
+                                    <div class="bg-primary text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-primary/20">
+                                        {{ $promotion->type === 'bogo_same' ? __('BOGO') : __('Bundle') }}
+                                    </div>
+                                </div>
+
+                                <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ $promotion->name }}</h3>
+                                <p class="text-gray-500 text-sm mb-8 leading-relaxed">
+                                    @if($promotion->type === 'bogo_same')
+                                        {{ __('Buy :buy get :get free on :product', ['buy' => $promotion->buy_quantity, 'get' => $promotion->get_quantity, 'product' => $promotion->buyProduct->name]) }}
+                                    @elseif($promotion->type === 'bogo_different')
+                                        {{ __('Buy :buy from :product1 and get :get from :product2 for free!', ['buy' => $promotion->buy_quantity, 'product1' => $promotion->buyProduct->name, 'get' => $promotion->get_quantity, 'product2' => $promotion->getProduct->name]) }}
+                                    @endif
+                                </p>
+
+                                <div class="flex items-center gap-6 mb-8 p-4 bg-rose-50/50 rounded-3xl border border-rose-100/50">
+                                    <div class="flex -space-x-4">
+                                        @if($promotion->buyProduct && $promotion->buyProduct->image)
+                                            <img src="{{ asset('storage/' . $promotion->buyProduct->image) }}" class="w-12 h-12 rounded-2xl object-cover ring-4 ring-white" alt="">
+                                        @endif
+                                        @if($promotion->type === 'bogo_different' && $promotion->getProduct && $promotion->getProduct->image)
+                                            <img src="{{ asset('storage/' . $promotion->getProduct->image) }}" class="w-12 h-12 rounded-2xl object-cover ring-4 ring-white" alt="">
+                                        @endif
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-[10px] font-bold text-primary uppercase tracking-widest">{{ __('Deal Items') }}</span>
+                                        <span class="text-xs text-gray-600 font-medium">{{ $promotion->buyProduct->name }} {{ $promotion->type === 'bogo_different' ? '+ ' . $promotion->getProduct->name : '' }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-3">
+                                    <a href="{{ route('web.promotions.show', ['id' => $promotion->id, 'vendor_id' => request('vendor_id')]) }}" class="flex-1 py-4 bg-gray-900 text-white rounded-2xl text-xs font-bold uppercase tracking-widest text-center hover:bg-primary transition-all duration-300 shadow-xl shadow-gray-900/10">
+                                        {{ __('View Details') }}
+                                    </a>
+                                    <form action="{{ route('web.cart.add', ['id' => $promotion->buyProduct->id, 'vendor_id' => request('vendor_id')]) }}" method="POST" class="contents">
+                                        @csrf
+                                        <input type="hidden" name="quantity" value="{{ $promotion->buy_quantity }}">
+                                        <button type="submit" class="w-14 h-14 bg-primary text-white rounded-2xl flex items-center justify-center hover:scale-105 transition-all duration-300 shadow-xl shadow-primary/20 group/add">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:rotate-12 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+        @endif
+
         <!-- Top Picks Section -->
         <section class="py-32 bg-white relative z-10">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -59,6 +136,10 @@
                                             </div>
                                         </div>
                                     </div>
+                                @elseif($product->stock <= 0)
+                                    <div class="absolute top-4 left-4 bg-gray-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20">
+                                        {{ __('Out of Stock') }}
+                                    </div>
                                 @elseif($product->discount_price && $product->discount_price < $product->price)
                                     <div class="absolute top-4 left-4 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20">
                                         {{ __('Sale') }}
@@ -111,11 +192,18 @@
                                     </div>
                                     <form action="{{ route('web.cart.add', $product->id) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="w-full py-3 bg-gray-50 text-gray-700 rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-primary hover:text-white hover:shadow-lg hover:shadow-primary/20 transition-all flex items-center justify-center gap-2 group/btn">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                            </svg>
-                                            {{ __('Add to Bag') }}
+                                        <button type="submit" @if($product->stock <= 0) disabled @endif class="w-full py-3 {{ $product->stock <= 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-50 text-gray-700 hover:bg-primary hover:text-white hover:shadow-lg hover:shadow-primary/20' }} rounded-2xl text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn">
+                                            @if($product->stock <= 0)
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                                </svg>
+                                                {{ __('Sold Out') }}
+                                            @else
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                                </svg>
+                                                {{ __('Add to Bag') }}
+                                            @endif
                                         </button>
                                     </form>
                                 </div>
@@ -179,6 +267,10 @@
                                                                 <span class="text-[6px] uppercase tracking-tighter">{{ __('Sec') }}</span>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                @elseif($product->stock <= 0)
+                                                    <div class="absolute top-3 left-3 bg-gray-500 text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shadow-lg z-20">
+                                                        {{ __('Out of Stock') }}
                                                     </div>
                                                 @elseif($product->discount_price && $product->discount_price < $product->price)
                                                     <div class="absolute top-3 left-3 bg-red-500 text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shadow-lg z-20">

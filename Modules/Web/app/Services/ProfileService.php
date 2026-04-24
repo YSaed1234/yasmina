@@ -20,6 +20,14 @@ class ProfileService
             ->paginate($perPage);
     }
 
+    public function getTotalPromotionalSavings($vendorId)
+    {
+        return Order::where('vendor_id', $vendorId)
+            ->where('user_id', Auth::id())
+            ->selectRaw('SUM(vendor_discount_amount + promotional_discount_amount) as total')
+            ->value('total') ?? 0;
+    }
+
     public function getAddresses($vendorId)
     {
         return Auth::user()->addresses()

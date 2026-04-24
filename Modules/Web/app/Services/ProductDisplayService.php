@@ -43,7 +43,7 @@ class ProductDisplayService
         }
 
         $products = $query->orderBy('rank')->paginate(12)->withQueryString();
-        
+
         $categoriesQuery = Category::query();
         if ($vendorId) {
             $categoriesQuery->where('vendor_id', $vendorId);
@@ -51,7 +51,7 @@ class ProductDisplayService
             $categoriesQuery->whereNull('vendor_id');
         }
         $categories = $categoriesQuery->get();
-        
+
         $currencies = Currency::all();
 
         return compact('products', 'categories', 'currencies');
@@ -59,13 +59,75 @@ class ProductDisplayService
 
     public function getProductDetails($id, $vendorId = null)
     {
-        $product = Product::withValidPrice()->with(['category', 'currency'])->find($id);
-        
+        $product = Product::
+            withValidPrice()->
+            with(['category', 'currency'])
+            ->find($id);
+
+        if (!$product) {
+            return null;
+        }
+
         // If a vendor is specified, ensure the product belongs to it
         if ($vendorId && $product->vendor_id != $vendorId) {
             return null;
         }
-        
+
+
         return $product;
+    }
+    public function getPromotionDetails($id, $vendorId = null)
+    {
+        $promotion = \App\Models\Promotion::with(['buyProduct', 'getProduct'])
+            ->where('is_active', true)
+            ->where(function ($q) {
+                $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
+            })
+            ->find($id);
+
+        if (!$promotion) {
+            return null;
+        }
+
+        if ($vendorId && $promotion->vendor_id != $vendorId) {
+            return null;
+        }
+
+        return $promotion;
+    }
+
+    public function getPromotionsData(Request $request, $vendorId)
+    {
+        $query = \App\Models\Promotion::with(['buyProduct', 'getProduct'])
+            ->where('is_active', true)
+            ->where(function ($q) {
+                $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
+            });
+
+        if ($vendorId) {
+            $query->where('vendor_id', $vendorId);
+        } else {
+            $query->whereNull('vendor_id');
+        }
+
+        // Search by name
+        if ($request->filled('search')) {
+            $query->whereTranslationLike('name', '%' . $request->search . '%');
+        }
+
+        // Filtering by type
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        $promotions = $query->latest()->paginate(12)->withQueryString();
+
+        return compact('promotions');
     }
 }

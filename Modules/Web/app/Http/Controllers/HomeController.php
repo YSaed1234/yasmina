@@ -39,7 +39,24 @@ class HomeController extends Controller
         }
         $slides = $slidesQuery->orderBy('order')->get();
 
-        return view('web::index', compact('categories', 'featuredProducts', 'slides', 'vendor'));
+        $promotionsQuery = \App\Models\Promotion::with(['buyProduct', 'getProduct'])
+            ->where('is_active', true)
+            ->where(function($q) {
+                $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
+            });
+
+        if ($vendor_id) {
+            $promotionsQuery->where('vendor_id', $vendor_id);
+        } else {
+            $promotionsQuery->whereNull('vendor_id');
+        }
+
+        $promotions = $promotionsQuery->latest()->get();
+
+        return view('web::index', compact('categories', 'featuredProducts', 'slides', 'vendor', 'promotions'));
     }
 
     public function about()
@@ -83,7 +100,8 @@ class HomeController extends Controller
             'message' => 'required|string',
         ]);
 
-        $validated['vendor_id'] = $request->get('vendor_id');
+        $vendor = $request->attributes->get('current_vendor');
+        $validated['vendor_id'] = $vendor ? $vendor->id : null;
 
         \App\Models\ContactRequest::create($validated);
 

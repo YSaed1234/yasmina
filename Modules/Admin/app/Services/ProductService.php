@@ -40,6 +40,7 @@ class ProductService
         $product->gift_threshold = $data['gift_threshold'] ?? null;
         $product->vendor_id = $data['vendor_id'] ?? null;
         $product->rank = $data['rank'] ?? 0;
+        $product->stock = $data['stock'] ?? 0;
 
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
             $product->image = $data['image']->store('products', 'public');
@@ -71,6 +72,7 @@ class ProductService
         $product->gift_threshold = array_key_exists('gift_threshold', $data) ? $data['gift_threshold'] : $product->gift_threshold;
         $product->vendor_id = $data['vendor_id'] ?? $product->vendor_id;
         $product->rank = $data['rank'] ?? $product->rank;
+        $product->stock = $data['stock'] ?? $product->stock;
 
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
             if ($product->image) {

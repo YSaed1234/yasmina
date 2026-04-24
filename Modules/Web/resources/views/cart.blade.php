@@ -39,16 +39,27 @@
                                         <div class="flex justify-between mb-2">
                                             <div>
                                                 <h3 class="text-xl font-bold text-gray-900">{{ $details['name'] }}</h3>
-                                                @if(isset($details['is_gift']) && $details['is_gift'])
-                                                    <span class="inline-block px-2 py-0.5 bg-yasmina-50 text-[10px] font-bold text-yasmina-500 uppercase tracking-widest rounded-lg">{{ __('Free Gift') }}</span>
-                                                @elseif(isset($details['is_flash_sale']) && $details['is_flash_sale'])
-                                                    <span class="text-[10px] font-bold text-amber-500 uppercase tracking-widest flex items-center gap-1">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                                        </svg>
-                                                        {{ __('Flash Sale Price') }}
-                                                    </span>
-                                                @endif
+                                                <div class="flex flex-wrap gap-2 mt-1">
+                                                    @if(isset($details['is_gift']) && $details['is_gift'])
+                                                        <span class="inline-block px-2 py-0.5 bg-yasmina-50 text-[10px] font-bold text-yasmina-500 uppercase tracking-widest rounded-lg">{{ __('Free Gift') }}</span>
+                                                    @elseif(isset($details['is_flash_sale']) && $details['is_flash_sale'])
+                                                        <span class="text-[10px] font-bold text-amber-500 uppercase tracking-widest flex items-center gap-1">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                            </svg>
+                                                            {{ __('Flash Sale Price') }}
+                                                        </span>
+                                                    @endif
+
+                                                    @if(isset($details['in_stock']) && !$details['in_stock'])
+                                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-600 rounded-lg text-[10px] font-black uppercase tracking-wider border border-red-100 animate-pulse">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                                            </svg>
+                                                            {{ __('Insufficient Stock') }} ({{ $details['available_stock'] ?? 0 }} {{ __('Left') }})
+                                                        </span>
+                                                    @endif
+                                                </div>
                                             </div>
                                             <button onclick="removeFromCart({{ $id }})" class="text-gray-400 hover:text-red-500 transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -164,14 +175,23 @@
                                             <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($productSavings, 2) }}</span>
                                         </div>
                                     @endif
+                                    @foreach($appliedPromotions as $promo)
+                                        <div class="flex justify-between text-red-600 bg-red-50/50 p-3 rounded-xl border border-red-100/50">
+                                            <div class="flex flex-col">
+                                                <span class="text-xs font-black uppercase tracking-wider">{{ $promo['name'] }}</span>
+                                                <span class="text-[10px] opacity-70">{{ $promo['details'] }}</span>
+                                            </div>
+                                            <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($promo['amount'], 2) }}</span>
+                                        </div>
+                                    @endforeach
                                     @foreach($appliedVendorDiscounts as $applied)
-                                        <div class="flex justify-between text-yasmina-600">
+                                        <div class="flex justify-between text-red-600">
                                             <span>{{ $applied['label'] }} ({{ $applied['vendor_name'] }})</span>
                                             <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($applied['amount'], 2) }}</span>
                                         </div>
                                     @endforeach
                                     @if($discount > 0)
-                                        <div class="flex justify-between text-green-600">
+                                        <div class="flex justify-between text-red-600 font-bold">
                                             <span>{{ __('Coupon Discount') }}</span>
                                             <span class="font-bold">-{{ reset($cart)['currency'] ?? '$' }}{{ number_format($discount, 2) }}</span>
                                         </div>

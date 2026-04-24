@@ -17,6 +17,7 @@ Route::prefix('admin-dashboard-2026')->group(function () {
         Route::get('/', [\Modules\Admin\Http\Controllers\AdminController::class, 'index'])->name('index');
 
         Route::resource('categories', CategoryController::class);
+        Route::patch('products/{product}/update-stock', [ProductController::class, 'updateStock'])->name('products.update-stock');
         Route::resource('products', ProductController::class);
         Route::resource('currencies', CurrencyController::class);
         Route::resource('roles', RoleController::class);
@@ -34,6 +35,7 @@ Route::prefix('admin-dashboard-2026')->group(function () {
         Route::delete('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy')->middleware('permission:manage orders');
 
         Route::resource('coupons', \Modules\Admin\Http\Controllers\CouponController::class)->middleware('permission:manage coupons');
+        Route::resource('promotions', \Modules\Admin\Http\Controllers\PromotionController::class)->middleware('permission:manage coupons');
 
         Route::resource('addresses', \Modules\Admin\Http\Controllers\AddressController::class)->names('addresses')->middleware('permission:manage addresses');
         Route::delete('addresses/{address}', [\Modules\Admin\Http\Controllers\AddressController::class, 'destroy'])->name('addresses.destroy')->middleware('permission:manage addresses');

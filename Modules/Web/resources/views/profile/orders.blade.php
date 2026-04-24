@@ -10,7 +10,25 @@
                 <!-- Main Content -->
                 <div class="lg:col-span-3">
                     <div class="bg-white rounded-3xl p-10 shadow-sm border border-rose-50">
-                        <h1 class="text-3xl font-bold text-gray-900 mb-8">{{ __('Order History') }}</h1>
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+                            <h1 class="text-3xl font-bold text-gray-900">{{ __('Order History') }}</h1>
+                            
+                            @if($totalPromotionalSavings > 0)
+                                <div class="bg-gradient-to-br from-yasmina-500 to-yasmina-600 p-0.5 rounded-2xl shadow-lg shadow-yasmina-500/20">
+                                    <div class="bg-white rounded-[calc(1rem-2px)] px-6 py-3 flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-xl bg-yasmina-50 flex items-center justify-center">
+                                            <svg class="w-6 h-6 text-yasmina-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-0.5">{{ __('Total Promotional Savings') }}</span>
+                                            <p class="text-xl font-bold text-yasmina-600">{{ number_format($totalPromotionalSavings, 2) }} {{ $orders->first()?->items?->first()?->product?->currency?->symbol ?? '$' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
                         
                         @if($orders->count() > 0)
                             <div class="space-y-6">
@@ -174,13 +192,21 @@
                                     <span class="text-gray-500">{{ __('Subtotal') }}</span>
                                     <span id="modal-subtotal" class="font-bold text-gray-900"></span>
                                 </div>
-                                <div class="flex justify-between text-sm">
+                                <div id="modal-coupon-row" class="flex justify-between text-sm hidden">
                                     <span class="text-gray-500">{{ __('Coupon Discount') }}</span>
                                     <span id="modal-discount" class="font-bold text-green-600"></span>
                                 </div>
-                                <div id="modal-vendor-discount-row" class="flex justify-between text-sm hidden">
-                                    <span class="text-gray-500" id="modal-vendor-discount-label"></span>
-                                    <span id="modal-vendor-discount" class="font-bold text-yasmina-600"></span>
+                                
+                                <!-- Special Discounts Block -->
+                                <div id="modal-special-discounts" class="hidden -mx-6 bg-amber-50/50 border-y border-amber-100/50 divide-y divide-amber-100/30">
+                                    <div id="modal-vendor-discount-row" class="flex justify-between items-center text-sm px-6 py-2 hidden">
+                                        <span class="text-amber-600 font-bold uppercase tracking-widest text-[10px]" id="modal-vendor-discount-label"></span>
+                                        <span id="modal-vendor-discount" class="font-bold text-amber-600"></span>
+                                    </div>
+                                    <div id="modal-promo-discount-row" class="flex justify-between items-center text-sm px-6 py-2 hidden">
+                                        <span class="text-amber-600 font-bold uppercase tracking-widest text-[10px]">{{ __('Promotional Offers (BOGO/Bundle)') }}</span>
+                                        <span id="modal-promo-discount" class="font-bold text-amber-600"></span>
+                                    </div>
                                 </div>
                                 <div class="flex justify-between text-sm">
                                     <span class="text-gray-500">{{ __('Shipping') }}</span>
@@ -273,14 +299,25 @@
             const shippingAmount = parseFloat(order.shipping_amount || 0);
             const discountAmount = parseFloat(order.discount_amount || 0);
             const vendorDiscountAmount = parseFloat(order.vendor_discount_amount || 0);
+            const promotionalDiscountAmount = parseFloat(order.promotional_discount_amount || 0);
+            const totalPromotionalDiscount = vendorDiscountAmount + promotionalDiscountAmount;
+            
             const totalAmount = parseFloat(order.total);
-            const subtotalAmount = totalAmount - shippingAmount + discountAmount + vendorDiscountAmount;
+            const subtotalAmount = totalAmount - shippingAmount + discountAmount + totalPromotionalDiscount;
 
             document.getElementById('modal-subtotal').innerText = subtotalAmount.toFixed(2);
             document.getElementById('modal-shipping').innerText = shippingAmount.toFixed(2);
-            document.getElementById('modal-discount').parentElement.classList.toggle('hidden', discountAmount === 0);
-            document.getElementById('modal-discount').innerText = `-${discountAmount.toFixed(2)}`;
             
+            // Coupon Discount
+            const couponRow = document.getElementById('modal-coupon-row');
+            if (discountAmount > 0) {
+                couponRow.classList.remove('hidden');
+                document.getElementById('modal-discount').innerText = `-${discountAmount.toFixed(2)}`;
+            } else {
+                couponRow.classList.add('hidden');
+            }
+            
+            // Vendor Specific Discount (Threshold/Multi-item)
             const vendorRow = document.getElementById('modal-vendor-discount-row');
             if (vendorDiscountAmount > 0) {
                 vendorRow.classList.remove('hidden');
@@ -289,6 +326,23 @@
                 document.getElementById('modal-vendor-discount').innerText = `-${vendorDiscountAmount.toFixed(2)}`;
             } else {
                 vendorRow.classList.add('hidden');
+            }
+
+            // Promotional Discount (BOGO/Bundle)
+            const promoRow = document.getElementById('modal-promo-discount-row');
+            if (promotionalDiscountAmount > 0) {
+                promoRow.classList.remove('hidden');
+                document.getElementById('modal-promo-discount').innerText = `-${promotionalDiscountAmount.toFixed(2)}`;
+            } else {
+                promoRow.classList.add('hidden');
+            }
+
+            // Show/Hide Special Discounts Block
+            const specialBlock = document.getElementById('modal-special-discounts');
+            if (vendorDiscountAmount > 0 || promotionalDiscountAmount > 0) {
+                specialBlock.classList.remove('hidden');
+            } else {
+                specialBlock.classList.add('hidden');
             }
 
             document.getElementById('modal-total').innerText = totalAmount.toFixed(2);

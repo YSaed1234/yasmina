@@ -45,6 +45,19 @@
             <p class="text-3xl font-black text-gray-900 text-rose-500">{{ number_format($stats['total_commission'], 2) }} <span class="text-sm font-bold text-gray-400">{{ __('LE') }}</span></p>
         </div>
 
+        <!-- Promotional Discounts -->
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-primary/10 transition-all group">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-white transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                    </svg>
+                </div>
+            </div>
+            <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">{{ __('Promotional Discounts') }}</h3>
+            <p class="text-3xl font-black text-gray-900 text-amber-500">{{ number_format($stats['total_promotional_discounts'], 2) }} <span class="text-sm font-bold text-gray-400">{{ __('LE') }}</span></p>
+        </div>
+
         <!-- Active Products -->
         <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-primary/10 transition-all group">
             <div class="flex items-center justify-between mb-4">

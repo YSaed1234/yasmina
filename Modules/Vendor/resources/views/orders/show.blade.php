@@ -92,6 +92,16 @@
                             </td>
                         </tr>
                         @endif
+                        @if($order->promotional_discount_amount > 0)
+                        <tr class="bg-amber-50/30">
+                            <td colspan="3" class="px-8 py-4 text-right font-bold text-amber-600 uppercase tracking-widest text-[10px]">
+                                {{ __('Promotional Discount') }}
+                            </td>
+                            <td class="px-8 py-4 text-right font-bold text-amber-600">
+                                -{{ number_format($order->promotional_discount_amount, 2) }} {{ $currency }}
+                            </td>
+                        </tr>
+                        @endif
                         <tr class="bg-gray-50/50">
                             <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Shipping') }}</td>
                             <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->shipping_amount, 2) }} {{ $currency }}</td>

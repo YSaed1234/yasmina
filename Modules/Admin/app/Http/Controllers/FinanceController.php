@@ -19,23 +19,25 @@ class FinanceController extends Controller
         $vendors->getCollection()->transform(function($vendor) {
             $stats = Order::where('vendor_id', $vendor->id)
                 ->where('status', '!=', OrderStatus::CANCELLED)
-                ->selectRaw('SUM(total) as total_sales, SUM(commission_amount) as total_commission, SUM(vendor_net_amount) as total_net')
+                ->selectRaw('SUM(total) as total_sales, SUM(commission_amount) as total_commission, SUM(vendor_net_amount) as total_net, SUM(vendor_discount_amount + promotional_discount_amount) as total_promotions')
                 ->first();
             
             $vendor->total_sales = $stats->total_sales ?? 0;
             $vendor->total_commission = $stats->total_commission ?? 0;
             $vendor->total_net = $stats->total_net ?? 0;
+            $vendor->total_promotions = $stats->total_promotions ?? 0;
             
             return $vendor;
         });
 
         $grand_stats = Order::where('status', '!=', OrderStatus::CANCELLED)
-            ->selectRaw('SUM(total) as total_sales, SUM(commission_amount) as total_commission, SUM(vendor_net_amount) as total_net')
+            ->selectRaw('SUM(total) as total_sales, SUM(commission_amount) as total_commission, SUM(vendor_net_amount) as total_net, SUM(vendor_discount_amount + promotional_discount_amount) as total_promotions')
             ->first();
             
         $grand_stats->total_sales = $grand_stats->total_sales ?? 0;
         $grand_stats->total_commission = $grand_stats->total_commission ?? 0;
         $grand_stats->total_net = $grand_stats->total_net ?? 0;
+        $grand_stats->total_promotions = $grand_stats->total_promotions ?? 0;
 
         return view('admin::finances.index', compact('vendors', 'grand_stats'));
     }
@@ -48,12 +50,13 @@ class FinanceController extends Controller
 
         $stats = Order::where('vendor_id', $vendor->id)
             ->where('status', '!=', OrderStatus::CANCELLED)
-            ->selectRaw('SUM(total) as total_sales, SUM(commission_amount) as total_commission, SUM(vendor_net_amount) as total_net')
+            ->selectRaw('SUM(total) as total_sales, SUM(commission_amount) as total_commission, SUM(vendor_net_amount) as total_net, SUM(vendor_discount_amount + promotional_discount_amount) as total_promotions')
             ->first();
 
         $stats->total_sales = $stats->total_sales ?? 0;
         $stats->total_commission = $stats->total_commission ?? 0;
         $stats->total_net = $stats->total_net ?? 0;
+        $stats->total_promotions = $stats->total_promotions ?? 0;
 
         return view('admin::finances.show', compact('vendor', 'orders', 'stats'));
     }
