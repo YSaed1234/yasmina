@@ -776,5 +776,17 @@
     "Manage Status": "إدارة الحالة",
     "Customer Info": "بيانات العميل",
     "Qty": "الكمية",
-    "Guest": "زائر"
+    "Guest": "زائر",
+    "Sales Trend": "اتجاه المبيعات",
+    "Platform Revenue Trend": "اتجاه إيرادات المنصة",
+    "Top Performing Vendors": "أفضل الموردين أداءً",
+    "Vendor Payouts": "مستحقات الموردين",
+    "Platform Revenue": "إيرادات المنصة",
+    "Items Sold": "قطعة مباعة",
+    "Net Profit": "صافي الربح",
+    "Last 6 Months": "آخر 6 أشهر",
+    "Revenue": "الإيرادات",
+    "Top Selling Products": "أكثر المنتجات مبيعاً",
+    "Welcome back! Here is what is happening with your platform today.": "مرحباً بك مجدداً! إليك ما يحدث في منصتك اليوم.",
+    "Welcome back! Here is what is happening with your institution today.": "مرحباً بك مجدداً! إليك ما يحدث في مؤسستك اليوم."
 }

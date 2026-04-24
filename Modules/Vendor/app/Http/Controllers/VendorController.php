@@ -13,13 +13,61 @@ class VendorController extends Controller
     public function index()
     {
         $vendor = auth('vendor')->user();
+        
+        // Base query for vendor orders
+        $orderQuery = \App\Models\Order::where('vendor_id', $vendor->id);
+        
+        // Revenue Stats
         $stats = [
+            'total_sales' => (clone $orderQuery)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('total'),
+            'net_earnings' => (clone $orderQuery)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('vendor_net_amount'),
+            'total_commission' => (clone $orderQuery)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('commission_amount'),
+            'orders_count' => (clone $orderQuery)->count(),
             'products_count' => $vendor->products()->count(),
-            'orders_count' => \App\Models\Order::where('vendor_id', $vendor->id)->count(),
-            'total_sales' => \App\Models\Order::where('vendor_id', $vendor->id)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('total'),
         ];
 
-        return view('vendor::index', compact('stats'));
+        // Order Status Breakdown
+        $statusBreakdown = (clone $orderQuery)
+            ->select('status', \DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->get()
+            ->mapWithKeys(fn($item) => [$item->status->value => $item->count])
+            ->toArray();
+
+        // Recent Orders
+        $recentOrders = (clone $orderQuery)
+            ->with(['user'])
+            ->latest()
+            ->take(5)
+            ->get();
+
+        // Top Products
+        $topProducts = \App\Models\OrderItem::whereHas('order', function($q) use ($vendor) {
+                $q->where('vendor_id', $vendor->id);
+            })
+            ->select('product_id', \DB::raw('SUM(quantity) as total_qty'), \DB::raw('SUM(quantity * price) as total_revenue'))
+            ->with('product')
+            ->groupBy('product_id')
+            ->orderByDesc('total_qty')
+            ->take(5)
+            ->get();
+
+        // Monthly Sales (Last 6 months)
+        $monthlySales = (clone $orderQuery)
+            ->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)
+            ->where('created_at', '>=', now()->subMonths(6))
+            ->select(
+                \DB::raw('YEAR(created_at) as year'),
+                \DB::raw('MONTH(created_at) as month'),
+                \DB::raw('SUM(total) as revenue'),
+                \DB::raw('SUM(vendor_net_amount) as net')
+            )
+            ->groupBy('year', 'month')
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc')
+            ->get();
+
+        return view('vendor::index', compact('stats', 'statusBreakdown', 'recentOrders', 'topProducts', 'monthlySales'));
     }
 
     public function finances()
