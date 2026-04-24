@@ -151,6 +151,9 @@
                                 <a href="{{ route('admin.finances.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.finances.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
                                     • {{ __('Financial Reports') }}
                                 </a>
+                                <a href="{{ route('admin.vendor_payments.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.vendor_payments.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                    • {{ __('Vendor Payments') }}
+                                </a>
                             @endcan
                         </div>
                     </div>

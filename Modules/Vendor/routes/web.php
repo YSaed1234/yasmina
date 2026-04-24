@@ -17,6 +17,7 @@ Route::prefix('vendor-panel')->group(function () {
     Route::middleware(['auth:vendor'])->group(function () {
         Route::get('/', [VendorController::class, 'index'])->name('vendor.dashboard');
         Route::get('finances', [VendorController::class, 'finances'])->name('vendor.finances.index');
+        Route::get('payments', [\Modules\Vendor\Http\Controllers\VendorPaymentController::class, 'index'])->name('vendor.payments.index');
 
         // Products
         Route::patch('products/{product}/update-stock', [ProductController::class, 'updateStock'])->name('vendor.products.update-stock');

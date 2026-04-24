@@ -55,6 +55,11 @@ Route::prefix('admin-dashboard-2026')->group(function () {
         Route::get('finances/{vendor}', [\Modules\Admin\Http\Controllers\FinanceController::class, 'show'])->name('finances.show')->middleware('permission:manage vendors');
 
         // Vendor Management
+        Route::get('vendor-payments', [\Modules\Admin\Http\Controllers\VendorPaymentController::class, 'index'])->name('vendor_payments.index')->middleware('permission:manage vendors');
+        Route::get('vendor-payments/{vendor}', [\Modules\Admin\Http\Controllers\VendorPaymentController::class, 'show'])->name('vendor_payments.show')->middleware('permission:manage vendors');
+        Route::post('vendor-payments', [\Modules\Admin\Http\Controllers\VendorPaymentController::class, 'store'])->name('vendor_payments.store')->middleware('permission:manage vendors');
+        Route::delete('vendor-payments/{payment}', [\Modules\Admin\Http\Controllers\VendorPaymentController::class, 'destroy'])->name('vendor_payments.destroy')->middleware('permission:manage vendors');
+
         Route::resource('vendors', \Modules\Admin\Http\Controllers\VendorController::class)->names('vendors')->middleware('permission:manage vendors');
     });
 });

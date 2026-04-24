@@ -58,4 +58,28 @@ class Vendor extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+
+    public function payments()
+    {
+        return $this->hasMany(VendorPayment::class);
+    }
+
+    public function getTotalCommissionAttribute()
+    {
+        return $this->orders()
+            ->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)
+            ->sum('commission_amount');
+    }
+
+    public function getTotalPaidAttribute()
+    {
+        return $this->payments()
+            ->where('status', 'confirmed')
+            ->sum('amount');
+    }
+
+    public function getRemainingBalanceAttribute()
+    {
+        return $this->total_commission - $this->total_paid;
+    }
 }
