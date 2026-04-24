@@ -1,11 +1,11 @@
 <x-admin::layouts.master>
     <div class="mb-10">
-        <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ __('Dashboard Overview') }}</h1>
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ __('Welcome back,') }} {{ auth()->user()->name }}</h1>
         <p class="text-gray-500">
             @if(auth()->user()->vendor_id)
-                {{ __('Welcome back! Here is what is happening with your institution today.') }}
+                {{ __('Here is what is happening with your institution today.') }}
             @else
-                {{ __('Welcome back! Here is what is happening with your platform today.') }}
+                {{ __('Here is what is happening with your platform today.') }}
             @endif
         </p>
     </div>

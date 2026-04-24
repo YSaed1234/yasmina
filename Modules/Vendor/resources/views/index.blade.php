@@ -107,7 +107,7 @@
                         <tr class="text-gray-400 text-[10px] uppercase tracking-widest border-b border-gray-50">
                             <th class="pb-4 font-black">{{ __('Order ID') }}</th>
                             <th class="pb-4 font-black">{{ __('Customer') }}</th>
-                            <th class="pb-4 font-black">{{ __('Amount') }}</th>
+                            <th class="pb-4 font-black">{{ __('Total') }}</th>
                             <th class="pb-4 font-black">{{ __('Status') }}</th>
                         </tr>
                     </thead>
