@@ -41,6 +41,7 @@ class ProductService
         $product->vendor_id = $data['vendor_id'] ?? null;
         $product->rank = $data['rank'] ?? 0;
         $product->stock = $data['stock'] ?? 0;
+        $product->custom_badge = $data['custom_badge'] ?? null;
 
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
             $product->image = $data['image']->store('products', 'public');
@@ -73,6 +74,7 @@ class ProductService
         $product->vendor_id = $data['vendor_id'] ?? $product->vendor_id;
         $product->rank = $data['rank'] ?? $product->rank;
         $product->stock = $data['stock'] ?? $product->stock;
+        $product->custom_badge = array_key_exists('custom_badge', $data) ? $data['custom_badge'] : $product->custom_badge;
 
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
             if ($product->image) {

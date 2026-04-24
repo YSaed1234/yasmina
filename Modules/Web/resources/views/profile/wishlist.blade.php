@@ -28,6 +28,37 @@
                                                         </svg>
                                                     </div>
                                                 @endif
+                                            @if($badge = $product->getBadge())
+                                                <div class="absolute top-4 left-4 {{ $badge['color'] }} text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shadow-lg z-20 flex items-center gap-1">
+                                                    @if($product->hasActiveFlashSale())
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-2 w-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                        </svg>
+                                                    @endif
+                                                    {{ $badge['label'] }}
+                                                </div>
+                                            @endif
+
+                                            @if($product->hasActiveFlashSale())
+                                                <div class="absolute bottom-3 left-0 right-0 px-3 z-20">
+                                                    <div class="bg-white/90 backdrop-blur-md rounded-xl p-1.5 shadow-xl border border-amber-100 flex items-center justify-center gap-2 text-amber-600" data-countdown="{{ $product->flash_sale_expires_at->toIso8601String() }}">
+                                                        <div class="text-center">
+                                                            <span class="hours block text-[10px] font-black">00</span>
+                                                            <span class="text-[6px] uppercase tracking-tighter">{{ __('Hrs') }}</span>
+                                                        </div>
+                                                        <div class="w-px h-3 bg-amber-200"></div>
+                                                        <div class="text-center">
+                                                            <span class="minutes block text-[10px] font-black">00</span>
+                                                            <span class="text-[6px] uppercase tracking-tighter">{{ __('Min') }}</span>
+                                                        </div>
+                                                        <div class="w-px h-3 bg-amber-200"></div>
+                                                        <div class="text-center">
+                                                            <span class="seconds block text-[10px] font-black">00</span>
+                                                            <span class="text-[6px] uppercase tracking-tighter">{{ __('Sec') }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
                                             </a>
                                             <button onclick="removeFromWishlist({{ $product->id }}, this)" class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-all group/wish">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 fill-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -49,9 +80,25 @@
                                                 <h3 class="mt-2 text-lg font-bold text-gray-900 mb-4 group-hover:text-primary transition-colors line-clamp-1">{{ $product->name }}</h3>
                                             </a>
                                             <div class="mt-auto flex justify-between items-center">
-                                                <div class="flex items-baseline gap-1">
-                                                    <span class="text-xl font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
-                                                    <span class="text-sm font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
+                                                <div class="flex flex-col">
+                                                    @if($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture())
+                                                        <span class="text-[10px] text-gray-400 line-through leading-none mb-1">{{ number_format($product->price, 2) }}</span>
+                                                        <div class="flex items-baseline gap-0.5">
+                                                            <span class="text-lg font-black text-amber-600 leading-none">{{ number_format($product->flash_sale_price, 2) }}</span>
+                                                            <span class="text-[10px] font-bold text-amber-600">{{ $product->currency?->symbol ?? '$' }}</span>
+                                                        </div>
+                                                    @elseif($product->discount_price && $product->discount_price < $product->price)
+                                                        <span class="text-[10px] text-gray-400 line-through leading-none mb-1">{{ number_format($product->price, 2) }}</span>
+                                                        <div class="flex items-baseline gap-0.5">
+                                                            <span class="text-lg font-black text-gray-900 leading-none">{{ number_format($product->discount_price, 2) }}</span>
+                                                            <span class="text-[10px] font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
+                                                        </div>
+                                                    @else
+                                                        <div class="flex items-baseline gap-1">
+                                                            <span class="text-xl font-bold text-gray-900 leading-none">{{ number_format($product->price, 2) }}</span>
+                                                            <span class="text-sm font-bold text-primary">{{ $product->currency?->symbol ?? '$' }}</span>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                                 <form action="{{ route('web.cart.add', ['id' => $product->id, 'vendor_id' => request('vendor_id')]) }}" method="POST">
                                                     @csrf

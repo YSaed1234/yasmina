@@ -13,13 +13,9 @@
                             <div class="w-full h-full flex items-center justify-center text-primary opacity-20 text-6xl">?</div>
                         @endif
                     </div>
-                    @if($product->stock <= 0)
-                        <div class="absolute top-8 left-8 bg-gray-500 text-white text-sm font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-2xl z-20">
-                            {{ __('Out of Stock') }}
-                        </div>
-                    @elseif($product->discount_price && $product->discount_price < $product->price)
-                        <div class="absolute top-8 left-8 bg-red-500 text-white text-sm font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-2xl z-20">
-                            {{ __('Sale') }}
+                    @if($badge = $product->getBadge())
+                        <div class="absolute top-8 left-8 {{ $badge['color'] }} text-sm font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-2xl z-20">
+                            {{ $badge['label'] }}
                         </div>
                     @endif
                 </div>

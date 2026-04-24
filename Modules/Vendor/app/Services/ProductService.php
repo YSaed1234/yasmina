@@ -29,6 +29,7 @@ class ProductService
         $product->gift_threshold = $data['gift_threshold'] ?? null;
         $product->currency_id = $data['currency_id'] ?? 1;
         $product->stock = $data['stock'] ?? 0;
+        $product->custom_badge = $data['custom_badge'] ?? null;
 
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
             $product->image = $data['image']->store('products', 'public');
@@ -59,6 +60,7 @@ class ProductService
         $product->gift_threshold = array_key_exists('gift_threshold', $data) ? $data['gift_threshold'] : $product->gift_threshold;
         $product->currency_id = $data['currency_id'] ?? $product->currency_id;
         $product->stock = $data['stock'] ?? $product->stock;
+        $product->custom_badge = array_key_exists('custom_badge', $data) ? $data['custom_badge'] : $product->custom_badge;
 
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
             if ($product->image) {

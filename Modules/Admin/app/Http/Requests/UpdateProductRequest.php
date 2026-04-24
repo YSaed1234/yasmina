@@ -31,6 +31,7 @@ class UpdateProductRequest extends FormRequest
             'rank' => 'nullable|integer',
             'stock' => 'required|integer|min:0',
             'vendor_id' => 'nullable|exists:vendors,id',
+            'custom_badge' => 'nullable|string|max:50',
         ];
     }
 

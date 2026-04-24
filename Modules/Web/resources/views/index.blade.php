@@ -111,13 +111,18 @@
                                         </div>
                                     @endif
                                 </a>
-                                @if($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture())
-                                    <div class="absolute top-4 left-4 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20 flex items-center gap-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                        </svg>
-                                        {{ __('Flash Sale') }}
+                                @if($badge = $product->getBadge())
+                                    <div class="absolute top-4 left-4 {{ $badge['color'] }} text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20 flex items-center gap-1">
+                                        @if($product->hasActiveFlashSale())
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                            </svg>
+                                        @endif
+                                        {{ $badge['label'] }}
                                     </div>
+                                @endif
+
+                                @if($product->hasActiveFlashSale())
                                     <div class="absolute bottom-4 left-0 right-0 px-4 z-20">
                                         <div class="bg-white/90 backdrop-blur-md rounded-2xl p-2 shadow-xl border border-amber-100 flex items-center justify-center gap-3 text-amber-600" data-countdown="{{ $product->flash_sale_expires_at->toIso8601String() }}">
                                             <div class="text-center">
@@ -135,14 +140,6 @@
                                                 <span class="text-[8px] uppercase tracking-tighter">{{ __('Sec') }}</span>
                                             </div>
                                         </div>
-                                    </div>
-                                @elseif($product->stock <= 0)
-                                    <div class="absolute top-4 left-4 bg-gray-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20">
-                                        {{ __('Out of Stock') }}
-                                    </div>
-                                @elseif($product->discount_price && $product->discount_price < $product->price)
-                                    <div class="absolute top-4 left-4 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20">
-                                        {{ __('Sale') }}
                                     </div>
                                 @endif
                                 @auth
@@ -243,13 +240,18 @@
                                                         <div class="h-full w-full flex items-center justify-center text-primary opacity-20 text-4xl font-light">?</div>
                                                     @endif
                                                 </a>
-                                                @if($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture())
-                                                    <div class="absolute top-3 left-3 bg-amber-500 text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shadow-lg z-20 flex items-center gap-1">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-2 w-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                                        </svg>
-                                                        {{ __('Flash Sale') }}
+                                                @if($badge = $product->getBadge())
+                                                    <div class="absolute top-3 left-3 {{ $badge['color'] }} text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shadow-lg z-20 flex items-center gap-1">
+                                                        @if($product->hasActiveFlashSale())
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-2 w-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                            </svg>
+                                                        @endif
+                                                        {{ $badge['label'] }}
                                                     </div>
+                                                @endif
+
+                                                @if($product->hasActiveFlashSale())
                                                     <div class="absolute bottom-3 left-0 right-0 px-3 z-20">
                                                         <div class="bg-white/90 backdrop-blur-md rounded-xl p-1.5 shadow-xl border border-amber-100 flex items-center justify-center gap-2 text-amber-600" data-countdown="{{ $product->flash_sale_expires_at->toIso8601String() }}">
                                                             <div class="text-center">
@@ -267,14 +269,6 @@
                                                                 <span class="text-[6px] uppercase tracking-tighter">{{ __('Sec') }}</span>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                @elseif($product->stock <= 0)
-                                                    <div class="absolute top-3 left-3 bg-gray-500 text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shadow-lg z-20">
-                                                        {{ __('Out of Stock') }}
-                                                    </div>
-                                                @elseif($product->discount_price && $product->discount_price < $product->price)
-                                                    <div class="absolute top-3 left-3 bg-red-500 text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shadow-lg z-20">
-                                                        {{ __('Sale') }}
                                                     </div>
                                                 @endif
                                                 @auth

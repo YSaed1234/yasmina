@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Vendor;
 use App\Models\VendorPayment;
+use App\Models\Order;
+use App\Enums\OrderStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,10 +17,13 @@ class VendorPaymentController extends Controller
     {
         $vendors = Vendor::paginate(15);
         
+        $totalCommission = Order::where('status', '!=', OrderStatus::CANCELLED)->sum('commission_amount');
+        $totalPaid = VendorPayment::where('status', 'confirmed')->sum('amount');
+        
         $stats = [
-            'total_commission' => Vendor::sum('total_commission'),
-            'total_paid' => Vendor::sum('total_paid'),
-            'remaining_balance' => Vendor::sum('remaining_balance'),
+            'total_commission' => $totalCommission,
+            'total_paid' => $totalPaid,
+            'remaining_balance' => $totalCommission - $totalPaid,
         ];
 
         return view('admin::vendor_payments.index', compact('vendors', 'stats'));

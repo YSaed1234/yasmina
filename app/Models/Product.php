@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ProductBadge;
 use Illuminate\Database\Eloquent\Model;
 
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -26,13 +27,74 @@ class Product extends Model implements TranslatableContract
         'image',
         'stock',
         'is_enabled',
-        'vendor_deactivated_at'
+        'vendor_deactivated_at',
+        'custom_badge'
     ];
 
     protected $casts = [
         'is_gift' => 'boolean',
         'flash_sale_expires_at' => 'datetime',
+        'custom_badge' => ProductBadge::class,
     ];
+
+    /**
+     * Get the dynamic badge for the product based on priority logic.
+     */
+    public function getBadge()
+    {
+        // 0. Priority: Out of Stock
+        if ($this->stock <= 0) {
+            return [
+                'label' => __('Out of Stock'),
+                'type' => 'stock_out',
+                'color' => 'bg-gray-500 text-white'
+            ];
+        }
+
+        // 1. Priority: Manual Custom Badge
+        if ($this->custom_badge) {
+            return [
+                'label' => $this->custom_badge->label(),
+                'type' => 'custom',
+                'color' => 'bg-primary text-white'
+            ];
+        }
+
+        // 2. Priority: Low Stock (Last X pieces)
+        if ($this->stock > 0 && $this->stock <= 3) {
+            return [
+                'label' => __('Last :count pieces', ['count' => $this->stock]),
+                'type' => 'stock',
+                'color' => 'bg-red-500 text-white animate-pulse'
+            ];
+        }
+
+        // 3. Priority: Discount / Sale
+        if ($this->isSale()) {
+            $percentage = 0;
+            if ($this->price > 0) {
+                $percentage = round((($this->price - $this->getEffectivePriceAttribute()) / $this->price) * 100);
+            }
+            if ($percentage > 0) {
+                return [
+                    'label' => __(':percentage% OFF', ['percentage' => $percentage]),
+                    'type' => 'sale',
+                    'color' => 'bg-emerald-500 text-white'
+                ];
+            }
+        }
+
+        // 4. Priority: New Arrival (within last 7 days)
+        if ($this->created_at && $this->created_at->diffInDays(now()) <= 7) {
+            return [
+                'label' => __('New Arrival'),
+                'type' => 'new',
+                'color' => 'bg-blue-500 text-white'
+            ];
+        }
+
+        return null;
+    }
 
     public function vendor()
     {
