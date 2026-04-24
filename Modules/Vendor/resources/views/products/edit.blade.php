@@ -9,6 +9,21 @@
             @csrf
             @method('PUT')
             
+            @if ($errors->any())
+                <div class="p-6 bg-red-50 border-l-4 border-red-500 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                        <h3 class="text-sm font-bold text-red-800">{{ __('Please correct the following errors:') }}</h3>
+                    </div>
+                    <ul class="list-disc list-inside text-sm text-red-700 space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                     <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">{{ __('Product Name (Arabic)') }}</label>
@@ -33,14 +48,31 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">{{ __('Currency') }}</label>
+                    <select name="currency_id" class="w-full px-5 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none font-bold text-gray-700 appearance-none" required>
+                        @foreach($currencies as $currency)
+                            <option value="{{ $currency->id }}" {{ (old('currency_id', $product->currency_id) == $currency->id) ? 'selected' : '' }}>
+                                {{ $currency->code }} ({{ $currency->symbol }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
                     <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">{{ __('Price') }}</label>
-                    <input type="number" step="0.01" name="price" class="w-full px-5 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none font-bold text-gray-700" 
-                        value="{{ $product->price }}" required>
+                    <input type="number" step="0.01" name="price" class="w-full px-5 py-4 bg-gray-50/50 border {{ $errors->has('price') ? 'border-red-500' : 'border-gray-100' }} rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none font-bold text-gray-700" 
+                        value="{{ old('price', $product->price) }}" required>
+                    @error('price')
+                        <p class="mt-1 text-xs font-bold text-red-500 uppercase tracking-widest">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">{{ __('Discount Price') }}</label>
-                    <input type="number" step="0.01" name="discount_price" value="{{ $product->discount_price }}" class="w-full px-5 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none font-bold text-gray-700" placeholder="0.00">
+                    <input type="number" step="0.01" name="discount_price" value="{{ old('discount_price', $product->discount_price) }}" class="w-full px-5 py-4 bg-gray-50/50 border {{ $errors->has('discount_price') ? 'border-red-500' : 'border-gray-100' }} rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none font-bold text-gray-700" placeholder="0.00">
+                    @error('discount_price')
+                        <p class="mt-1 text-xs font-bold text-red-500 uppercase tracking-widest">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="p-6 bg-amber-50/50 rounded-3xl border border-amber-100 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -54,7 +86,10 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-amber-500 mb-2 uppercase tracking-widest">{{ __('Flash Sale Price') }}</label>
-                        <input type="number" step="0.01" name="flash_sale_price" value="{{ $product->flash_sale_price }}" class="w-full px-5 py-4 bg-white border border-amber-100 rounded-2xl focus:ring-4 focus:ring-amber-100 outline-none font-bold text-gray-700" placeholder="0.00">
+                        <input type="number" step="0.01" name="flash_sale_price" value="{{ old('flash_sale_price', $product->flash_sale_price) }}" class="w-full px-5 py-4 bg-white border {{ $errors->has('flash_sale_price') ? 'border-red-500' : 'border-amber-100' }} rounded-2xl focus:ring-4 focus:ring-amber-100 outline-none font-bold text-gray-700" placeholder="0.00">
+                        @error('flash_sale_price')
+                            <p class="mt-1 text-xs font-bold text-red-500 uppercase tracking-widest">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-amber-500 mb-2 uppercase tracking-widest">{{ __('Expiry Date') }}</label>

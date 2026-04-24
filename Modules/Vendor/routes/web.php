@@ -16,6 +16,7 @@ Route::prefix('vendor-panel')->group(function () {
     // Dashboard - Protected
     Route::middleware(['auth:vendor'])->group(function () {
         Route::get('/', [VendorController::class, 'index'])->name('vendor.dashboard');
+        Route::get('finances', [VendorController::class, 'finances'])->name('vendor.finances.index');
 
         // Products
         Route::resource('products', ProductController::class)->names('vendor.products');

@@ -23,11 +23,15 @@ class Order extends Model
         'discount_amount',
         'vendor_discount_amount',
         'vendor_discount_type',
+        'commission_amount',
+        'vendor_net_amount',
     ];
 
     protected $casts = [
         'shipping_details' => 'array',
         'total' => 'decimal:2',
+        'commission_amount' => 'decimal:2',
+        'vendor_net_amount' => 'decimal:2',
         'status' => \App\Enums\OrderStatus::class,
     ];
 

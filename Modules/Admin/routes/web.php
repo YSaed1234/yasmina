@@ -48,6 +48,10 @@ Route::prefix('admin-dashboard-2026')->group(function () {
         Route::get('settings/points', [PointSettingController::class, 'index'])->name('settings.points')->middleware('permission:manage points');
         Route::post('settings/points', [PointSettingController::class, 'update'])->name('settings.points.update')->middleware('permission:manage points');
 
+        // Finances/Reports
+        Route::get('finances', [\Modules\Admin\Http\Controllers\FinanceController::class, 'index'])->name('finances.index')->middleware('permission:manage vendors');
+        Route::get('finances/{vendor}', [\Modules\Admin\Http\Controllers\FinanceController::class, 'show'])->name('finances.show')->middleware('permission:manage vendors');
+
         // Vendor Management
         Route::resource('vendors', \Modules\Admin\Http\Controllers\VendorController::class)->names('vendors')->middleware('permission:manage vendors');
     });

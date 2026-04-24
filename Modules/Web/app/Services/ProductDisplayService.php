@@ -11,7 +11,7 @@ class ProductDisplayService
 {
     public function getShopData(Request $request, $vendorId)
     {
-        $query = Product::with(['category', 'currency']);
+        $query = Product::withValidPrice()->with(['category', 'currency']);
 
         if ($vendorId) {
             $query->where('vendor_id', $vendorId);
@@ -59,7 +59,7 @@ class ProductDisplayService
 
     public function getProductDetails($id, $vendorId = null)
     {
-        $product = Product::with(['category', 'currency'])->findOrFail($id);
+        $product = Product::withValidPrice()->with(['category', 'currency'])->find($id);
         
         // If a vendor is specified, ensure the product belongs to it
         if ($vendorId && $product->vendor_id != $vendorId) {

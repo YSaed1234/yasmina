@@ -5,6 +5,7 @@ namespace Modules\Vendor\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Currency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Vendor\Http\Requests\StoreProductRequest;
@@ -32,8 +33,9 @@ class ProductController extends Controller
     {
         $vendor = Auth::guard('vendor')->user();
         $categories = Category::where('vendor_id', $vendor->id)->get();
+        $currencies = Currency::all();
 
-        return view('vendor::products.create', compact('categories'));
+        return view('vendor::products.create', compact('categories', 'currencies'));
     }
 
     public function store(StoreProductRequest $request)
@@ -52,8 +54,9 @@ class ProductController extends Controller
 
         $vendor = Auth::guard('vendor')->user();
         $categories = Category::where('vendor_id', $vendor->id)->get();
+        $currencies = Currency::all();
 
-        return view('vendor::products.edit', compact('product', 'categories'));
+        return view('vendor::products.edit', compact('product', 'categories', 'currencies'));
     }
 
     public function update(UpdateProductRequest $request, Product $product)

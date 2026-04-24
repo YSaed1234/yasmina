@@ -33,9 +33,18 @@
                         <tr>
                             <td class="px-8 py-6">
                                 <div class="flex items-center gap-4">
-                                    @if($item->product->image)
-                                        <img src="{{ asset('storage/' . $item->product->image) }}" class="w-12 h-12 rounded-xl object-cover shadow-sm">
-                                    @endif
+                                    <div class="relative">
+                                        @if($item->is_gift)
+                                            <div class="absolute -top-2 -left-2 z-10">
+                                                <span class="bg-yasmina-500 text-white text-[6px] font-black uppercase tracking-widest px-1 py-0.5 rounded shadow-lg shadow-yasmina-500/20">
+                                                    {{ __('Gift') }}
+                                                </span>
+                                            </div>
+                                        @endif
+                                        @if($item->product->image)
+                                            <img src="{{ asset('storage/' . $item->product->image) }}" class="w-12 h-12 rounded-xl object-cover shadow-sm">
+                                        @endif
+                                    </div>
                                     <div>
                                         <p class="font-bold text-gray-800">{{ $item->product->name }}</p>
                                         <p class="text-xs text-gray-400">{{ $item->product->category->name ?? '' }}</p>
@@ -43,21 +52,30 @@
                                 </div>
                             </td>
                             <td class="px-8 py-6 font-bold text-gray-600">
-                                {{ number_format($item->price, 2) }}
+                                @if($item->is_gift)
+                                    <span class="text-yasmina-600 uppercase text-[10px]">{{ __('Free') }}</span>
+                                @else
+                                    {{ number_format($item->price, 2) }}
+                                @endif
                             </td>
                             <td class="px-8 py-6 font-bold text-gray-600">
                                 {{ $item->quantity }}
                             </td>
                             <td class="px-8 py-6 text-right font-black text-primary">
-                                {{ number_format($item->price * $item->quantity, 2) }}
+                                @if($item->is_gift)
+                                    <span class="text-yasmina-600 uppercase text-[10px]">{{ __('Free') }}</span>
+                                @else
+                                    {{ number_format($item->price * $item->quantity, 2) }}
+                                @endif
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
+                        @php $currency = $order->items->first()?->product?->currency?->symbol ?? __('LE'); @endphp
                         <tr class="bg-gray-50/50">
                             <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Subtotal') }}</td>
-                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->items->sum(fn($i) => $i->price * $i->quantity), 2) }} LE</td>
+                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->items->sum(fn($i) => $i->price * $i->quantity), 2) }} {{ $currency }}</td>
                         </tr>
                         @if($order->vendor_discount_amount > 0)
                         <tr class="bg-yasmina-50/30">
@@ -70,18 +88,30 @@
                                 </span>
                             </td>
                             <td class="px-8 py-4 text-right font-bold text-yasmina-600">
-                                -{{ number_format($order->vendor_discount_amount, 2) }} LE
+                                -{{ number_format($order->vendor_discount_amount, 2) }} {{ $currency }}
                             </td>
                         </tr>
                         @endif
                         <tr class="bg-gray-50/50">
                             <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Shipping') }}</td>
-                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->shipping_amount, 2) }} LE</td>
+                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->shipping_amount, 2) }} {{ $currency }}</td>
+                        </tr>
+                        <tr class="border-y border-gray-100 bg-gray-50/80">
+                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-900 uppercase tracking-widest text-[10px]">{{ __('Total Amount') }}</td>
+                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->total, 2) }} {{ $currency }}</td>
+                        </tr>
+                        <tr class="bg-rose-50/30">
+                            <td colspan="3" class="px-8 py-4 text-right font-bold text-rose-600 uppercase tracking-widest text-[10px]">
+                                {{ __('Yasmina Commission') }}
+                            </td>
+                            <td class="px-8 py-4 text-right font-bold text-rose-600">
+                                -{{ number_format($order->commission_amount, 2) }} {{ $currency }}
+                            </td>
                         </tr>
                         <tr class="bg-primary/5">
-                            <td colspan="3" class="px-8 py-6 text-right font-bold text-primary uppercase tracking-widest text-xs">{{ __('Your Total Revenue') }}</td>
+                            <td colspan="3" class="px-8 py-6 text-right font-bold text-primary uppercase tracking-widest text-xs">{{ __('Vendor Net') }}</td>
                             <td class="px-8 py-6 text-right font-black text-primary text-2xl">
-                                {{ number_format($order->items->sum(fn($i) => $i->price * $i->quantity) - $order->vendor_discount_amount + $order->shipping_amount, 2) }} LE
+                                {{ number_format($order->vendor_net_amount, 2) }} {{ $currency }}
                             </td>
                         </tr>
                     </tfoot>

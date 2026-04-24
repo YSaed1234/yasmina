@@ -7,6 +7,22 @@
     <div class="max-w-4xl bg-white/70 backdrop-blur-md p-8 rounded-3xl border border-yasmina-50 shadow-xl shadow-yasmina-100/50">
         <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
             @csrf
+
+            @if ($errors->any())
+                <div class="p-6 bg-red-50 border-l-4 border-red-500 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                        <h3 class="text-sm font-bold text-red-800">{{ __('Please correct the following errors:') }}</h3>
+                    </div>
+                    <ul class="list-disc list-inside text-sm text-red-700 space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="md:col-span-1">
                     <label class="block text-sm font-bold text-yasmina-500 mb-2 uppercase tracking-widest">{{ __('Product Name (Arabic)') }}</label>
@@ -39,12 +55,18 @@
 
                 <div>
                     <label class="block text-sm font-bold text-yasmina-500 mb-2 uppercase tracking-widest">{{ __('Price') }}</label>
-                    <input type="number" step="0.01" name="price" class="w-full px-5 py-4 bg-yasmina-50/50 border border-yasmina-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-yasmina-100 focus:border-yasmina-300 transition-all outline-none font-bold text-gray-700" placeholder="0.00" required>
+                    <input type="number" step="0.01" name="price" value="{{ old('price') }}" class="w-full px-5 py-4 bg-yasmina-50/50 border {{ $errors->has('price') ? 'border-red-500' : 'border-yasmina-100' }} rounded-2xl focus:bg-white focus:ring-4 focus:ring-yasmina-100 focus:border-yasmina-300 transition-all outline-none font-bold text-gray-700" placeholder="0.00" required>
+                    @error('price')
+                        <p class="mt-1 text-xs font-bold text-red-500 uppercase tracking-widest">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label class="block text-sm font-bold text-yasmina-500 mb-2 uppercase tracking-widest">{{ __('Discount Price') }}</label>
-                    <input type="number" step="0.01" name="discount_price" class="w-full px-5 py-4 bg-yasmina-50/50 border border-yasmina-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-yasmina-100 focus:border-yasmina-300 transition-all outline-none font-bold text-gray-700" placeholder="0.00">
+                    <input type="number" step="0.01" name="discount_price" value="{{ old('discount_price') }}" class="w-full px-5 py-4 bg-yasmina-50/50 border {{ $errors->has('discount_price') ? 'border-red-500' : 'border-yasmina-100' }} rounded-2xl focus:bg-white focus:ring-4 focus:ring-yasmina-100 focus:border-yasmina-300 transition-all outline-none font-bold text-gray-700" placeholder="0.00">
+                    @error('discount_price')
+                        <p class="mt-1 text-xs font-bold text-red-500 uppercase tracking-widest">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="p-6 bg-amber-50/50 rounded-3xl border border-amber-100 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -58,7 +80,10 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-amber-500 mb-2 uppercase tracking-widest">{{ __('Flash Sale Price') }}</label>
-                        <input type="number" step="0.01" name="flash_sale_price" class="w-full px-5 py-4 bg-white border border-amber-100 rounded-2xl focus:ring-4 focus:ring-amber-100 outline-none font-bold text-gray-700" placeholder="0.00">
+                        <input type="number" step="0.01" name="flash_sale_price" value="{{ old('flash_sale_price') }}" class="w-full px-5 py-4 bg-white border {{ $errors->has('flash_sale_price') ? 'border-red-500' : 'border-amber-100' }} rounded-2xl focus:ring-4 focus:ring-amber-100 outline-none font-bold text-gray-700" placeholder="0.00">
+                        @error('flash_sale_price')
+                            <p class="mt-1 text-xs font-bold text-red-500 uppercase tracking-widest">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-amber-500 mb-2 uppercase tracking-widest">{{ __('Expiry Date') }}</label>

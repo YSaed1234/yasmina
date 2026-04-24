@@ -72,6 +72,15 @@ class CheckoutService
 
         $finalTotal = $cartData['finalTotal'] + $shippingCost;
 
+        $commissionAmount = 0;
+        if ($vendor->commission_type === 'percentage') {
+            $commissionAmount = ($cartData['finalTotal'] * ($vendor->commission_value ?? 0)) / 100;
+        } else {
+            $commissionAmount = $vendor->commission_value ?? 0;
+        }
+        
+        $vendorNetAmount = ($cartData['finalTotal'] - $commissionAmount) + $shippingCost;
+
         try {
             DB::beginTransaction();
 
@@ -80,6 +89,8 @@ class CheckoutService
                 'vendor_id' => $vendor->id,
                 'total' => $finalTotal,
                 'shipping_amount' => $shippingCost,
+                'commission_amount' => $commissionAmount,
+                'vendor_net_amount' => $vendorNetAmount,
                 'status' => 'new',
                 'payment_status' => 'pending',
                 'payment_method' => $data['payment_method'],
@@ -105,6 +116,7 @@ class CheckoutService
                     'product_id' => $id,
                     'quantity' => $details['quantity'],
                     'price' => $details['price'],
+                    'is_gift' => $details['is_gift'] ?? false,
                 ]);
             }
 

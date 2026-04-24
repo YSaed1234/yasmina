@@ -44,7 +44,14 @@
                                             <div class="space-y-6">
                                                 @foreach($order->items as $item)
                                                     <div class="flex items-center gap-6">
-                                                        <div class="w-20 h-20 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100">
+                                                        <div class="w-20 h-20 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 relative">
+                                                            @if($item->is_gift)
+                                                                <div class="absolute top-1 left-1 z-10">
+                                                                    <span class="bg-yasmina-500 text-white text-[6px] font-black uppercase tracking-widest px-1 py-0.5 rounded shadow-lg shadow-yasmina-500/20">
+                                                                        {{ __('Gift') }}
+                                                                    </span>
+                                                                </div>
+                                                            @endif
                                                             @if($item->product && $item->product->image)
                                                                 <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}" class="w-full h-full object-cover">
                                                             @else
@@ -242,7 +249,14 @@
                 const div = document.createElement('div');
                 div.className = 'flex items-center gap-4 py-2 border-b border-gray-50 last:border-0';
                 div.innerHTML = `
-                    <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-50 border border-gray-100 shrink-0">
+                    <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-50 border border-gray-100 shrink-0 relative">
+                        ${item.is_gift ? `
+                            <div class="absolute top-0.5 left-0.5 z-10">
+                                <span class="bg-yasmina-500 text-white text-[5px] font-black uppercase tracking-tighter px-1 py-0.5 rounded shadow-sm">
+                                    {{ __('Gift') }}
+                                </span>
+                            </div>
+                        ` : ''}
                         <img src="/storage/${item.product.image}" class="w-full h-full object-cover" onerror="this.src='/placeholder.png'">
                     </div>
                     <div class="flex-1 min-w-0">

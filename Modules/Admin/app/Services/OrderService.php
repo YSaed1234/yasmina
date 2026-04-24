@@ -8,7 +8,7 @@ class OrderService
 {
     public function getAllPaginated($limit = 10, array $filters = [])
     {
-        $query = Order::with(['user', 'items.product.vendor'])->latest();
+        $query = Order::with(['user', 'items.product.vendor', 'items.product.currency'])->latest();
 
         if (!empty($filters['search'])) {
             $search = $filters['search'];
@@ -27,7 +27,7 @@ class OrderService
 
     public function getOrderDetails(Order $order)
     {
-        return $order->load(['items.product.vendor', 'user']);
+        return $order->load(['items.product.vendor', 'items.product.currency', 'user']);
     }
 
     public function updateStatus(Order $order, array $data)

@@ -40,7 +40,14 @@
                             <tr>
                                 <td class="px-8 py-6">
                                     <div class="flex items-center gap-4">
-                                        <div class="w-12 h-12 rounded-xl bg-gray-100 overflow-hidden flex-shrink-0">
+                                        <div class="w-12 h-12 rounded-xl bg-gray-100 overflow-hidden flex-shrink-0 relative">
+                                            @if($item->is_gift)
+                                                <div class="absolute -top-1 -left-1 z-10">
+                                                    <span class="bg-yasmina-500 text-white text-[5px] font-black uppercase tracking-widest px-1 py-0.5 rounded shadow-sm">
+                                                        {{ __('Gift') }}
+                                                    </span>
+                                                </div>
+                                            @endif
                                             @if($item->product && $item->product->image)
                                                 <img src="{{ asset('storage/' . $item->product->image) }}" class="w-full h-full object-cover">
                                             @endif
@@ -54,37 +61,58 @@
                                     </div>
                                 </td>
                                 <td class="px-8 py-6 text-center font-bold text-gray-600">{{ $item->quantity }}</td>
-                                <td class="px-8 py-6 text-right font-medium text-gray-500">{{ number_format($item->price, 2) }}</td>
-                                <td class="px-8 py-6 text-right font-bold text-gray-900">{{ number_format($item->price * $item->quantity, 2) }}</td>
+                                <td class="px-8 py-6 text-right font-medium text-gray-500">
+                                    @if($item->is_gift)
+                                        <span class="text-yasmina-600 uppercase text-[10px]">{{ __('Free') }}</span>
+                                    @else
+                                        {{ number_format($item->price, 2) }} {{ $item->product->currency->symbol ?? __('LE') }}
+                                    @endif
+                                </td>
+                                <td class="px-8 py-6 text-right font-bold text-gray-900">
+                                    @if($item->is_gift)
+                                        <span class="text-yasmina-600 uppercase text-[10px]">{{ __('Free') }}</span>
+                                    @else
+                                        {{ number_format($item->price * $item->quantity, 2) }} {{ $item->product->currency->symbol ?? __('LE') }}
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
+                        @php $currency = $order->items->first()?->product?->currency?->symbol ?? __('LE'); @endphp
                         <tr class="bg-gray-50/50">
                             <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Subtotal') }}</td>
-                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->total - $order->shipping_amount + $order->discount_amount + $order->vendor_discount_amount, 2) }}</td>
+                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->total - $order->shipping_amount + $order->discount_amount + $order->vendor_discount_amount, 2) }} {{ $currency }}</td>
                         </tr>
                         @if($order->vendor_discount_amount > 0)
                         <tr class="bg-gray-50/50">
                             <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">
                                 {{ $order->vendor_discount_type === 'threshold' ? __('Order Threshold Discount') : __('Multi-item Discount') }}
                             </td>
-                            <td class="px-8 py-4 text-right font-bold text-yasmina-600">-{{ number_format($order->vendor_discount_amount, 2) }}</td>
+                            <td class="px-8 py-4 text-right font-bold text-yasmina-600">-{{ number_format($order->vendor_discount_amount, 2) }} {{ $currency }}</td>
                         </tr>
                         @endif
                         @if($order->discount_amount > 0)
                         <tr class="bg-gray-50/50">
                             <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Coupon Discount') }}</td>
-                            <td class="px-8 py-4 text-right font-bold text-green-600">-{{ number_format($order->discount_amount, 2) }}</td>
+                            <td class="px-8 py-4 text-right font-bold text-green-600">-{{ number_format($order->discount_amount, 2) }} {{ $currency }}</td>
                         </tr>
                         @endif
                         <tr class="bg-gray-50/50">
                             <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Shipping') }}</td>
-                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->shipping_amount, 2) }}</td>
+                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->shipping_amount, 2) }} {{ $currency }}</td>
+                        </tr>
+                        <tr class="bg-rose-50/30">
+                            <td colspan="3" class="px-8 py-4 text-right font-bold text-rose-600 uppercase tracking-widest text-[10px]">{{ __('Yasmina Commission') }}</td>
+                            <td class="px-8 py-4 text-right font-bold text-rose-600">-{{ number_format($order->commission_amount, 2) }} {{ $currency }}</td>
+                        </tr>
+                        <tr class="bg-emerald-50/30">
+                            <td colspan="3" class="px-8 py-4 text-right font-bold text-emerald-600 uppercase tracking-widest text-[10px]">{{ __('Vendor Net') }}</td>
+                            <td class="px-8 py-4 text-right font-bold text-emerald-600">{{ number_format($order->vendor_net_amount, 2) }} {{ $currency }}</td>
                         </tr>
                         <tr class="bg-gray-50/50 border-t border-gray-100">
                             <td colspan="3" class="px-8 py-6 text-right font-bold text-gray-500 uppercase tracking-widest text-xs">{{ __('Grand Total') }}</td>
-                            <td class="px-8 py-6 text-right font-black text-2xl text-primary">{{ number_format($order->total, 2) }}</td>
+                            <td class="px-8 py-6 text-right font-black text-2xl text-primary">{{ number_format($order->total, 2) }} {{ $currency }}</td>
                         </tr>
                     </tfoot>
                 </table>

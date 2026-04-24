@@ -44,6 +44,9 @@ class UpdateVendorRequest extends FormRequest
             'min_items_for_discount' => 'nullable|integer|min:0',
             'items_discount_amount' => 'nullable|numeric|min:0',
             'items_discount_type' => 'required|in:fixed,percentage',
+            'free_shipping_threshold' => 'nullable|numeric|min:0',
+            'commission_type' => 'required|in:fixed,percentage',
+            'commission_value' => 'nullable|numeric|min:0',
         ];
     }
 

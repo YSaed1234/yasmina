@@ -35,6 +35,8 @@ class Vendor extends Authenticatable
         'items_discount_amount',
         'items_discount_type',
         'free_shipping_threshold',
+        'commission_type',
+        'commission_value',
     ];
 
     protected $hidden = [
@@ -50,5 +52,10 @@ class Vendor extends Authenticatable
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

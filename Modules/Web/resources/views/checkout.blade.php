@@ -115,7 +115,14 @@
                             <div class="space-y-4 mb-8 max-h-60 overflow-y-auto pr-2">
                                 @foreach($cart as $id => $details)
                                     <div class="flex gap-4 items-center">
-                                        <div class="w-16 h-16 rounded-xl bg-gray-50 overflow-hidden flex-shrink-0 border border-rose-50">
+                                        <div class="w-16 h-16 rounded-xl bg-gray-50 overflow-hidden flex-shrink-0 border border-rose-50 relative">
+                                            @if(isset($details['is_gift']) && $details['is_gift'])
+                                                <div class="absolute top-1 left-1 z-10">
+                                                    <span class="bg-yasmina-500 text-white text-[6px] font-black uppercase tracking-widest px-1 py-0.5 rounded shadow-lg shadow-yasmina-500/20">
+                                                        {{ __('Gift') }}
+                                                    </span>
+                                                </div>
+                                            @endif
                                             @if($details['image'])
                                                 <img src="{{ asset('storage/' . $details['image']) }}" alt="{{ $details['name'] }}" class="w-full h-full object-cover">
                                             @endif
@@ -125,14 +132,21 @@
                                             <p class="text-xs text-gray-400 mt-1">x{{ $details['quantity'] }}</p>
                                         </div>
                                         <div class="flex flex-col items-end">
-                                            @if(isset($details['original_price']) && $details['price'] < $details['original_price'])
-                                                <span class="text-[10px] text-red-400 line-through">{{ $details['currency'] }}{{ number_format($details['original_price'] * $details['quantity'], 2) }}</span>
-                                            @endif
-                                            <div class="text-sm font-bold text-primary">
-                                                {{ $details['currency'] }}{{ number_format($details['price'] * $details['quantity'], 2) }}
-                                            </div>
-                                            @if(isset($details['is_flash_sale']) && $details['is_flash_sale'])
-                                                <span class="text-[8px] font-black text-amber-500 uppercase tracking-widest">{{ __('Flash Price') }}</span>
+                                            @if(isset($details['is_gift']) && $details['is_gift'])
+                                                <span class="text-[8px] font-black text-yasmina-500 uppercase tracking-widest bg-yasmina-50 px-2 py-0.5 rounded-lg mb-1">{{ __('Free Gift') }}</span>
+                                                <div class="text-sm font-bold text-yasmina-600">
+                                                    {{ __('Free') }}
+                                                </div>
+                                            @else
+                                                @if(isset($details['original_price']) && $details['price'] < $details['original_price'])
+                                                    <span class="text-[10px] text-red-400 line-through">{{ $details['currency'] }}{{ number_format($details['original_price'] * $details['quantity'], 2) }}</span>
+                                                @endif
+                                                <div class="text-sm font-bold text-primary">
+                                                    {{ $details['currency'] }}{{ number_format($details['price'] * $details['quantity'], 2) }}
+                                                </div>
+                                                @if(isset($details['is_flash_sale']) && $details['is_flash_sale'])
+                                                    <span class="text-[8px] font-black text-amber-500 uppercase tracking-widest">{{ __('Flash Price') }}</span>
+                                                @endif
                                             @endif
                                         </div>
                                     </div>

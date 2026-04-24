@@ -50,22 +50,23 @@
                         </span>
                     </td>
                     <td class="px-8 py-5">
+                        @php $currencyCode = $product->currency->code ?? 'LE'; @endphp
                         @if($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture())
                             <div class="flex flex-col">
                                 <span class="text-[9px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-black uppercase self-start mb-1">{{ __('Flash Sale') }}</span>
-                                <span class="text-[10px] text-amber-500 line-through">{{ number_format($product->price, 2) }}</span>
-                                <span class="font-bold text-amber-600">{{ number_format($product->flash_sale_price, 2) }}</span>
+                                <span class="text-[10px] text-amber-500 line-through">{{ number_format($product->price, 2) }} {{ $currencyCode }}</span>
+                                <span class="font-bold text-amber-600">{{ number_format($product->flash_sale_price, 2) }} {{ $currencyCode }}</span>
                                 <span class="text-[10px] font-bold text-amber-500" data-countdown="{{ $product->flash_sale_expires_at->toIso8601String() }}">
                                     <span class="hours">00</span>:<span class="minutes">00</span>
                                 </span>
                             </div>
                         @elseif($product->discount_price && $product->discount_price < $product->price)
                             <div class="flex flex-col">
-                                <span class="text-[10px] text-red-400 line-through">{{ number_format($product->price, 2) }}</span>
-                                <span class="font-bold text-gray-800">{{ number_format($product->discount_price, 2) }}</span>
+                                <span class="text-[10px] text-red-400 line-through">{{ number_format($product->price, 2) }} {{ $currencyCode }}</span>
+                                <span class="font-bold text-gray-800">{{ number_format($product->discount_price, 2) }} {{ $currencyCode }}</span>
                             </div>
                         @else
-                            <span class="font-bold text-gray-800">{{ number_format($product->price, 2) }}</span>
+                            <span class="font-bold text-gray-800">{{ number_format($product->price, 2) }} {{ $currencyCode }}</span>
                         @endif
                     </td>
                     <td class="px-8 py-5">

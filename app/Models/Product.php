@@ -94,4 +94,18 @@ class Product extends Model implements TranslatableContract
     {
         return $this->hasActiveFlashSale() || ($this->discount_price && $this->discount_price < $this->price);
     }
+
+    /**
+     * Scope a query to only include products with an effective price greater than zero.
+     */
+    public function scopeWithValidPrice($query)
+    {
+        return $query->where('price', '>', 0)
+            ->where(function($q) {
+                $q->whereNull('discount_price')->orWhere('discount_price', '>', 0);
+            })
+            ->where(function($q) {
+                $q->whereNull('flash_sale_price')->orWhere('flash_sale_price', '>', 0);
+            });
+    }
 }

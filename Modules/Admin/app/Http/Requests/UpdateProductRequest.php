@@ -13,6 +13,7 @@ class UpdateProductRequest extends FormRequest
 
     public function rules(): array
     {
+
         return [
             'category_id' => 'required|exists:categories,id',
             'currency_id' => 'required|exists:currencies,id',
@@ -20,15 +21,26 @@ class UpdateProductRequest extends FormRequest
             'en.name' => 'required|string|max:255',
             'ar.description' => 'nullable|string',
             'en.description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'discount_price' => 'nullable|numeric|lte:price',
-            'flash_sale_price' => 'nullable|numeric|lte:price',
+            'price' => 'required|numeric|min:0.00',
+            'discount_price' => 'nullable|numeric|min:0.00|lte:price',
+            'flash_sale_price' => 'nullable|numeric|min:0.00|lte:price',
             'flash_sale_expires_at' => 'nullable|date',
             'is_gift' => 'nullable|boolean',
-            'gift_threshold' => 'nullable|numeric',
+            'gift_threshold' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'rank' => 'nullable|integer',
             'vendor_id' => 'nullable|exists:vendors,id',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'discount_price.lte' => __('سعر الخصم يجب أن يكون أقل من أو يساوي السعر الأساسي'),
+            'flash_sale_price.lte' => __('سعر الفلاش سيل يجب أن يكون أقل من أو يساوي السعر الأساسي'),
+            'price.min' => __('السعر يجب أن يكون أكبر من 0'),
+            'discount_price.min' => __('سعر الخصم يجب أن يكون أكبر من 0'),
+            'flash_sale_price.min' => __('سعر الفلاش سيل يجب أن يكون أكبر من 0'),
         ];
     }
 }

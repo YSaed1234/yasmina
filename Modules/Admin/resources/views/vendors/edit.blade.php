@@ -140,6 +140,17 @@
                     <input type="number" step="0.01" name="free_shipping_threshold" value="{{ old('free_shipping_threshold', $vendor->free_shipping_threshold) }}" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="{{ __('Min Order for Free Shipping') }}">
                 </div>
 
+                <div class="md:col-span-2 p-6 bg-indigo-50/30 rounded-2xl border border-indigo-50 space-y-4">
+                    <label class="block text-xs font-bold text-gray-900 uppercase tracking-widest">{{ __('Commission Settings (Yasmina Share)') }}</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <select name="commission_type" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
+                            <option value="percentage" {{ old('commission_type', $vendor->commission_type) == 'percentage' ? 'selected' : '' }}>{{ __('Percentage') }} (%)</option>
+                            <option value="fixed" {{ old('commission_type', $vendor->commission_type) == 'fixed' ? 'selected' : '' }}>{{ __('Fixed Amount') }}</option>
+                        </select>
+                        <input type="number" step="0.01" name="commission_value" value="{{ old('commission_value', $vendor->commission_value) }}" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="{{ __('Commission Value') }}">
+                    </div>
+                </div>
+
                 <div class="md:col-span-2">
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Address') }}</label>
                     <textarea name="address" rows="3" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">{{ old('address', $vendor->address) }}</textarea>

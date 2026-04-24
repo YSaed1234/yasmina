@@ -15,15 +15,27 @@ class VendorController extends Controller
         $vendor = auth('vendor')->user();
         $stats = [
             'products_count' => $vendor->products()->count(),
-            'orders_count' => \App\Models\OrderItem::whereHas('product', function($q) use ($vendor) {
-                $q->where('vendor_id', $vendor->id);
-            })->count(),
-            'total_sales' => \App\Models\OrderItem::whereHas('product', function($q) use ($vendor) {
-                $q->where('vendor_id', $vendor->id);
-            })->sum(\DB::raw('price * quantity')),
+            'orders_count' => \App\Models\Order::where('vendor_id', $vendor->id)->count(),
+            'total_sales' => \App\Models\Order::where('vendor_id', $vendor->id)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('total'),
         ];
 
         return view('vendor::index', compact('stats'));
+    }
+
+    public function finances()
+    {
+        $vendor = auth('vendor')->user();
+        $orders = \App\Models\Order::where('vendor_id', $vendor->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+
+        $stats = [
+            'total_sales' => \App\Models\Order::where('vendor_id', $vendor->id)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('total'),
+            'total_commission' => \App\Models\Order::where('vendor_id', $vendor->id)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('commission_amount'),
+            'net_earnings' => \App\Models\Order::where('vendor_id', $vendor->id)->where('status', '!=', \App\Enums\OrderStatus::CANCELLED)->sum('vendor_net_amount'),
+        ];
+
+        return view('vendor::finances.index', compact('orders', 'stats'));
     }
 
     /**

@@ -29,7 +29,7 @@
                         <p class="text-[10px] text-gray-400 font-medium uppercase">{{ $order->created_at->format('M d, Y') }}</p>
                     </td>
                     <td class="px-8 py-5">
-                        <p class="font-bold text-gray-800">{{ $order->shipping_details['name'] ?? 'Guest' }}</p>
+                        <p class="font-bold text-gray-800">{{ $order->shipping_details['name'] ?? __('Guest') }}</p>
                         <p class="text-xs text-gray-400">{{ $order->shipping_details['phone'] ?? '' }}</p>
                     </td>
                     <td class="px-8 py-5">
@@ -38,7 +38,10 @@
                         </span>
                     </td>
                     <td class="px-8 py-5">
-                        <p class="font-bold text-primary">{{ number_format($order->items->sum(fn($i) => $i->price * $i->quantity), 2) }} LE</p>
+                        @php $currency = $order->items->first()?->product?->currency?->symbol ?? __('LE'); @endphp
+                        <p class="font-bold text-gray-900">{{ number_format($order->total, 2) }} {{ $currency }}</p>
+                        <p class="text-[10px] text-rose-500 font-medium">-{{ number_format($order->commission_amount, 2) }} {{ $currency }} {{ __('Yasmina Commission') }}</p>
+                        <p class="text-[10px] text-emerald-600 font-bold">{{ number_format($order->vendor_net_amount, 2) }} {{ $currency }} {{ __('Vendor Net') }}</p>
                     </td>
                     <td class="px-8 py-5">
                         <form action="{{ route('vendor.orders.update-status', $order) }}" method="POST">

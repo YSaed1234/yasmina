@@ -17,8 +17,10 @@ class HomeController extends Controller
         $vendor = $request->attributes->get('current_vendor');
         $vendor_id = $vendor ? $vendor->id : null;
 
-        $categoriesQuery = \App\Models\Category::with('products')->orderBy('rank');
-        $featuredProductsQuery = \App\Models\Product::where('vendor_id', $vendor_id)->orderBy('rank');
+        $categoriesQuery = \App\Models\Category::with(['products' => function($q) {
+            $q->withValidPrice();
+        }])->orderBy('rank');
+        $featuredProductsQuery = \App\Models\Product::withValidPrice()->orderBy('rank');
         if ($vendor_id) {
             $categoriesQuery->where('vendor_id', $vendor_id);
             $featuredProductsQuery->where('vendor_id', $vendor_id);

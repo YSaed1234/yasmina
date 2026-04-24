@@ -11,7 +11,7 @@ class ProductService
     public function getVendorProducts($vendorId)
     {
         return Product::where('vendor_id', $vendorId)
-            ->with(['category', 'translations'])
+            ->with(['category', 'translations', 'currency'])
             ->latest()
             ->paginate(10);
     }
@@ -27,7 +27,7 @@ class ProductService
         $product->flash_sale_expires_at = $data['flash_sale_expires_at'] ?? null;
         $product->is_gift = isset($data['is_gift']) && $data['is_gift'];
         $product->gift_threshold = $data['gift_threshold'] ?? null;
-        $product->currency_id = 1;
+        $product->currency_id = $data['currency_id'] ?? 1;
 
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
             $product->image = $data['image']->store('products', 'public');
@@ -56,6 +56,7 @@ class ProductService
         $product->flash_sale_expires_at = array_key_exists('flash_sale_expires_at', $data) ? $data['flash_sale_expires_at'] : $product->flash_sale_expires_at;
         $product->is_gift = isset($data['is_gift']) && $data['is_gift'];
         $product->gift_threshold = array_key_exists('gift_threshold', $data) ? $data['gift_threshold'] : $product->gift_threshold;
+        $product->currency_id = $data['currency_id'] ?? $product->currency_id;
 
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
             if ($product->image) {

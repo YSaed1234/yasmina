@@ -59,7 +59,7 @@
                         </td>
                         <td class="px-8 py-6">
                             <div class="flex flex-col">
-                                <span class="font-bold text-gray-900">{{ $order->shipping_details['name'] ?? 'Guest' }}</span>
+                                <span class="font-bold text-gray-900">{{ $order->shipping_details['name'] ?? __('Guest') }}</span>
                                 <span class="text-xs text-gray-400">{{ $order->shipping_details['email'] ?? '' }}</span>
                             </div>
                         </td>
@@ -75,11 +75,16 @@
                                 </div>
                             @endforeach
                         </td>
-                        <td class="px-8 py-6 font-bold text-primary">
-                            {{ number_format($order->total, 2) }}
+                        @php $currency = $order->items->first()?->product?->currency?->symbol ?? __('LE'); @endphp
+                        <td class="px-8 py-6">
+                            <p class="font-bold text-gray-900">{{ number_format($order->total, 2) }} {{ $currency }}</p>
+                            <div class="flex flex-col mt-1">
+                                <span class="text-[10px] text-rose-500 font-medium">-{{ number_format($order->commission_amount, 2) }} {{ $currency }} {{ __('Yasmina Commission') }}</span>
+                                <span class="text-[10px] text-emerald-600 font-bold">{{ number_format($order->vendor_net_amount, 2) }} {{ $currency }} {{ __('Vendor Net') }}</span>
+                            </div>
                         </td>
                         <td class="px-8 py-6 text-sm text-gray-500 font-bold">
-                            {{ number_format($order->shipping_amount, 2) }}
+                            {{ number_format($order->shipping_amount, 2) }} {{ $currency }}
                         </td>
                         <td class="px-8 py-6">
                             <form action="{{ route('admin.orders.update-status', $order) }}" method="POST" class="status-update-form">

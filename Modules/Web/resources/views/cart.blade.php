@@ -14,7 +14,17 @@
                         <div class="lg:col-span-2 space-y-6">
                             @foreach($cart as $id => $details)
                                 <div class="bg-white p-8 rounded-3xl shadow-sm border border-rose-50 flex gap-8 items-center group">
-                                    <div class="w-32 h-32 rounded-2xl overflow-hidden bg-gray-50 flex-shrink-0">
+                                    <div class="w-32 h-32 rounded-2xl overflow-hidden bg-gray-50 flex-shrink-0 relative">
+                                        @if(isset($details['is_gift']) && $details['is_gift'])
+                                            <div class="absolute top-2 left-2 z-10">
+                                                <span class="bg-yasmina-500 text-white text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-lg shadow-lg shadow-yasmina-500/20 flex items-center gap-1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                                    </svg>
+                                                    {{ __('Gift') }}
+                                                </span>
+                                            </div>
+                                        @endif
                                         @if($details['image'])
                                             <img src="{{ asset('storage/' . $details['image']) }}" alt="{{ $details['name'] }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                         @else
@@ -30,7 +40,7 @@
                                             <div>
                                                 <h3 class="text-xl font-bold text-gray-900">{{ $details['name'] }}</h3>
                                                 @if(isset($details['is_gift']) && $details['is_gift'])
-                                                    <span class="text-[10px] font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Free Gift') }}</span>
+                                                    <span class="inline-block px-2 py-0.5 bg-yasmina-50 text-[10px] font-bold text-yasmina-500 uppercase tracking-widest rounded-lg">{{ __('Free Gift') }}</span>
                                                 @elseif(isset($details['is_flash_sale']) && $details['is_flash_sale'])
                                                     <span class="text-[10px] font-bold text-amber-500 uppercase tracking-widest flex items-center gap-1">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -62,11 +72,11 @@
                                                 @if(isset($details['original_price']) && $details['price'] < $details['original_price'] && !(isset($details['is_gift']) && $details['is_gift']))
                                                     <span class="text-xs text-red-400 line-through">{{ $details['currency'] }}{{ number_format($details['original_price'] * $details['quantity'], 2) }}</span>
                                                 @endif
-                                                <div class="text-lg font-bold text-primary">
+                                                <div class="text-lg font-bold">
                                                     @if(isset($details['is_gift']) && $details['is_gift'])
-                                                        {{ __('Free') }}
+                                                        <span class="text-yasmina-600">{{ __('Free') }}</span>
                                                     @else
-                                                        {{ $details['currency'] }}{{ number_format($details['price'] * $details['quantity'], 2) }}
+                                                        <span class="text-primary">{{ $details['currency'] }}{{ number_format($details['price'] * $details['quantity'], 2) }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -96,7 +106,7 @@
                                                 </div>
                                                 <div class="flex-1">
                                                     <h4 class="font-bold text-gray-900 mb-1">{{ $gift->name }}</h4>
-                                                    <span class="text-[10px] font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Free Reward') }}</span>
+                                                    <span class="text-[10px] font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Gift') }}</span>
                                                     <form action="{{ route('web.cart.add', $gift->id) }}" method="POST" class="mt-3">
                                                         @csrf
                                                         <input type="hidden" name="quantity" value="1">
