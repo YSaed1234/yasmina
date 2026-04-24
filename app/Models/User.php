@@ -147,6 +147,9 @@ class User extends Authenticatable
     {
         $query = $this->notifications();
         if ($vendorId) {
+            if (!is_numeric($vendorId)) {
+                $vendorId = \App\Models\Vendor::where('slug', $vendorId)->value('id');
+            }
             $query->where('vendor_id', (int) $vendorId);
         }
         return $query;
@@ -156,6 +159,9 @@ class User extends Authenticatable
     {
         $query = $this->unreadNotifications();
         if ($vendorId) {
+            if (!is_numeric($vendorId)) {
+                $vendorId = \App\Models\Vendor::where('slug', $vendorId)->value('id');
+            }
             $query->where('vendor_id', (int) $vendorId);
         }
         return $query;

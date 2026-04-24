@@ -6,20 +6,7 @@ class WebNotificationService
 {
     public function getNotifications($vendorId, int $perPage = 15)
     {
-        $query = auth()->user()->notifications();
-
-        if ($vendorId) {
-            if (!is_numeric($vendorId)) {
-                $vendor = \App\Models\Vendor::where('slug', $vendorId)->first();
-                $vendorId = $vendor ? $vendor->id : null;
-            }
-
-            if ($vendorId) {
-                $query->where('vendor_id', $vendorId);
-            }
-        }
-
-        return $query->paginate($perPage);
+        return auth()->user()->vendorNotifications($vendorId)->paginate($perPage);
     }
 
     public function markAsRead(string $id)
@@ -29,9 +16,9 @@ class WebNotificationService
         return true;
     }
 
-    public function markAllAsRead()
+    public function markAllAsRead($vendorId = null)
     {
-        auth()->user()->unreadNotifications->markAsRead();
+        auth()->user()->vendorUnreadNotifications($vendorId)->update(['read_at' => now()]);
         return true;
     }
 }

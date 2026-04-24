@@ -145,7 +145,7 @@
                             </div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                                    @foreach($category->products->where('vendor_id', $vendor->id)->sortBy('rank')->take(4) as $product)
+                                    @foreach($category->products->where('vendor_id', $vendor?->id)->sortBy('rank')->take(4) as $product)
                                         <div class="group relative flex flex-col h-full">
                                             <div class="aspect-square w-full rounded-2xl overflow-hidden bg-rose-50 shadow-sm transition-all duration-500 hover:-translate-y-1 relative">
                                                 <a href="{{ route('web.products.show', [$product->id, 'vendor_id' => $product->vendor_id]) }}" class="block w-full h-full">
@@ -161,6 +161,24 @@
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                                         </svg>
                                                         {{ __('Flash Sale') }}
+                                                    </div>
+                                                    <div class="absolute bottom-3 left-0 right-0 px-3 z-20">
+                                                        <div class="bg-white/90 backdrop-blur-md rounded-xl p-1.5 shadow-xl border border-amber-100 flex items-center justify-center gap-2 text-amber-600" data-countdown="{{ $product->flash_sale_expires_at->toIso8601String() }}">
+                                                            <div class="text-center">
+                                                                <span class="hours block text-[10px] font-black">00</span>
+                                                                <span class="text-[6px] uppercase tracking-tighter">{{ __('Hrs') }}</span>
+                                                            </div>
+                                                            <div class="w-px h-3 bg-amber-200"></div>
+                                                            <div class="text-center">
+                                                                <span class="minutes block text-[10px] font-black">00</span>
+                                                                <span class="text-[6px] uppercase tracking-tighter">{{ __('Min') }}</span>
+                                                            </div>
+                                                            <div class="w-px h-3 bg-amber-200"></div>
+                                                            <div class="text-center">
+                                                                <span class="seconds block text-[10px] font-black">00</span>
+                                                                <span class="text-[6px] uppercase tracking-tighter">{{ __('Sec') }}</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 @elseif($product->discount_price && $product->discount_price < $product->price)
                                                     <div class="absolute top-3 left-3 bg-red-500 text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shadow-lg z-20">

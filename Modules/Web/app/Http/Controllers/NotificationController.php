@@ -31,7 +31,8 @@ class NotificationController extends Controller
 
     public function markAllAsRead()
     {
-        $this->notificationService->markAllAsRead();
+        $vendorId = request()->vendor_id;
+        $this->notificationService->markAllAsRead($vendorId);
         return back()->with('success', __('All notifications marked as read.'));
     }
 }

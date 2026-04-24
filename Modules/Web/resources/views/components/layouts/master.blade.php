@@ -574,6 +574,9 @@
                         }
                     }
                 })
+                .catch(error => console.error('Error:', error));
+            }
+
             function initCountdown() {
                 const timers = document.querySelectorAll('[data-countdown]');
                 timers.forEach(timer => {

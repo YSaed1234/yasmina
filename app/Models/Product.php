@@ -60,4 +60,38 @@ class Product extends Model implements TranslatableContract
     {
         return $this->hasMany(Wishlist::class);
     }
+
+    /**
+     * Check if the product has an active flash sale.
+     */
+    public function hasActiveFlashSale(): bool
+    {
+        return $this->flash_sale_price && 
+               $this->flash_sale_expires_at && 
+               $this->flash_sale_expires_at->isFuture();
+    }
+
+    /**
+     * Get the effective price of the product (Flash Sale > Discount > Regular).
+     */
+    public function getEffectivePriceAttribute()
+    {
+        if ($this->hasActiveFlashSale()) {
+            return $this->flash_sale_price;
+        }
+
+        if ($this->discount_price && $this->discount_price < $this->price) {
+            return $this->discount_price;
+        }
+
+        return $this->price;
+    }
+
+    /**
+     * Check if the product is on any kind of sale.
+     */
+    public function isSale(): bool
+    {
+        return $this->hasActiveFlashSale() || ($this->discount_price && $this->discount_price < $this->price);
+    }
 }

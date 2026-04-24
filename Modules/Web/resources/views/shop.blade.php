@@ -103,6 +103,11 @@
                                                     <span class="minutes block text-xs font-black">00</span>
                                                     <span class="text-[8px] uppercase tracking-tighter">{{ __('Min') }}</span>
                                                 </div>
+                                                <div class="w-px h-4 bg-amber-200"></div>
+                                                <div class="text-center">
+                                                    <span class="seconds block text-xs font-black">00</span>
+                                                    <span class="text-[8px] uppercase tracking-tighter">{{ __('Sec') }}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     @elseif($product->discount_price && $product->discount_price < $product->price)

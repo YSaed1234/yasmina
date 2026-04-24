@@ -23,8 +23,9 @@ class CartService
         foreach ($cart as $id => &$item) {
             if (isset($products[$id])) {
                 $product = $products[$id];
-                $item['price'] = $product->discount_price ?? $product->price;
+                $item['price'] = $product->is_gift ? 0 : $product->effective_price;
                 $item['original_price'] = $product->price;
+                $item['is_flash_sale'] = $product->hasActiveFlashSale();
                 $item['vendor_id'] = $product->vendor_id;
                 
                 $itemTotal = $item['price'] * $item['quantity'];
@@ -194,14 +195,7 @@ class CartService
         if (isset($cart[$productId])) {
             $cart[$productId]['quantity'] += $quantity;
         } else {
-            $price = $product->price;
-            if ($product->is_gift) {
-                $price = 0;
-            } elseif ($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture()) {
-                $price = $product->flash_sale_price;
-            } elseif ($product->discount_price && $product->discount_price < $product->price) {
-                $price = $product->discount_price;
-            }
+            $price = $product->is_gift ? 0 : $product->effective_price;
             
             $cart[$productId] = [
                 "name" => $product->name,
@@ -209,6 +203,7 @@ class CartService
                 "price" => $price,
                 "original_price" => $product->price,
                 "is_gift" => $product->is_gift,
+                "is_flash_sale" => $product->hasActiveFlashSale(),
                 "image" => $product->image,
                 "currency" => $product->currency->symbol ?? '$'
             ];

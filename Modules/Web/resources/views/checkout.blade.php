@@ -131,6 +131,9 @@
                                             <div class="text-sm font-bold text-primary">
                                                 {{ $details['currency'] }}{{ number_format($details['price'] * $details['quantity'], 2) }}
                                             </div>
+                                            @if(isset($details['is_flash_sale']) && $details['is_flash_sale'])
+                                                <span class="text-[8px] font-black text-amber-500 uppercase tracking-widest">{{ __('Flash Price') }}</span>
+                                            @endif
                                         </div>
                                     </div>
                                 @endforeach

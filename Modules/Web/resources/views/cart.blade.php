@@ -31,6 +31,13 @@
                                                 <h3 class="text-xl font-bold text-gray-900">{{ $details['name'] }}</h3>
                                                 @if(isset($details['is_gift']) && $details['is_gift'])
                                                     <span class="text-[10px] font-bold text-yasmina-500 uppercase tracking-widest">{{ __('Free Gift') }}</span>
+                                                @elseif(isset($details['is_flash_sale']) && $details['is_flash_sale'])
+                                                    <span class="text-[10px] font-bold text-amber-500 uppercase tracking-widest flex items-center gap-1">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                        </svg>
+                                                        {{ __('Flash Sale Price') }}
+                                                    </span>
                                                 @endif
                                             </div>
                                             <button onclick="removeFromCart({{ $id }})" class="text-gray-400 hover:text-red-500 transition-colors">
