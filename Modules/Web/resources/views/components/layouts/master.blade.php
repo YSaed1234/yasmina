@@ -65,6 +65,38 @@
                         
                         <div class="relative group">
                             <button class="flex items-center gap-1 hover:text-primary transition-colors py-8">
+                                {{ __('Institutions') }}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div class="absolute left-0 top-full w-64 bg-white rounded-2xl shadow-2xl border border-rose-50 p-4 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
+                                <div class="grid gap-2">
+                                    <a href="{{ route('home') }}" class="px-4 py-3 hover:bg-rose-50 rounded-xl transition-all flex items-center justify-between group/item">
+                                        <span class="font-bold text-gray-700 group-hover/item:text-primary">{{ __('Main Store') }}</span>
+                                        @if(!$currentVendor)
+                                            <span class="w-2 h-2 bg-primary rounded-full"></span>
+                                        @endif
+                                    </a>
+                                    @foreach($globalVendors as $vendor)
+                                        <a href="{{ route('home', ['vendor_id' => $vendor->slug]) }}" class="px-4 py-3 hover:bg-rose-50 rounded-xl transition-all flex items-center justify-between group/item">
+                                            <div class="flex items-center gap-3">
+                                                @if($vendor->logo)
+                                                    <img src="{{ asset('storage/' . $vendor->logo) }}" class="w-6 h-6 rounded-full object-contain bg-gray-50">
+                                                @endif
+                                                <span class="font-bold text-gray-700 group-hover/item:text-primary">{{ $vendor->name }}</span>
+                                            </div>
+                                            @if($currentVendor && $currentVendor->id == $vendor->id)
+                                                <span class="w-2 h-2 bg-primary rounded-full"></span>
+                                            @endif
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="relative group">
+                            <button class="flex items-center gap-1 hover:text-primary transition-colors py-8">
                                 {{ __('Categories') }}
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -109,7 +141,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>
-                            @php $cartCount = count(session()->get('cart', [])); @endphp
+                            @php $cartCount = app(\Modules\Web\Services\CartService::class)->getCartCount(); @endphp
                             @if($cartCount > 0)
                                 <span class="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-lg shadow-primary/20 border-2 border-white">
                                     {{ $cartCount }}

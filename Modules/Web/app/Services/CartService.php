@@ -2,31 +2,54 @@
 
 namespace Modules\Web\Services;
 
+use App\Models\Cart;
+use App\Models\CartItem;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\Coupon;
-use Illuminate\Support\Facades\Session;
 
 class CartService
 {
+    public function getCartCount()
+    {
+        if (Auth::check()) {
+            $cart = Cart::where('user_id', Auth::id())->first();
+            return $cart ? $cart->items()->count() : 0;
+        }
+
+        return count(Session::get('cart', []));
+    }
+
     public function getCartData()
     {
-        $cart = Session::get('cart', []);
+        $rawItems = $this->getRawCartItems();
+        $cart = [];
+        
+        foreach ($rawItems as $productId => $quantity) {
+            $cart[$productId] = ['quantity' => $quantity];
+        }
+
         $total = 0;
         $totalOriginal = 0;
         $totalItemsCount = 0;
         
         $productIds = array_keys($cart);
-        $products = Product::with('vendor')->whereIn('id', $productIds)->get()->keyBy('id');
+        $products = Product::with('vendor', 'currency')->whereIn('id', $productIds)->get()->keyBy('id');
 
         $vendorGroups = [];
 
         foreach ($cart as $id => &$item) {
             if (isset($products[$id])) {
                 $product = $products[$id];
+                $item['name'] = $product->name;
                 $item['price'] = $product->is_gift ? 0 : $product->effective_price;
                 $item['original_price'] = $product->price;
                 $item['is_flash_sale'] = $product->hasActiveFlashSale();
                 $item['vendor_id'] = $product->vendor_id;
+                $item['image'] = $product->image;
+                $item['currency'] = $product->currency->symbol ?? '$';
+                $item['is_gift'] = $product->is_gift;
                 
                 $itemTotal = $item['price'] * $item['quantity'];
                 $itemTotalOriginal = $item['original_price'] * $item['quantity'];
@@ -39,7 +62,7 @@ class CartService
                 $totalOriginal += $itemTotalOriginal;
                 $totalItemsCount += $item['quantity'];
 
-                // Group by vendor for vendor-level discounts
+                // Group by vendor
                 if (!isset($vendorGroups[$product->vendor_id])) {
                     $vendorGroups[$product->vendor_id] = [
                         'vendor' => $product->vendor,
@@ -49,9 +72,16 @@ class CartService
                 }
                 $vendorGroups[$product->vendor_id]['total'] += $itemTotal;
                 $vendorGroups[$product->vendor_id]['items_count'] += $item['quantity'];
+            } else {
+                // If product no longer exists, remove from cart
+                $this->removeItem($id);
+                unset($cart[$id]);
             }
         }
-        Session::put('cart', $cart);
+        
+        if (!Auth::check()) {
+            Session::put('cart', $cart);
+        }
 
         // Calculate BOGO & Cross-sell Promotions
         $promotionalDiscount = 0;
@@ -274,59 +304,137 @@ class CartService
     public function addToCart(int $productId, int $quantity = 1)
     {
         $product = Product::findOrFail($productId);
-        $cart = Session::get('cart', []);
 
-        if (isset($cart[$productId])) {
-            $newQuantity = $cart[$productId]['quantity'] + $quantity;
+        if (Auth::check()) {
+            $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
+            $cartItem = $cart->items()->where('product_id', $productId)->first();
+            
+            $currentQty = $cartItem ? $cartItem->quantity : 0;
+            $newQuantity = $currentQty + $quantity;
+
             if (!$product->hasStock($newQuantity)) {
                 return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
             }
-            $cart[$productId]['quantity'] = $newQuantity;
-        } else {
-            if (!$product->hasStock($quantity)) {
-                return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
-            }
-            $price = $product->is_gift ? 0 : $product->effective_price;
+
+            $cart->items()->updateOrCreate(
+                ['product_id' => $productId],
+                ['quantity' => $newQuantity]
+            );
             
-            $cart[$productId] = [
-                "name" => $product->name,
-                "quantity" => $quantity,
-                "price" => $price,
-                "original_price" => $product->price,
-                "is_gift" => $product->is_gift,
-                "is_flash_sale" => $product->hasActiveFlashSale(),
-                "image" => $product->image,
-                "currency" => $product->currency->symbol ?? '$'
-            ];
+            $cart->touch(); // Update cart updated_at
+        } else {
+            $cart = Session::get('cart', []);
+            if (isset($cart[$productId])) {
+                $newQuantity = $cart[$productId]['quantity'] + $quantity;
+                if (!$product->hasStock($newQuantity)) {
+                    return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
+                }
+                $cart[$productId]['quantity'] = $newQuantity;
+            } else {
+                if (!$product->hasStock($quantity)) {
+                    return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
+                }
+                $cart[$productId] = [
+                    "quantity" => $quantity,
+                ];
+            }
+            Session::put('cart', $cart);
         }
 
-        Session::put('cart', $cart);
         return ['success' => true, 'message' => __('Product added to cart successfully!')];
     }
 
     public function updateQuantity(int $productId, int $quantity)
     {
-        $cart = Session::get('cart', []);
-        if (isset($cart[$productId])) {
-            $product = Product::find($productId);
-            if ($product && !$product->hasStock($quantity)) {
-                return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
+        if ($quantity <= 0) {
+            return $this->removeItem($productId);
+        }
+
+        $product = Product::find($productId);
+        if ($product && !$product->hasStock($quantity)) {
+            return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
+        }
+
+        if (Auth::check()) {
+            $cart = Cart::where('user_id', Auth::id())->first();
+            if ($cart) {
+                $cart->items()->where('product_id', $productId)->update(['quantity' => $quantity]);
+                $cart->touch();
+                return ['success' => true, 'message' => __('Cart updated successfully')];
             }
-            $cart[$productId]["quantity"] = $quantity;
-            Session::put('cart', $cart);
-            return ['success' => true, 'message' => __('Cart updated successfully')];
+        } else {
+            $cart = Session::get('cart', []);
+            if (isset($cart[$productId])) {
+                $cart[$productId]["quantity"] = $quantity;
+                Session::put('cart', $cart);
+                return ['success' => true, 'message' => __('Cart updated successfully')];
+            }
         }
         return ['success' => false];
     }
 
     public function removeItem(int $productId)
     {
-        $cart = Session::get('cart', []);
-        if (isset($cart[$productId])) {
-            unset($cart[$productId]);
-            Session::put('cart', $cart);
-            return ['success' => true, 'message' => __('Product removed successfully')];
+        if (Auth::check()) {
+            $cart = Cart::where('user_id', Auth::id())->first();
+            if ($cart) {
+                $cart->items()->where('product_id', $productId)->delete();
+                $cart->touch();
+                return ['success' => true, 'message' => __('Product removed successfully')];
+            }
+        } else {
+            $cart = Session::get('cart', []);
+            if (isset($cart[$productId])) {
+                unset($cart[$productId]);
+                Session::put('cart', $cart);
+                return ['success' => true, 'message' => __('Product removed successfully')];
+            }
         }
         return ['success' => false];
+    }
+
+    private function getRawCartItems()
+    {
+        if (Auth::check()) {
+            // Check if we need to merge session cart first
+            if (Session::has('cart') && !empty(Session::get('cart'))) {
+                $this->persistToDatabase();
+            }
+
+            $cart = Cart::with('items')->firstOrCreate(['user_id' => Auth::id()]);
+            return $cart->items->pluck('quantity', 'product_id')->toArray();
+        }
+
+        $sessionCart = Session::get('cart', []);
+        $raw = [];
+        foreach ($sessionCart as $id => $details) {
+            $raw[$id] = $details['quantity'];
+        }
+        return $raw;
+    }
+
+    public function persistToDatabase()
+    {
+        if (Auth::check()) {
+            $sessionCart = Session::get('cart', []);
+            if (!empty($sessionCart)) {
+                $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
+                
+                foreach ($sessionCart as $productId => $details) {
+                    $item = $cart->items()->where('product_id', $productId)->first();
+                    if ($item) {
+                        // If exists in DB, maybe add quantities or keep session qty? 
+                        // Usually, session qty is the most recent intent.
+                        $item->update(['quantity' => $details['quantity']]);
+                    } else {
+                        $cart->items()->create([
+                            'product_id' => $productId,
+                            'quantity' => $details['quantity']
+                        ]);
+                    }
+                }
+                Session::forget('cart');
+            }
+        }
     }
 }

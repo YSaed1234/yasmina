@@ -57,6 +57,7 @@ class WebServiceProvider extends ModuleServiceProvider
 
             $view->with('globalCategories', $categoriesQuery->get());
             $view->with('currentVendor', $currentVendor);
+            $view->with('globalVendors', \App\Models\Vendor::where('status', 'active')->orderBy('name')->get());
         });
     }
 }

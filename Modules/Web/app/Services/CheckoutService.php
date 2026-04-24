@@ -23,14 +23,14 @@ class CheckoutService
     public function getCheckoutData($vendor)
     {
         $cartData = $this->cartService->getCartData();
-        
+
         if (empty($cartData['cart'])) {
             return ['error' => __('Your cart is empty!')];
         }
 
         $addresses = Address::with(['governorate', 'region'])
             ->where('user_id', auth()->id())
-            ->where('vendor_id', $vendor->id)
+            ->where('vendor_id', $vendor->id ?? null)
             ->get();
 
         return array_merge($cartData, ['addresses' => $addresses]);
@@ -64,7 +64,7 @@ class CheckoutService
         }
 
         $shippingCost = $region->rate;
-        
+
         // Apply Free Shipping if vendor allows it
         if ($vendor && in_array($vendor->id, $cartData['freeShippingVendors'])) {
             $shippingCost = 0;
@@ -78,7 +78,7 @@ class CheckoutService
         } else {
             $commissionAmount = $vendor->commission_value ?? 0;
         }
-        
+
         $vendorNetAmount = ($cartData['finalTotal'] - $commissionAmount) + $shippingCost;
 
         try {
@@ -149,6 +149,10 @@ class CheckoutService
             auth()->user()->notify(new NewOrderNotification($order));
 
             Session::forget(['cart', 'coupon']);
+
+            if (auth()->check()) {
+                \App\Models\Cart::where('user_id', auth()->id())->delete();
+            }
 
             return ['success' => true, 'order' => $order];
 

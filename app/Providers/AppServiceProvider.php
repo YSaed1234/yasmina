@@ -23,6 +23,13 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasRole('admin') ? true : null;
         });
 
+        \Illuminate\Support\Facades\Event::listen(
+            \Illuminate\Auth\Events\Login::class,
+            function ($event) {
+                app(\Modules\Web\Services\CartService::class)->persistToDatabase();
+            }
+        );
+
         \Illuminate\Notifications\DatabaseNotification::creating(function ($notification) {
             if (isset($notification->data['vendor_id'])) {
                 $notification->vendor_id = $notification->data['vendor_id'];
