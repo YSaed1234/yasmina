@@ -22,7 +22,7 @@ class CheckoutService
 
     public function getCheckoutData($vendor)
     {
-        $cartData = $this->cartService->getCartData();
+        $cartData = $this->cartService->getCartData($vendor->id ?? null);
 
         if (empty($cartData['cart'])) {
             return ['error' => __('Your cart is empty!')];
@@ -57,7 +57,7 @@ class CheckoutService
             return ['success' => false, 'error' => __('Shipping is not available for the selected address / area.')];
         }
 
-        $cartData = $this->cartService->getCartData();
+        $cartData = $this->cartService->getCartData($vendor->id ?? null);
 
         if (empty($cartData['cart'])) {
             return ['success' => false, 'error' => __('Your cart is empty!')];
@@ -148,11 +148,7 @@ class CheckoutService
             // Send Notification to user
             auth()->user()->notify(new NewOrderNotification($order));
 
-            Session::forget(['cart', 'coupon']);
-
-            if (auth()->check()) {
-                \App\Models\Cart::where('user_id', auth()->id())->delete();
-            }
+            $this->cartService->clearCart($vendor->id ?? null);
 
             return ['success' => true, 'order' => $order];
 

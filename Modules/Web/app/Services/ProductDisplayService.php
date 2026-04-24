@@ -54,7 +54,15 @@ class ProductDisplayService
 
         $currencies = Currency::all();
 
-        return compact('products', 'categories', 'currencies');
+        $slidesQuery = \App\Models\Slide::where('active', true);
+        if ($vendorId) {
+            $slidesQuery->where('vendor_id', $vendorId);
+        } else {
+            $slidesQuery->whereNull('vendor_id');
+        }
+        $slides = $slidesQuery->orderBy('order')->get();
+
+        return compact('products', 'categories', 'currencies', 'slides');
     }
 
     public function getProductDetails($id, $vendorId = null)

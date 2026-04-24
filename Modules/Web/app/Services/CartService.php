@@ -11,19 +11,34 @@ use App\Models\Coupon;
 
 class CartService
 {
-    public function getCartCount()
+    private function getCurrentVendorId()
     {
+        $vendor = request()->attributes->get('current_vendor');
+        return $vendor ? $vendor->id : null;
+    }
+
+    private function getSessionKey($vendorId = null)
+    {
+        $vId = $vendorId ?? $this->getCurrentVendorId();
+        return $vId ? "cart_vendor_{$vId}" : "cart_main";
+    }
+
+    public function getCartCount($vendorId = null)
+    {
+        $vId = $vendorId ?? $this->getCurrentVendorId();
+
         if (Auth::check()) {
-            $cart = Cart::where('user_id', Auth::id())->first();
+            $cart = Cart::where('user_id', Auth::id())->where('vendor_id', $vId)->first();
             return $cart ? $cart->items()->count() : 0;
         }
 
-        return count(Session::get('cart', []));
+        return count(Session::get($this->getSessionKey($vId), []));
     }
 
-    public function getCartData()
+    public function getCartData($vendorId = null)
     {
-        $rawItems = $this->getRawCartItems();
+        $vId = $vendorId ?? $this->getCurrentVendorId();
+        $rawItems = $this->getRawCartItems($vId);
         $cart = [];
         
         foreach ($rawItems as $productId => $quantity) {
@@ -80,7 +95,7 @@ class CartService
         }
         
         if (!Auth::check()) {
-            Session::put('cart', $cart);
+            Session::put($this->getSessionKey($vId), $cart);
         }
 
         // Calculate BOGO & Cross-sell Promotions
@@ -301,12 +316,16 @@ class CartService
         return ['success' => true, 'message' => __('Coupon removed successfully.')];
     }
 
-    public function addToCart(int $productId, int $quantity = 1)
+    public function addToCart(int $productId, int $quantity = 1, $vendorId = null)
     {
+        $vId = $vendorId ?? $this->getCurrentVendorId();
         $product = Product::findOrFail($productId);
 
         if (Auth::check()) {
-            $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
+            $cart = Cart::firstOrCreate([
+                'user_id' => Auth::id(),
+                'vendor_id' => $vId
+            ]);
             $cartItem = $cart->items()->where('product_id', $productId)->first();
             
             $currentQty = $cartItem ? $cartItem->quantity : 0;
@@ -323,7 +342,8 @@ class CartService
             
             $cart->touch(); // Update cart updated_at
         } else {
-            $cart = Session::get('cart', []);
+            $sessionKey = $this->getSessionKey($vId);
+            $cart = Session::get($sessionKey, []);
             if (isset($cart[$productId])) {
                 $newQuantity = $cart[$productId]['quantity'] + $quantity;
                 if (!$product->hasStock($newQuantity)) {
@@ -338,16 +358,18 @@ class CartService
                     "quantity" => $quantity,
                 ];
             }
-            Session::put('cart', $cart);
+            Session::put($sessionKey, $cart);
         }
 
         return ['success' => true, 'message' => __('Product added to cart successfully!')];
     }
 
-    public function updateQuantity(int $productId, int $quantity)
+    public function updateQuantity(int $productId, int $quantity, $vendorId = null)
     {
+        $vId = $vendorId ?? $this->getCurrentVendorId();
+
         if ($quantity <= 0) {
-            return $this->removeItem($productId);
+            return $this->removeItem($productId, $vId);
         }
 
         $product = Product::find($productId);
@@ -356,56 +378,66 @@ class CartService
         }
 
         if (Auth::check()) {
-            $cart = Cart::where('user_id', Auth::id())->first();
+            $cart = Cart::where('user_id', Auth::id())->where('vendor_id', $vId)->first();
             if ($cart) {
                 $cart->items()->where('product_id', $productId)->update(['quantity' => $quantity]);
                 $cart->touch();
                 return ['success' => true, 'message' => __('Cart updated successfully')];
             }
         } else {
-            $cart = Session::get('cart', []);
+            $sessionKey = $this->getSessionKey($vId);
+            $cart = Session::get($sessionKey, []);
             if (isset($cart[$productId])) {
                 $cart[$productId]["quantity"] = $quantity;
-                Session::put('cart', $cart);
+                Session::put($sessionKey, $cart);
                 return ['success' => true, 'message' => __('Cart updated successfully')];
             }
         }
         return ['success' => false];
     }
 
-    public function removeItem(int $productId)
+    public function removeItem(int $productId, $vendorId = null)
     {
+        $vId = $vendorId ?? $this->getCurrentVendorId();
+
         if (Auth::check()) {
-            $cart = Cart::where('user_id', Auth::id())->first();
+            $cart = Cart::where('user_id', Auth::id())->where('vendor_id', $vId)->first();
             if ($cart) {
                 $cart->items()->where('product_id', $productId)->delete();
                 $cart->touch();
                 return ['success' => true, 'message' => __('Product removed successfully')];
             }
         } else {
-            $cart = Session::get('cart', []);
+            $sessionKey = $this->getSessionKey($vId);
+            $cart = Session::get($sessionKey, []);
             if (isset($cart[$productId])) {
                 unset($cart[$productId]);
-                Session::put('cart', $cart);
+                Session::put($sessionKey, $cart);
                 return ['success' => true, 'message' => __('Product removed successfully')];
             }
         }
         return ['success' => false];
     }
 
-    private function getRawCartItems()
+    private function getRawCartItems($vendorId = null)
     {
+        $vId = $vendorId ?? $this->getCurrentVendorId();
+
         if (Auth::check()) {
             // Check if we need to merge session cart first
-            if (Session::has('cart') && !empty(Session::get('cart'))) {
-                $this->persistToDatabase();
+            $sessionKey = $this->getSessionKey($vId);
+            if (Session::has($sessionKey) && !empty(Session::get($sessionKey))) {
+                $this->persistToDatabase($vId);
             }
 
-            $cart = Cart::with('items')->firstOrCreate(['user_id' => Auth::id()]);
+            $cart = Cart::with('items')->firstOrCreate([
+                'user_id' => Auth::id(),
+                'vendor_id' => $vId
+            ]);
             return $cart->items->pluck('quantity', 'product_id')->toArray();
         }
 
-        $sessionCart = Session::get('cart', []);
+        $sessionCart = Session::get($this->getSessionKey($vId), []);
         $raw = [];
         foreach ($sessionCart as $id => $details) {
             $raw[$id] = $details['quantity'];
@@ -413,28 +445,62 @@ class CartService
         return $raw;
     }
 
-    public function persistToDatabase()
+    public function persistToDatabase($vendorId = null)
     {
-        if (Auth::check()) {
-            $sessionCart = Session::get('cart', []);
-            if (!empty($sessionCart)) {
-                $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
-                
-                foreach ($sessionCart as $productId => $details) {
-                    $item = $cart->items()->where('product_id', $productId)->first();
-                    if ($item) {
-                        // If exists in DB, maybe add quantities or keep session qty? 
-                        // Usually, session qty is the most recent intent.
-                        $item->update(['quantity' => $details['quantity']]);
-                    } else {
-                        $cart->items()->create([
-                            'product_id' => $productId,
-                            'quantity' => $details['quantity']
-                        ]);
-                    }
+        if (!Auth::check()) return;
+
+        if ($vendorId) {
+            $this->persistSingleVendorCart($vendorId);
+        } else {
+            // Persist all vendor carts found in session
+            $sessionData = Session::all();
+            foreach ($sessionData as $key => $value) {
+                if ($key === 'cart_main') {
+                    $this->persistSingleVendorCart(null);
+                } elseif (strpos($key, 'cart_vendor_') === 0) {
+                    $vId = (int) str_replace('cart_vendor_', '', $key);
+                    $this->persistSingleVendorCart($vId);
                 }
-                Session::forget('cart');
             }
+        }
+    }
+
+    private function persistSingleVendorCart($vId)
+    {
+        $sessionKey = $this->getSessionKey($vId);
+        $sessionCart = Session::get($sessionKey, []);
+        
+        if (!empty($sessionCart)) {
+            $cart = Cart::firstOrCreate([
+                'user_id' => Auth::id(),
+                'vendor_id' => $vId
+            ]);
+            
+            foreach ($sessionCart as $productId => $details) {
+                $item = $cart->items()->where('product_id', $productId)->first();
+                if ($item) {
+                    $item->update(['quantity' => $details['quantity']]);
+                } else {
+                    $cart->items()->create([
+                        'product_id' => $productId,
+                        'quantity' => $details['quantity']
+                    ]);
+                }
+            }
+            Session::forget($sessionKey);
+        }
+    }
+
+    public function clearCart($vendorId = null)
+    {
+        $vId = $vendorId ?? $this->getCurrentVendorId();
+        $sessionKey = $this->getSessionKey($vId);
+        
+        Session::forget($sessionKey);
+        Session::forget('coupon'); // Coupons are currently global per session, might need vendor-specific coupons later
+
+        if (Auth::check()) {
+            Cart::where('user_id', Auth::id())->where('vendor_id', $vId)->delete();
         }
     }
 }

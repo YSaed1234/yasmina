@@ -1050,5 +1050,7 @@
     "In Stock": "متوفر في المخزون",
     "Insufficient Stock": "مخزون غير كافٍ",
     "Some items in your cart are no longer available in the requested quantity.": "بعض العناصر في سلتك لم تعد متوفرة بالكمية المطلوبة.",
-    "Please update your cart before proceeding.": "يرجى تحديث سلتك قبل المتابعة."
+    "Please update your cart before proceeding.": "يرجى تحديث سلتك قبل المتابعة.",
+    "Institutions": "المؤسسات",
+    "Main Store": "المتجر الرئيسي"
 }

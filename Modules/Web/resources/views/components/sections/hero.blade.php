@@ -7,7 +7,8 @@
     'buttonLink' => route('web.shop'),
     'showButton' => true,
     'compact' => false,
-    'slides' => null
+    'slides' => null,
+    'logo' => null
 ])
 
 @if($slides && $slides->count() > 0)

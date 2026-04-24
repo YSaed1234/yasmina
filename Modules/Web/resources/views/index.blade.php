@@ -2,7 +2,10 @@
     <x-slot:title>{{ $currentVendor ? $currentVendor->name . ' - ' : '' }}Yasmina</x-slot:title>
     <div class="relative overflow-hidden">
         <!-- Hero Section -->
-        <x-web::sections.hero :slides="$slides" />
+        <x-web::sections.hero 
+            :slides="$slides" 
+            :logo="$currentVendor ? $currentVendor->logo : null"
+        />
 
         @if($promotions->count() > 0)
         <!-- Promotions Section -->
@@ -187,7 +190,7 @@
                                             </div>
                                         @endif
                                     </div>
-                                    <form action="{{ route('web.cart.add', $product->id) }}" method="POST">
+                                    <form action="{{ route('web.cart.add', ['id' => $product->id, 'vendor_id' => request('vendor_id')]) }}" method="POST">
                                         @csrf
                                         <button type="submit" @if($product->stock <= 0) disabled @endif class="w-full py-3 {{ $product->stock <= 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-50 text-gray-700 hover:bg-primary hover:text-white hover:shadow-lg hover:shadow-primary/20' }} rounded-2xl text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn">
                                             @if($product->stock <= 0)

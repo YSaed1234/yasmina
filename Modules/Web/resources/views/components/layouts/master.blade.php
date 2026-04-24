@@ -55,10 +55,21 @@
         <!-- Navigation -->
         <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-rose-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-20 items-center">
-                    <a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center">
-                        <img src="{{ ($currentVendor && $currentVendor->logo) ? asset('storage/' . $currentVendor->logo) : asset('logo.png') }}" alt="{{ ($currentVendor) ? $currentVendor->name : 'Yasmina Logo' }}" class="h-16 w-auto object-contain">
-                    </a>
+                <div class="flex justify-between h-20 items-center gap-x-12">
+                    <div class="flex items-center gap-6 me-12">
+                        
+                        
+                        @if($currentVendor && $currentVendor->logo)
+          
+                        <a href="{{ route('home') }}" class="flex items-center shrink-0">
+                            <img src="{{ asset('storage/' . $currentVendor->logo) }}" alt="{{ $currentVendor->name }}" class="h-10 w-auto object-contain">
+                        </a>
+                        @else
+                            <a href="{{ route('home') }}" class="flex items-center shrink-0">
+                            <img src="{{ asset('logo.png') }}" alt="Yasmina Logo" class="h-10 w-auto object-contain">
+                        </a>
+                        @endif
+                    </div>
                     
                     <div class="hidden md:flex gap-8 text-sm font-bold uppercase tracking-widest text-gray-600 items-center">
                         <a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('home') ? 'text-primary' : '' }}">{{ __('Home') }}</a>

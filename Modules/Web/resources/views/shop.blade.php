@@ -1,13 +1,18 @@
 <x-web::layouts.master>
     <x-slot:title>{{ $currentVendor ? $currentVendor->name . ' - ' : '' }}{{ __('Shop All Products') }} - Yasmina</x-slot:title>
 
-    <div class="pt-32 pb-20">
+    <x-web::sections.hero 
+        :slides="$slides"
+        :title="$currentVendor ? $currentVendor->name : __('Our Collection')"
+        :description="$currentVendor && $currentVendor->description ? $currentVendor->description : __('Discover our range of luxury products carefully curated for you.')"
+        :logo="$currentVendor ? $currentVendor->logo : null"
+        :image="$currentVendor && $currentVendor->about_image1 ? asset('storage/' . $currentVendor->about_image1) : 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=2000'"
+        :showButton="false"
+        compact="true"
+    />
+
+    <div class="py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Header -->
-            <div class="mb-12">
-                <h1 class="text-4xl font-bold text-gray-900">{{ $currentVendor ? $currentVendor->name : __('Our Collection') }}</h1>
-                <p class="mt-4 text-gray-600">{{ __('Discover our range of luxury products carefully curated for you.') }}</p>
-            </div>
 
             <div class="flex flex-col lg:flex-row gap-12">
                 <!-- Filters Sidebar -->
@@ -159,7 +164,7 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        <form action="{{ route('web.cart.add', $product->id) }}" method="POST">
+                                        <form action="{{ route('web.cart.add', ['id' => $product->id, 'vendor_id' => request('vendor_id')]) }}" method="POST">
                                             @csrf
                                             <button type="submit" @if($product->stock <= 0) disabled @endif class="p-3 rounded-2xl {{ $product->stock <= 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-rose-50 text-primary hover:bg-primary hover:text-white' }} transition-all duration-300 shadow-sm flex items-center gap-2 group/btn">
                                                 @if($product->stock <= 0)
