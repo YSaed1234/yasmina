@@ -33,6 +33,11 @@ Route::prefix('admin-dashboard-2026')->group(function () {
         Route::put('orders/{order}/status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.update-status')->middleware('permission:manage orders');
         Route::put('orders/{order}/payment-status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updatePaymentStatus'])->name('orders.update-payment-status')->middleware('permission:manage orders');
         Route::delete('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy')->middleware('permission:manage orders');
+        
+        // Returns
+        Route::get('returns', [\Modules\Admin\Http\Controllers\ReturnRequestController::class, 'index'])->name('returns.index')->middleware('permission:manage orders');
+        Route::get('returns/{returnRequest}', [\Modules\Admin\Http\Controllers\ReturnRequestController::class, 'show'])->name('returns.show')->middleware('permission:manage orders');
+        Route::put('returns/{returnRequest}/status', [\Modules\Admin\Http\Controllers\ReturnRequestController::class, 'updateStatus'])->name('returns.update-status')->middleware('permission:manage orders');
 
         Route::resource('coupons', \Modules\Admin\Http\Controllers\CouponController::class)->middleware('permission:manage coupons');
         Route::resource('promotions', \Modules\Admin\Http\Controllers\PromotionController::class)->middleware('permission:manage coupons');

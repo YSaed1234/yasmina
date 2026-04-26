@@ -47,6 +47,11 @@
                                     </div>
                                     <div>
                                         <p class="font-bold text-gray-800">{{ $item->product->name }}</p>
+                                        @if($item->variant)
+                                            <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mt-0.5">
+                                                {{ $item->variant->color }} {{ $item->variant->size ? '/ ' . $item->variant->size : '' }}
+                                            </span>
+                                        @endif
                                         <p class="text-xs text-gray-400">{{ $item->product->category->name ?? '' }}</p>
                                     </div>
                                 </div>

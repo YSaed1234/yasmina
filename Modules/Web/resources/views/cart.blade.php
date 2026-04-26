@@ -61,7 +61,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <button onclick="removeFromCart({{ $id }})" class="text-gray-400 hover:text-red-500 transition-colors">
+                                            <button onclick="removeFromCart('{{ $id }}')" class="text-gray-400 hover:text-red-500 transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16" />
                                                 </svg>
@@ -70,9 +70,9 @@
                                         <div class="flex items-center justify-between mt-6">
                                             @if(!(isset($details['is_gift']) && $details['is_gift']))
                                                 <div class="flex items-center bg-gray-50 rounded-xl p-1 border border-gray-100">
-                                                    <button onclick="updateQuantity({{ $id }}, {{ $details['quantity'] - 1 }})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary transition-colors">-</button>
+                                                    <button onclick="updateQuantity('{{ $id }}', {{ (int) $details['quantity'] - 1 }})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary transition-colors">-</button>
                                                     <span class="w-10 text-center font-bold text-sm">{{ $details['quantity'] }}</span>
-                                                    <button onclick="updateQuantity({{ $id }}, {{ $details['quantity'] + 1 }})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary transition-colors">+</button>
+                                                    <button onclick="updateQuantity('{{ $id }}', {{ (int) $details['quantity'] + 1 }})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary transition-colors">+</button>
                                                 </div>
                                             @else
                                                 <div class="text-xs font-bold text-gray-400 italic">

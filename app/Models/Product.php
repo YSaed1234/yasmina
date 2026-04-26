@@ -42,8 +42,10 @@ class Product extends Model implements TranslatableContract
      */
     public function getBadge()
     {
+        $currentStock = $this->total_stock;
+
         // 0. Priority: Out of Stock
-        if ($this->stock <= 0) {
+        if ($currentStock <= 0) {
             return [
                 'label' => __('Out of Stock'),
                 'type' => 'stock_out',
@@ -61,9 +63,9 @@ class Product extends Model implements TranslatableContract
         }
 
         // 2. Priority: Low Stock (Last X pieces)
-        if ($this->stock > 0 && $this->stock <= 3) {
+        if ($currentStock > 0 && $currentStock <= 3) {
             return [
-                'label' => __('Last :count pieces', ['count' => $this->stock]),
+                'label' => __('Last :count pieces', ['count' => $currentStock]),
                 'type' => 'stock',
                 'color' => 'bg-red-500 text-white animate-pulse'
             ];
@@ -116,6 +118,11 @@ class Product extends Model implements TranslatableContract
         return $this->hasMany(Review::class);
     }
 
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
     public function averageRating()
     {
         return $this->reviews()->avg('rating') ?: 0;
@@ -145,11 +152,22 @@ class Product extends Model implements TranslatableContract
     }
 
     /**
+     * Get the total stock across all variants, or base stock if no variants.
+     */
+    public function getTotalStockAttribute()
+    {
+        if ($this->variants()->exists()) {
+            return (int) $this->variants()->sum('stock');
+        }
+        return (int) $this->stock;
+    }
+
+    /**
      * Check if the product has enough stock.
      */
     public function hasStock(int $quantity): bool
     {
-        return $this->stock >= $quantity;
+        return $this->total_stock >= $quantity;
     }
 
     /**
@@ -167,15 +185,36 @@ class Product extends Model implements TranslatableContract
      */
     public function getEffectivePriceAttribute()
     {
+        $price = $this->price;
+
+        if ($this->hasActiveFlashSale()) {
+            $price = $this->flash_sale_price;
+        } elseif ($this->discount_price && $this->discount_price < $this->price) {
+            $price = $this->discount_price;
+        }
+
+        return max(0, (float)$price);
+    }
+
+    /**
+     * Get final price considering variants and sales.
+     * Logic: Flash Sale > Variant Price > Discount Price > Regular Price
+     */
+    public function getFinalPrice($variant = null)
+    {
+        if ($this->is_gift) {
+            return 0;
+        }
+
         if ($this->hasActiveFlashSale()) {
             return $this->flash_sale_price;
         }
 
-        if ($this->discount_price && $this->discount_price < $this->price) {
-            return $this->discount_price;
+        if ($variant && $variant->price) {
+            return $variant->price;
         }
 
-        return $this->price;
+        return $this->getEffectivePriceAttribute();
     }
 
     /**

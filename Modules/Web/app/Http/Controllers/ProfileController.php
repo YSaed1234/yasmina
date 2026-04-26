@@ -32,6 +32,17 @@ class ProfileController extends Controller
         return view('web::profile.orders', compact('orders', 'totalPromotionalSavings'));
     }
 
+    public function wallet()
+    {
+        $user = auth()->user();
+        $pointTransactions = $this->profileService->getPointTransactions();
+        $walletTransactions = $this->profileService->getWalletTransactions();
+        $rate = (float) \App\Models\PointSetting::getValue('currency_per_point', 0.1);
+        $minPoints = (int) \App\Models\PointSetting::getValue('min_points_to_convert', 100);
+
+        return view('web::profile.wallet', compact('user', 'pointTransactions', 'walletTransactions', 'rate', 'minPoints'));
+    }
+
     public function addresses()
     {
         $vendor = request()->attributes->get('current_vendor');

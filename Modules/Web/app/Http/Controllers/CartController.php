@@ -49,7 +49,7 @@ class CartController extends Controller
 
     public function add(Request $request, $id)
     {
-        $result = $this->cartService->addToCart($id);
+        $result = $this->cartService->addToCart($id, $request->variant_id);
         
         if (!$result['success']) {
             return redirect()->back()->with('error', $result['error'] ?? __('Error adding product to cart'));

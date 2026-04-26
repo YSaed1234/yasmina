@@ -29,6 +29,13 @@ class UpdateProductRequest extends FormRequest
             'stock' => 'required|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'custom_badge' => 'nullable|string|max:50',
+            'variants' => 'nullable|array',
+            'variants.*.id' => 'nullable|exists:product_variants,id',
+            'variants.*.color' => 'nullable|string|max:50',
+            'variants.*.size' => 'nullable|string|max:50',
+            'variants.*.price' => 'nullable|numeric|min:0',
+            'variants.*.stock' => 'nullable|integer|min:0',
+            'variants.*.sku' => 'nullable|string|max:100',
         ];
     }
 

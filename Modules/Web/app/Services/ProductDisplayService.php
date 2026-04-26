@@ -69,7 +69,7 @@ class ProductDisplayService
     {
         $product = Product::
             withValidPrice()->
-            with(['category', 'currency'])
+            with(['category', 'currency', 'variants'])
             ->find($id);
 
         if (!$product) {

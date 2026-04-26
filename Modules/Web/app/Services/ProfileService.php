@@ -20,6 +20,21 @@ class ProfileService
             ->paginate($perPage);
     }
 
+    public function getPointTransactions(int $perPage = 15)
+    {
+        return Auth::user()->pointTransactions()
+            ->latest()
+            ->paginate($perPage, ['*'], 'points_page');
+    }
+
+    public function getWalletTransactions(int $perPage = 15)
+    {
+        // Add relationship to User model if not present, but for now use direct query
+        return \App\Models\WalletTransaction::where('user_id', Auth::id())
+            ->latest()
+            ->paginate($perPage, ['*'], 'wallet_page');
+    }
+
     public function getTotalPromotionalSavings($vendorId)
     {
         return Order::where('vendor_id', $vendorId)

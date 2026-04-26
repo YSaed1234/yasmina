@@ -726,7 +726,7 @@
                         Swal.fire({
                             icon: 'success',
                             title: '{{ __("Success!") }}',
-                            text: '{{ __("Added to favorites") }}',
+                            text: data.message || '{{ __("Added to favorites") }}',
                             timer: 1500,
                             showConfirmButton: false,
                             confirmButtonColor: 'var(--yasmina-primary)'

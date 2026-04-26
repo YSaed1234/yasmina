@@ -50,6 +50,20 @@
                                                 </div>
                                             </div>
                                             <div class="flex items-center gap-4">
+                                                @php
+                                                    $refundedCount = $order->returnRequests
+                                                        ->where('status', 'completed')
+                                                        ->flatMap->items
+                                                        ->sum('quantity');
+                                                @endphp
+                                                @if($refundedCount > 0)
+                                                    <span class="px-4 py-1.5 bg-rose-50 text-rose-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-rose-100 shadow-sm flex items-center gap-2">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                                                        </svg>
+                                                        {{ $refundedCount }} {{ __('Items Refunded') }}
+                                                    </span>
+                                                @endif
                                                 <button onclick="showOrderDetails({{ json_encode($order->load('items.product')) }})" class="px-6 py-2 bg-white text-gray-700 rounded-xl text-xs font-bold hover:bg-primary hover:text-white transition-all border border-primary/10 shadow-sm">
                                                     {{ __('View Details') }}
                                                 </button>
@@ -94,6 +108,19 @@
                                                                 <a href="{{ route('web.products.show', ['id' => $item->product->id, 'vendor_id' => request('vendor_id')]) }}" class="px-6 py-2 bg-gray-50 text-gray-600 rounded-xl text-xs font-bold hover:bg-primary hover:text-white transition-all">
                                                                     {{ __('Buy Again') }}
                                                                 </a>
+                                                            @endif
+                                                            
+                                                            @if($order->status->value === 'delivered')
+                                                                @php $returnRequest = $order->returnRequests->first(); @endphp
+                                                                @if(!$returnRequest)
+                                                                    <a href="{{ route('web.orders.return', $order) }}" class="px-6 py-2 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold hover:bg-rose-500 hover:text-white transition-all">
+                                                                        {{ __('Return Items') }}
+                                                                    </a>
+                                                                @else
+                                                                    <a href="{{ route('web.returns.show', $returnRequest) }}" class="px-6 py-2 bg-blue-50 text-blue-600 rounded-xl text-xs font-bold hover:bg-blue-500 hover:text-white transition-all">
+                                                                        {{ __('View Return Status') }}
+                                                                    </a>
+                                                                @endif
                                                             @endif
                                                         </div>
                                                     </div>

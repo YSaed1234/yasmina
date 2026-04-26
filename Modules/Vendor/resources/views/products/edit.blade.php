@@ -134,6 +134,61 @@
                     </div>
                 </div>
 
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-bold text-gray-400 mb-4 uppercase tracking-widest">{{ __('Product Variants') }} ({{ __('Sizes & Colors') }})</label>
+                    <div class="bg-gray-50/30 rounded-3xl border border-gray-100 p-6">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-separate border-spacing-y-2" id="variants-table">
+                                <thead>
+                                    <tr class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                        <th class="px-4 py-2">{{ __('Color') }}</th>
+                                        <th class="px-4 py-2">{{ __('Size') }}</th>
+                                        <th class="px-4 py-2">{{ __('Price') }}</th>
+                                        <th class="px-4 py-2">{{ __('Stock') }}</th>
+                                        <th class="px-4 py-2">{{ __('SKU') }}</th>
+                                        <th class="px-4 py-2 text-right">{{ __('Actions') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="variants-body">
+                                    @foreach($product->variants as $index => $variant)
+                                    <tr class="bg-white rounded-xl shadow-sm border border-gray-50 group">
+                                        <td class="px-4 py-3">
+                                            <input type="hidden" name="variants[{{ $index }}][id]" value="{{ $variant->id }}">
+                                            <input type="text" name="variants[{{ $index }}][color]" value="{{ $variant->color }}" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="{{ __('Red, Blue...') }}">
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <input type="text" name="variants[{{ $index }}][size]" value="{{ $variant->size }}" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="{{ __('XL, 42...') }}">
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <input type="number" step="0.01" name="variants[{{ $index }}][price]" value="{{ $variant->price }}" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="0.00">
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <input type="number" name="variants[{{ $index }}][stock]" value="{{ $variant->stock }}" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="0">
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <input type="text" name="variants[{{ $index }}][sku]" value="{{ $variant->sku }}" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="SKU-123">
+                                        </td>
+                                        <td class="px-4 py-3 text-right">
+                                            <button type="button" onclick="this.closest('tr').remove()" class="p-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" onclick="addVariant()" class="mt-4 flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary/90 transition-all shadow-md shadow-primary/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            {{ __('Add Variant') }}
+                        </button>
+                    </div>
+                </div>
+
                 <div class="md:col-span-1">
                     <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">{{ __('Description (Arabic)') }}</label>
                     <textarea name="ar[description]" rows="4" class="w-full px-5 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none font-bold text-gray-700">{{ $product->translate('ar')->description ?? '' }}</textarea>
@@ -142,6 +197,41 @@
                     <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">{{ __('Description (English)') }}</label>
                     <textarea name="en[description]" rows="4" class="w-full px-5 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none font-bold text-gray-700">{{ $product->translate('en')->description ?? '' }}</textarea>
                 </div>
+
+                <script>
+                    let variantIndex = {{ $product->variants->count() }};
+                    function addVariant() {
+                        const body = document.getElementById('variants-body');
+                        const row = `
+                            <tr class="bg-white rounded-xl shadow-sm border border-gray-50 group">
+                                <td class="px-4 py-3">
+                                    <input type="text" name="variants[${variantIndex}][color]" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="{{ __('Red, Blue...') }}">
+                                </td>
+                                <td class="px-4 py-3">
+                                    <input type="text" name="variants[${variantIndex}][size]" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="{{ __('XL, 42...') }}">
+                                </td>
+                                <td class="px-4 py-3">
+                                    <input type="number" step="0.01" name="variants[${variantIndex}][price]" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="0.00">
+                                </td>
+                                <td class="px-4 py-3">
+                                    <input type="number" name="variants[${variantIndex}][stock]" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="0">
+                                </td>
+                                <td class="px-4 py-3">
+                                    <input type="text" name="variants[${variantIndex}][sku]" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="SKU-123">
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <button type="button" onclick="this.closest('tr').remove()" class="p-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                        body.insertAdjacentHTML('beforeend', row);
+                        variantIndex++;
+                    }
+                </script>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">{{ __('Product Image') }}</label>

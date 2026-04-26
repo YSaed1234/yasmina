@@ -52,12 +52,17 @@
                                                 <img src="{{ asset('storage/' . $item->product->image) }}" class="w-full h-full object-cover">
                                             @endif
                                         </div>
-                                        <div>
-                                            <span class="block font-bold text-gray-900">{{ $item->product->name ?? __('Product Not Found') }}</span>
-                                            @if($item->product && $item->product->vendor)
-                                                <span class="text-[10px] font-black uppercase text-blue-500 tracking-widest bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100 mt-1 inline-block">{{ $item->product->vendor->name }}</span>
-                                            @endif
-                                        </div>
+                                         <div>
+                                             <span class="block font-bold text-gray-900">{{ $item->product->name ?? __('Product Not Found') }}</span>
+                                             @if($item->variant)
+                                                 <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mt-0.5">
+                                                     {{ $item->variant->color }} {{ $item->variant->size ? '/ ' . $item->variant->size : '' }}
+                                                 </span>
+                                             @endif
+                                             @if($item->product && $item->product->vendor)
+                                                 <span class="text-[10px] font-black uppercase text-blue-500 tracking-widest bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100 mt-1 inline-block">{{ $item->product->vendor->name }}</span>
+                                             @endif
+                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-8 py-6 text-center font-bold text-gray-600">{{ $item->quantity }}</td>

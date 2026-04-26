@@ -37,6 +37,7 @@ Route::middleware([\Modules\Web\Http\Middleware\ResolveVendor::class])->group(fu
         Route::get('/my-account', [ProfileController::class, 'index'])->name('web.profile');
         Route::post('/my-account/convert-points', [ProfileController::class, 'convertPoints'])->name('web.profile.convert-points');
         Route::get('/my-account/orders', [ProfileController::class, 'orders'])->name('web.profile.orders');
+        Route::get('/my-account/wallet', [ProfileController::class, 'wallet'])->name('web.profile.wallet');
         Route::get('/my-account/addresses', [ProfileController::class, 'addresses'])->name('web.profile.addresses');
         Route::post('/my-account/addresses', [ProfileController::class, 'storeAddress'])->name('web.profile.addresses.store');
         Route::put('/my-account/addresses/{address}', [ProfileController::class, 'updateAddress'])->name('web.profile.addresses.update');
@@ -48,6 +49,11 @@ Route::middleware([\Modules\Web\Http\Middleware\ResolveVendor::class])->group(fu
 
         // Reviews
         Route::post('/reviews', [ProfileController::class, 'storeReview'])->name('web.reviews.store');
+
+        // Returns
+        Route::get('/orders/{order}/return', [\Modules\Web\Http\Controllers\ReturnRequestController::class, 'create'])->name('web.orders.return');
+        Route::post('/orders/{order}/return', [\Modules\Web\Http\Controllers\ReturnRequestController::class, 'store'])->name('web.orders.return.store');
+        Route::get('/returns/{returnRequest}', [\Modules\Web\Http\Controllers\ReturnRequestController::class, 'show'])->name('web.returns.show');
 
         // Notifications
         Route::get('/notifications', [\Modules\Web\Http\Controllers\NotificationController::class, 'index'])->name('web.notifications');

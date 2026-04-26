@@ -38,44 +38,58 @@ class CartService
     public function getCartData($vendorId = null)
     {
         $vId = $vendorId ?? $this->getCurrentVendorId();
-        $rawItems = $this->getRawCartItems($vId);
-        $cart = [];
-        
-        foreach ($rawItems as $productId => $quantity) {
-            $cart[$productId] = ['quantity' => $quantity];
-        }
+        $cart = $this->getRawCartItems($vId);
 
         $total = 0;
         $totalOriginal = 0;
         $totalItemsCount = 0;
-        
-        $productIds = array_keys($cart);
-        $products = Product::with('vendor', 'currency')->whereIn('id', $productIds)->get()->keyBy('id');
+
+        $productIds = array_column($cart, 'product_id');
+        $variantIds = array_filter(array_column($cart, 'variant_id'));
+
+        $products = Product::with(['vendor', 'currency'])->whereIn('id', $productIds)->get()->keyBy('id');
+        $variants = \App\Models\ProductVariant::whereIn('id', $variantIds)->get()->keyBy('id');
 
         $vendorGroups = [];
 
-        foreach ($cart as $id => &$item) {
+        foreach ($cart as $key => $item) {
+            $id = $item['product_id'];
+            $vId_variant = $item['variant_id'];
+
             if (isset($products[$id])) {
                 $product = $products[$id];
-                $item['name'] = $product->name;
-                $item['price'] = $product->is_gift ? 0 : $product->effective_price;
-                $item['original_price'] = $product->price;
-                $item['is_flash_sale'] = $product->hasActiveFlashSale();
-                $item['vendor_id'] = $product->vendor_id;
-                $item['image'] = $product->image;
-                $item['currency'] = $product->currency->symbol ?? '$';
-                $item['is_gift'] = $product->is_gift;
-                
-                $itemTotal = $item['price'] * $item['quantity'];
-                $itemTotalOriginal = $item['original_price'] * $item['quantity'];
-                
-                // Stock Validation
-                $item['in_stock'] = $product->hasStock($item['quantity']);
-                $item['available_stock'] = $product->stock;
+                $variant = $vId_variant ? ($variants[$vId_variant] ?? null) : null;
 
-                $total += $itemTotal;
-                $totalOriginal += $itemTotalOriginal;
-                $totalItemsCount += $item['quantity'];
+                $cart[$key]['name'] = $product->name . ($variant ? " ({$variant->color} {$variant->size})" : "");
+
+                // Final Price with priority logic
+                $cart[$key]['price'] = (float) $product->getFinalPrice($variant);
+
+                $cart[$key]['original_price'] = (float) ($variant && $variant->price ? $variant->price : $product->price);
+                $cart[$key]['is_flash_sale'] = (bool) $product->hasActiveFlashSale();
+                $cart[$key]['vendor_id'] = $product->vendor_id;
+                $cart[$key]['image'] = $product->image;
+                $cart[$key]['currency'] = $product->currency->symbol ?? '$';
+                $cart[$key]['is_gift'] = (bool) $product->is_gift;
+
+                // Force quantity to be integer to prevent Blade errors
+                $cart[$key]['quantity'] = (int) $item['quantity'];
+
+                $itemTotal = (float) $cart[$key]['price'] * $cart[$key]['quantity'];
+                $itemTotalOriginal = (float) $cart[$key]['original_price'] * $cart[$key]['quantity'];
+
+                // Stock Validation (Check variant stock if exists, otherwise product stock)
+                if ($variant) {
+                    $cart[$key]['in_stock'] = $variant->stock >= $cart[$key]['quantity'];
+                    $cart[$key]['available_stock'] = $variant->stock;
+                } else {
+                    $cart[$key]['in_stock'] = $product->hasStock($cart[$key]['quantity']);
+                    $cart[$key]['available_stock'] = $product->stock;
+                }
+
+                $total = (float) $total + $itemTotal;
+                $totalOriginal = (float) $totalOriginal + $itemTotalOriginal;
+                $totalItemsCount = (int) $totalItemsCount + (int) $cart[$key]['quantity'];
 
                 // Group by vendor
                 if (!isset($vendorGroups[$product->vendor_id])) {
@@ -85,17 +99,25 @@ class CartService
                         'items_count' => 0
                     ];
                 }
-                $vendorGroups[$product->vendor_id]['total'] += $itemTotal;
-                $vendorGroups[$product->vendor_id]['items_count'] += $item['quantity'];
+                $vendorGroups[$product->vendor_id]['total'] = (float) $vendorGroups[$product->vendor_id]['total'] + $itemTotal;
+                $vendorGroups[$product->vendor_id]['items_count'] = (int) $vendorGroups[$product->vendor_id]['items_count'] + (int) $cart[$key]['quantity'];
             } else {
                 // If product no longer exists, remove from cart
-                $this->removeItem($id);
-                unset($cart[$id]);
+                $this->removeItem($key);
+                unset($cart[$key]);
             }
         }
-        
+
         if (!Auth::check()) {
-            Session::put($this->getSessionKey($vId), $cart);
+            $rawToSave = [];
+            foreach ($cart as $k => $item) {
+                $rawToSave[$k] = [
+                    'product_id' => $item['product_id'],
+                    'variant_id' => $item['variant_id'],
+                    'quantity' => $item['quantity']
+                ];
+            }
+            Session::put($this->getSessionKey($vId), $rawToSave);
         }
 
         // Calculate BOGO & Cross-sell Promotions
@@ -103,72 +125,60 @@ class CartService
         $appliedPromotions = [];
         $activePromotions = \App\Models\Promotion::where('is_active', true)
             ->whereIn('buy_product_id', $productIds)
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
             })
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
             })
             ->get();
 
         foreach ($activePromotions as $promo) {
-            if (isset($cart[$promo->buy_product_id])) {
-                $buyQtyInCart = $cart[$promo->buy_product_id]['quantity'];
-                
+            // Find all cart entries for this buy_product_id (sum quantities)
+            $buyQtyInCart = 0;
+            foreach ($cart as $item) {
+                if ($item['product_id'] == $promo->buy_product_id) {
+                    $buyQtyInCart = (float) $buyQtyInCart + (int) $item['quantity'];
+                }
+            }
+
+            if ($buyQtyInCart > 0) {
                 if ($promo->type === 'bogo_same') {
-                    // Logic for "Buy 2 Get 1 Free" (Total 3 items, 1 free)
                     $cycle = $promo->buy_quantity + $promo->get_quantity;
                     $eligibleQty = floor($buyQtyInCart / $cycle) * $promo->get_quantity;
                 } else {
-                    // Logic for "Buy A Get B at discount"
                     $timesApplicable = floor($buyQtyInCart / $promo->buy_quantity);
-                    if (isset($cart[$promo->get_product_id])) {
-                        $getQtyInCart = $cart[$promo->get_product_id]['quantity'];
-                        $eligibleQty = min($timesApplicable * $promo->get_quantity, $getQtyInCart);
-                    } else {
-                        $eligibleQty = 0;
+                    $getQtyInCart = 0;
+                    foreach ($cart as $item) {
+                        if ($item['product_id'] == $promo->get_product_id) {
+                            $getQtyInCart += $item['quantity'];
+                        }
                     }
+                    $eligibleQty = min($timesApplicable * $promo->get_quantity, $getQtyInCart);
                 }
 
                 if ($eligibleQty > 0) {
                     $targetProduct = $products[$promo->get_product_id] ?? null;
                     if ($targetProduct) {
-                        // Validate if "Get" items are available in stock
-                        // For bogo_same, it's already checked in the items loop
-                        // For different product, check if the getQtyInCart is within stock
-                        $isFulfillable = true;
-                        if ($promo->type !== 'bogo_same') {
-                            $isFulfillable = $targetProduct->hasStock($cart[$promo->get_product_id]['quantity']);
-                        }
+                        $unitPrice = $targetProduct->effective_price;
+                        $discountForThisPromo = 0;
 
-                        if ($isFulfillable) {
-                            $unitPrice = $targetProduct->effective_price;
-                            $discountForThisPromo = 0;
-
-                            if ($promo->discount_type === 'free') {
-                                $discountForThisPromo = $unitPrice * $eligibleQty;
-                            } elseif ($promo->discount_type === 'percentage') {
-                                $discountForThisPromo = ($unitPrice * $promo->discount_value / 100) * $eligibleQty;
-                            } else {
-                                $discountForThisPromo = min($promo->discount_value * $eligibleQty, $unitPrice * $eligibleQty);
-                            }
-
-                            $promotionalDiscount += $discountForThisPromo;
-                            $appliedPromotions[] = [
-                                'name' => $promo->name ?: ($promo->type === 'bogo_same' ? __('BOGO Deal') : __('Bundle Deal')),
-                                'amount' => $discountForThisPromo,
-                                'details' => $promo->type === 'bogo_same' 
-                                    ? __('Buy :buy get :get free', ['buy' => $promo->buy_quantity, 'get' => $promo->get_quantity])
-                                    : __('Discount on :product', ['product' => $targetProduct->name])
-                            ];
+                        if ($promo->discount_type === 'free') {
+                            $discountForThisPromo = $unitPrice * $eligibleQty;
+                        } elseif ($promo->discount_type === 'percentage') {
+                            $discountForThisPromo = ($unitPrice * $promo->discount_value / 100) * $eligibleQty;
                         } else {
-                            $appliedPromotions[] = [
-                                'name' => $promo->name,
-                                'amount' => 0,
-                                'error' => __('Insufficient stock for the free/discounted items in this deal.'),
-                                'details' => __('Deal cannot be applied due to stock limits.')
-                            ];
+                            $discountForThisPromo = min($promo->discount_value * $eligibleQty, $unitPrice * $eligibleQty);
                         }
+
+                        $promotionalDiscount += $discountForThisPromo;
+                        $appliedPromotions[] = [
+                            'name' => $promo->name ?: ($promo->type === 'bogo_same' ? __('BOGO Deal') : __('Bundle Deal')),
+                            'amount' => $discountForThisPromo,
+                            'details' => $promo->type === 'bogo_same'
+                                ? __('Buy :buy get :get free', ['buy' => $promo->buy_quantity, 'get' => $promo->get_quantity])
+                                : __('Discount on :product', ['product' => $targetProduct->name])
+                        ];
                     }
                 }
             }
@@ -184,7 +194,8 @@ class CartService
 
         foreach ($vendorGroups as $vId => $group) {
             $vendor = $group['vendor'];
-            if (!$vendor) continue;
+            if (!$vendor)
+                continue;
 
             $thresholdDisc = 0;
             // 1. Order Threshold Discount
@@ -205,7 +216,7 @@ class CartService
                     $multiItemDisc = $vendor->items_discount_amount;
                 }
             }
-            
+
             // Pick the best discount
             if ($thresholdDisc > 0 || $multiItemDisc > 0) {
                 if ($thresholdDisc >= $multiItemDisc) {
@@ -230,7 +241,7 @@ class CartService
 
         $coupon = null;
         $discount = 0;
-        
+
         $totalAfterVendorDiscounts = max(0, $totalAfterPromotions - $vendorDiscount);
         $freeShippingVendors = [];
         foreach ($vendorGroups as $vId => $group) {
@@ -242,7 +253,7 @@ class CartService
         if (Session::has('coupon')) {
             $couponData = Session::get('coupon');
             $coupon = Coupon::where('code', $couponData['code'])->first();
-            
+
             if ($coupon && $coupon->isValid()) {
                 if ($totalAfterVendorDiscounts >= $coupon->min_order_amount) {
                     if ($coupon->type === 'percentage') {
@@ -257,9 +268,9 @@ class CartService
                 Session::forget('coupon');
             }
         }
-        
+
         $finalTotal = max(0, $totalAfterVendorDiscounts - $discount);
-        
+
         return [
             'cart' => $cart,
             'total' => $total,
@@ -270,9 +281,9 @@ class CartService
             'vendorDiscount' => $vendorDiscount,
             'appliedVendorDiscounts' => $appliedVendorDiscounts,
             'availableGifts' => \App\Models\Product::where('is_gift', true)
-                                ->where('gift_threshold', '<=', $total)
-                                ->whereNotIn('id', array_keys($cart))
-                                ->get(),
+                ->where('gift_threshold', '<=', $total)
+                ->whereNotIn('id', $productIds)
+                ->get(),
             'freeShippingVendors' => $freeShippingVendors,
             'coupon' => $coupon,
             'discount' => $discount,
@@ -280,81 +291,73 @@ class CartService
         ];
     }
 
-    public function applyCoupon(string $code)
-    {
-        $coupon = Coupon::where('code', $code)->first();
-
-        if (!$coupon) {
-            return ['success' => false, 'error' => __('Invalid coupon code.')];
-        }
-
-        if (!$coupon->isValid()) {
-            return ['success' => false, 'error' => __('This coupon is no longer valid.')];
-        }
-
-        if (auth()->check() && !$coupon->canBeUsedByUser(auth()->user())) {
-            return ['success' => false, 'error' => __('You have reached the usage limit for this coupon.')];
-        }
-
-        $cartData = $this->getCartData();
-        if ($cartData['total'] < $coupon->min_order_amount) {
-            return ['success' => false, 'error' => __('Minimum order amount for this coupon is :amount', ['amount' => $coupon->min_order_amount])];
-        }
-
-        Session::put('coupon', [
-            'code' => $coupon->code,
-            'type' => $coupon->type,
-            'value' => $coupon->value
-        ]);
-
-        return ['success' => true, 'message' => __('Coupon applied successfully!')];
-    }
-
-    public function removeCoupon()
-    {
-        Session::forget('coupon');
-        return ['success' => true, 'message' => __('Coupon removed successfully.')];
-    }
-
-    public function addToCart(int $productId, int $quantity = 1, $vendorId = null)
+    public function addToCart(int $productId, $variantId = null, int $quantity = 1, $vendorId = null)
     {
         $vId = $vendorId ?? $this->getCurrentVendorId();
         $product = Product::findOrFail($productId);
+
+        // Ensure variant is selected if product has variants
+        if ($product->variants()->count() > 0 && !$variantId) {
+            return ['success' => false, 'error' => __('Please select your preferred color and size.')];
+        }
+
+        $variant = $variantId ? \App\Models\ProductVariant::findOrFail($variantId) : null;
+
+        $key = $variantId ? (string)$productId . ':' . (string)$variantId : (string)$productId;
 
         if (Auth::check()) {
             $cart = Cart::firstOrCreate([
                 'user_id' => Auth::id(),
                 'vendor_id' => $vId
             ]);
-            $cartItem = $cart->items()->where('product_id', $productId)->first();
-            
+            $cartItem = $cart->items()
+                ->where('product_id', $productId)
+                ->where('variant_id', $variantId)
+                ->first();
+
             $currentQty = $cartItem ? $cartItem->quantity : 0;
             $newQuantity = $currentQty + $quantity;
 
-            if (!$product->hasStock($newQuantity)) {
-                return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
-            }
-
-            $cart->items()->updateOrCreate(
-                ['product_id' => $productId],
-                ['quantity' => $newQuantity]
-            );
-            
-            $cart->touch(); // Update cart updated_at
-        } else {
-            $sessionKey = $this->getSessionKey($vId);
-            $cart = Session::get($sessionKey, []);
-            if (isset($cart[$productId])) {
-                $newQuantity = $cart[$productId]['quantity'] + $quantity;
+            // Stock Check
+            if ($variant) {
+                if ($variant->stock < $newQuantity) {
+                    return ['success' => false, 'error' => __('Only :count units available for this option.', ['count' => $variant->stock])];
+                }
+            } else {
                 if (!$product->hasStock($newQuantity)) {
                     return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
                 }
-                $cart[$productId]['quantity'] = $newQuantity;
+            }
+
+            $cart->items()->updateOrCreate(
+                ['product_id' => $productId, 'variant_id' => $variantId],
+                ['quantity' => $newQuantity]
+            );
+
+            $cart->touch();
+        } else {
+            $sessionKey = $this->getSessionKey($vId);
+            $cart = Session::get($sessionKey, []);
+
+            $currentQty = isset($cart[$key]) ? $cart[$key]['quantity'] : 0;
+            $newQuantity = $currentQty + $quantity;
+
+            if ($variant) {
+                if ($variant->stock < $newQuantity) {
+                    return ['success' => false, 'error' => __('Only :count units available for this option.', ['count' => $variant->stock])];
+                }
             } else {
-                if (!$product->hasStock($quantity)) {
+                if (!$product->hasStock($newQuantity)) {
                     return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
                 }
-                $cart[$productId] = [
+            }
+
+            if (isset($cart[$key])) {
+                $cart[$key]['quantity'] = $newQuantity;
+            } else {
+                $cart[$key] = [
+                    "product_id" => $productId,
+                    "variant_id" => $variantId,
                     "quantity" => $quantity,
                 ];
             }
@@ -364,31 +367,47 @@ class CartService
         return ['success' => true, 'message' => __('Product added to cart successfully!')];
     }
 
-    public function updateQuantity(int $productId, int $quantity, $vendorId = null)
+    public function updateQuantity($key, int $quantity, $vendorId = null)
     {
         $vId = $vendorId ?? $this->getCurrentVendorId();
 
         if ($quantity <= 0) {
-            return $this->removeItem($productId, $vId);
+            return $this->removeItem($key, $vId);
         }
 
+        $parts = explode(':', $key);
+        $productId = (int) $parts[0];
+        $variantId = isset($parts[1]) ? (int) $parts[1] : null;
+
         $product = Product::find($productId);
-        if ($product && !$product->hasStock($quantity)) {
-            return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
+        $variant = $variantId ? \App\Models\ProductVariant::find($variantId) : null;
+
+        // Stock Check
+        if ($variant) {
+            if ($variant->stock < $quantity) {
+                return ['success' => false, 'error' => __('Only :count units available for this option.', ['count' => $variant->stock])];
+            }
+        } elseif ($product) {
+            if (!$product->hasStock($quantity)) {
+                return ['success' => false, 'error' => __('Only :count units available in stock.', ['count' => $product->stock])];
+            }
         }
 
         if (Auth::check()) {
             $cart = Cart::where('user_id', Auth::id())->where('vendor_id', $vId)->first();
             if ($cart) {
-                $cart->items()->where('product_id', $productId)->update(['quantity' => $quantity]);
+                $cart->items()
+                    ->where('product_id', $productId)
+                    ->where('variant_id', $variantId)
+                    ->update(['quantity' => $quantity]);
                 $cart->touch();
                 return ['success' => true, 'message' => __('Cart updated successfully')];
             }
         } else {
             $sessionKey = $this->getSessionKey($vId);
             $cart = Session::get($sessionKey, []);
-            if (isset($cart[$productId])) {
-                $cart[$productId]["quantity"] = $quantity;
+            if (isset($cart[$key])) {
+                $cart[$key]["quantity"] = $quantity;
                 Session::put($sessionKey, $cart);
                 return ['success' => true, 'message' => __('Cart updated successfully')];
             }
@@ -396,22 +415,28 @@ class CartService
         return ['success' => false];
     }
 
-    public function removeItem(int $productId, $vendorId = null)
+    public function removeItem($key, $vendorId = null)
     {
         $vId = $vendorId ?? $this->getCurrentVendorId();
+        $parts = explode(':', $key);
+        $productId = (int) $parts[0];
+        $variantId = isset($parts[1]) ? (int) $parts[1] : null;
 
         if (Auth::check()) {
             $cart = Cart::where('user_id', Auth::id())->where('vendor_id', $vId)->first();
             if ($cart) {
-                $cart->items()->where('product_id', $productId)->delete();
+                $cart->items()
+                    ->where('product_id', $productId)
+                    ->where('variant_id', $variantId)
+                    ->delete();
                 $cart->touch();
                 return ['success' => true, 'message' => __('Product removed successfully')];
             }
         } else {
             $sessionKey = $this->getSessionKey($vId);
             $cart = Session::get($sessionKey, []);
-            if (isset($cart[$productId])) {
-                unset($cart[$productId]);
+            if (isset($cart[$key])) {
+                unset($cart[$key]);
                 Session::put($sessionKey, $cart);
                 return ['success' => true, 'message' => __('Product removed successfully')];
             }
@@ -434,20 +459,27 @@ class CartService
                 'user_id' => Auth::id(),
                 'vendor_id' => $vId
             ]);
-            return $cart->items->pluck('quantity', 'product_id')->toArray();
+
+            $raw = [];
+            foreach ($cart->items as $item) {
+                $key = $item->variant_id ? "{$item->product_id}:{$item->variant_id}" : "{$item->product_id}";
+                $raw[$key] = [
+                    'product_id' => $item->product_id,
+                    'variant_id' => $item->variant_id,
+                    'quantity' => $item->quantity
+                ];
+            }
+            return $raw;
         }
 
         $sessionCart = Session::get($this->getSessionKey($vId), []);
-        $raw = [];
-        foreach ($sessionCart as $id => $details) {
-            $raw[$id] = $details['quantity'];
-        }
-        return $raw;
+        return $sessionCart; // In session we already use the key
     }
 
     public function persistToDatabase($vendorId = null)
     {
-        if (!Auth::check()) return;
+        if (!Auth::check())
+            return;
 
         if ($vendorId) {
             $this->persistSingleVendorCart($vendorId);
@@ -469,20 +501,28 @@ class CartService
     {
         $sessionKey = $this->getSessionKey($vId);
         $sessionCart = Session::get($sessionKey, []);
-        
+
         if (!empty($sessionCart)) {
             $cart = Cart::firstOrCreate([
                 'user_id' => Auth::id(),
                 'vendor_id' => $vId
             ]);
-            
-            foreach ($sessionCart as $productId => $details) {
-                $item = $cart->items()->where('product_id', $productId)->first();
+
+            foreach ($sessionCart as $key => $details) {
+                $productId = $details['product_id'];
+                $variantId = $details['variant_id'] ?? null;
+
+                $item = $cart->items()
+                    ->where('product_id', $productId)
+                    ->where('variant_id', $variantId)
+                    ->first();
+
                 if ($item) {
                     $item->update(['quantity' => $details['quantity']]);
                 } else {
                     $cart->items()->create([
                         'product_id' => $productId,
+                        'variant_id' => $variantId,
                         'quantity' => $details['quantity']
                     ]);
                 }
@@ -495,7 +535,7 @@ class CartService
     {
         $vId = $vendorId ?? $this->getCurrentVendorId();
         $sessionKey = $this->getSessionKey($vId);
-        
+
         Session::forget($sessionKey);
         Session::forget('coupon'); // Coupons are currently global per session, might need vendor-specific coupons later
 

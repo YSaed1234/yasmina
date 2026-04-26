@@ -12,9 +12,9 @@ class WishlistService
     {
         $user = Auth::user();
         $wishlist = Wishlist::where('user_id', $user->id)
-                            ->where('product_id', $productId)
-                            ->where('vendor_id', $vendorId)
-                            ->first();
+            ->where('product_id', $productId)
+            ->where('vendor_id', $vendorId)
+            ->first();
 
         if ($wishlist) {
             $wishlist->delete();

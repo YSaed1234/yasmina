@@ -111,22 +111,47 @@ class CheckoutService
                 'promotional_discount_amount' => $cartData['promotionalDiscount'],
             ]);
 
-            foreach ($cartData['cart'] as $id => $details) {
-                $product = \App\Models\Product::lockForUpdate()->find($id);
-                if (!$product || !$product->hasStock($details['quantity'])) {
-                    throw new \Exception(__('One or more items in your cart are no longer available in the requested quantity.'));
+            foreach ($cartData['cart'] as $key => $details) {
+                $productId = $details['product_id'];
+                $variantId = $details['variant_id'] ?? null;
+
+                $product = \App\Models\Product::lockForUpdate()->find($productId);
+                $variant = $variantId ? \App\Models\ProductVariant::lockForUpdate()->find($variantId) : null;
+
+                if (!$product) {
+                    throw new \Exception(__('Product no longer exists.'));
+                }
+
+                // Stock Validation
+                if ($variant) {
+                    if ($variant->stock < $details['quantity']) {
+                        throw new \Exception(__('Insufficient stock for :product (:color :size)', [
+                            'product' => $product->name,
+                            'color' => $variant->color,
+                            'size' => $variant->size
+                        ]));
+                    }
+                } else {
+                    if (!$product->hasStock($details['quantity'])) {
+                        throw new \Exception(__('Insufficient stock for :product', ['product' => $product->name]));
+                    }
                 }
 
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'product_id' => $id,
+                    'product_id' => $productId,
+                    'variant_id' => $variantId,
                     'quantity' => $details['quantity'],
                     'price' => $details['price'],
                     'is_gift' => $details['is_gift'] ?? false,
                 ]);
 
                 // Decrement stock
-                $product->decrement('stock', $details['quantity']);
+                if ($variant) {
+                    $variant->decrement('stock', $details['quantity']);
+                } else {
+                    $product->decrement('stock', $details['quantity']);
+                }
             }
 
             if ($cartData['coupon']) {

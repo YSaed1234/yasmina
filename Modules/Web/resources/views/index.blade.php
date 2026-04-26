@@ -147,11 +147,15 @@
                                 @endif
                                 @auth
                                     @php $isFavorited = auth()->user()->wishlist()->where('product_id', $product->id)->exists(); @endphp
-                                    <button onclick="toggleWishlist({{ $product->id }}, this)" class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-all group/wish">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 {{ $isFavorited ? 'text-red-500 fill-current' : 'text-gray-400 group-hover/wish:text-red-500' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                        </svg>
-                                    </button>
+                                    <form action="{{ route('web.wishlist.toggle', $product->id) }}" method="POST" class="absolute top-4 right-4 z-30">
+                                        @csrf
+                                        <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}">
+                                        <button type="submit" class="w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-all group/wish">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 {{ $isFavorited ? 'text-red-500 fill-current' : 'text-gray-400 group-hover/wish:text-red-500' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                            </svg>
+                                        </button>
+                                    </form>
                                 @endauth
                             </div>
                             <div class="p-6 flex-1 flex flex-col justify-between">
@@ -192,8 +196,8 @@
                                     </div>
                                     <form action="{{ route('web.cart.add', ['id' => $product->id, 'vendor_id' => request('vendor_id')]) }}" method="POST">
                                         @csrf
-                                        <button type="submit" @if($product->stock <= 0) disabled @endif class="w-full py-3 {{ $product->stock <= 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-50 text-gray-700 hover:bg-primary hover:text-white hover:shadow-lg hover:shadow-primary/20' }} rounded-2xl text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn">
-                                            @if($product->stock <= 0)
+                                        <button type="submit" @if($product->total_stock <= 0) disabled @endif class="w-full py-3 {{ $product->total_stock <= 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-50 text-gray-700 hover:bg-primary hover:text-white hover:shadow-lg hover:shadow-primary/20' }} rounded-2xl text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn">
+                                            @if($product->total_stock <= 0)
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                                                 </svg>
@@ -276,11 +280,15 @@
                                                 @endif
                                                 @auth
                                                     @php $isFavorited = auth()->user()->wishlist()->where('product_id', $product->id)->exists(); @endphp
-                                                    <button onclick="toggleWishlist({{ $product->id }}, this)" class="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:bg-white transition-all group/wish">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {{ $isFavorited ? 'text-red-500 fill-current' : 'text-gray-400 group-hover/wish:text-red-500' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                                        </svg>
-                                                    </button>
+                                                    <form action="{{ route('web.wishlist.toggle', $product->id) }}" method="POST" class="absolute top-3 right-3 z-30">
+                                                        @csrf
+                                                        <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}">
+                                                        <button type="submit" class="w-8 h-8 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:bg-white transition-all group/wish">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {{ $isFavorited ? 'text-red-500 fill-current' : 'text-gray-400 group-hover/wish:text-red-500' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                                            </svg>
+                                                        </button>
+                                                    </form>
                                                 @endauth
                                                 <div class="absolute inset-0 bg-black/0 group-hover:bg-primary/5 pointer-events-none transition-all duration-500"></div>
                                             </div>

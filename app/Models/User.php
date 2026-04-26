@@ -65,6 +65,24 @@ class User extends Authenticatable
         return $this->hasMany(PointTransaction::class);
     }
 
+    public function walletTransactions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(WalletTransaction::class);
+    }
+
+    public function addWalletBalance(float $amount, string $description = null, $reference = null)
+    {
+        $this->increment('balance', $amount);
+
+        return $this->walletTransactions()->create([
+            'amount' => $amount,
+            'type' => 'credit',
+            'description' => $description,
+            'reference_type' => $reference ? get_class($reference) : null,
+            'reference_id' => $reference ? $reference->id : null,
+        ]);
+    }
+
     public function convertPointsToBalance(int $pointsToConvert)
     {
         $minPoints = (int) PointSetting::getValue('min_points_to_convert', 100);
@@ -82,7 +100,7 @@ class User extends Authenticatable
 
         return \DB::transaction(function () use ($pointsToConvert, $moneyValue) {
             $this->subtractPoints($pointsToConvert, 'spending', __('Converted to wallet balance'));
-            $this->increment('balance', $moneyValue);
+            $this->addWalletBalance($moneyValue, __('Points conversion'));
 
             return $moneyValue;
         });
@@ -141,6 +159,11 @@ class User extends Authenticatable
     public function wishlist(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Wishlist::class);
+    }
+
+    public function returnRequests(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ReturnRequest::class);
     }
 
     public function vendorNotifications($vendorId = null)

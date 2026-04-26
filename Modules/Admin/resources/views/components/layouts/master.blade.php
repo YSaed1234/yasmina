@@ -176,6 +176,9 @@
                                 <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.orders.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
                                     <span x-show="sidebarOpen">• {{ __('Orders') }}</span>
                                 </a>
+                                <a href="{{ route('admin.returns.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.returns.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                    <span x-show="sidebarOpen">• {{ __('Return Requests') }}</span>
+                                </a>
                             @endcan
                             @can('manage coupons')
                                 <a href="{{ route('admin.coupons.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.coupons.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
