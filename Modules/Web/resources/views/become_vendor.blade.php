@@ -3,7 +3,7 @@
 
     <div class="relative min-h-[60vh] flex items-center justify-center py-32 overflow-hidden bg-white">
         <!-- Background Elements -->
-        <div class="absolute top-0 right-0 w-1/3 h-full bg-rose-50/30 -skew-x-12 translate-x-1/2"></div>
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-yasmina-50/30 -skew-x-12 translate-x-1/2"></div>
         <div class="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full -translate-x-1/2 translate-y-1/2 blur-3xl"></div>
 
         <div class="container mx-auto px-6 relative z-10">
@@ -17,7 +17,7 @@
                     </p>
                 </div>
 
-                <div class="bg-white p-10 md:p-16 rounded-[3rem] shadow-2xl shadow-rose-100/50 border border-rose-50">
+                <div class="bg-white p-10 md:p-16 rounded-[3rem] shadow-2xl shadow-yasmina-100/50 border border-yasmina-50">
                     @if(session('success'))
                         <div class="mb-10 p-6 bg-green-50 text-green-700 rounded-3xl border border-green-100 flex items-center gap-4">
                             <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center shrink-0">
@@ -92,7 +92,7 @@
                             <label class="text-sm font-bold text-gray-700 uppercase tracking-widest">{{ __('Store Logo') }}</label>
                             <div class="relative group">
                                 <input type="file" name="logo" accept="image/*"
-                                    class="w-full px-6 py-4 bg-gray-50 border border-dashed border-rose-200 rounded-2xl cursor-pointer hover:bg-rose-50 transition-all text-sm text-gray-500 file:hidden">
+                                    class="w-full px-6 py-4 bg-gray-50 border border-dashed border-yasmina-200 rounded-2xl cursor-pointer hover:bg-yasmina-50 transition-all text-sm text-gray-500 file:hidden">
                                 <div class="absolute inset-y-0 right-6 flex items-center pointer-events-none">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />

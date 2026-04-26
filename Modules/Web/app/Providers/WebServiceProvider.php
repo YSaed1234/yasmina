@@ -38,14 +38,16 @@ class WebServiceProvider extends ModuleServiceProvider
     {
         parent::boot();
         
-        \Illuminate\Support\Facades\View::composer(['web::*'], function ($view) {
-            $vendorParam = request()->get('vendor_id');
-            $currentVendor = null;
+        \Illuminate\Support\Facades\View::composer(['web::*', 'layouts.guest', 'auth.*'], function ($view) {
+            $currentVendor = request()->attributes->get('current_vendor');
             
-            if ($vendorParam) {
-                $currentVendor = \App\Models\Vendor::where('id', $vendorParam)
-                    ->orWhere('slug', $vendorParam)
-                    ->first();
+            if (!$currentVendor) {
+                $vendorIdentifier = request()->get('vendor_id') ?: session('current_vendor_id');
+                if ($vendorIdentifier) {
+                    $currentVendor = \App\Models\Vendor::where('id', $vendorIdentifier)
+                        ->orWhere('slug', $vendorIdentifier)
+                        ->first();
+                }
             }
 
             $categoriesQuery = \App\Models\Category::orderBy('rank');

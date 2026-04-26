@@ -42,26 +42,38 @@
 
         <style>
             :root {
+                /* Dynamic Vendor Theme if applicable */
+                @if(auth('admin')->check() && auth('admin')->user()->vendor)
+                    --yasmina-primary-base: {{ auth('admin')->user()->vendor->primary_color ?? '#865d58' }};
+                    --yasmina-secondary-base: {{ auth('admin')->user()->vendor->secondary_color ?? '#d6a6a1' }};
+                @else
+                    --yasmina-primary-base: #865d58;
+                    --yasmina-secondary-base: #d6a6a1;
+                @endif
+
                 /* Yasmina Rose (Default) */
-                --yasmina-50: #fdf8f7;
-                --yasmina-100: #f9eded;
-                --yasmina-200: #f2d8d5;
-                --yasmina-300: #e5bcba;
-                --yasmina-400: #d6a6a1;
-                --yasmina-500: #865d58;
-                --yasmina-600: #75514c;
-                --yasmina-700: #634541;
-                --yasmina-800: #523a37;
-                --yasmina-900: #422f2c;
+                --yasmina-50: color-mix(in srgb, var(--yasmina-primary-base), white 95%);
+                --yasmina-100: color-mix(in srgb, var(--yasmina-primary-base), white 90%);
+                --yasmina-200: color-mix(in srgb, var(--yasmina-primary-base), white 80%);
+                --yasmina-300: color-mix(in srgb, var(--yasmina-primary-base), white 60%);
+                --yasmina-400: var(--yasmina-secondary-base);
+                --yasmina-500: var(--yasmina-primary-base);
+                --yasmina-600: color-mix(in srgb, var(--yasmina-primary-base), black 10%);
+                --yasmina-700: color-mix(in srgb, var(--yasmina-primary-base), black 20%);
+                --yasmina-800: color-mix(in srgb, var(--yasmina-primary-base), black 30%);
+                --yasmina-900: color-mix(in srgb, var(--yasmina-primary-base), black 40%);
             }
 
             [data-theme="barbie"] {
+                --yasmina-primary-base: #e0218a;
+                --yasmina-secondary-base: #ff64b1;
+                
                 --yasmina-50: #fff0f7;
                 --yasmina-100: #ffe4f2;
                 --yasmina-200: #ffc9e7;
                 --yasmina-300: #ff9ed1;
-                --yasmina-400: #ff64b1;
-                --yasmina-500: #e0218a;
+                --yasmina-400: var(--yasmina-secondary-base);
+                --yasmina-500: var(--yasmina-primary-base);
                 --yasmina-600: #c2146e;
                 --yasmina-700: #a20e58;
                 --yasmina-800: #86104a;
@@ -71,50 +83,76 @@
             body {
                 font-family: 'Outfit', sans-serif;
             }
+
+            /* Fix for sidebar labels appearing when collapsed */
+            aside:not(.w-64) span,
+            aside:not(.w-64) svg:not(.shrink-0) {
+                display: none !important;
+            }
+            
+            [x-cloak] { display: none !important; }
         </style>
+        @stack('styles')
     </head>
 
-    <body class="bg-yasmina-50/30">
+    <body class="bg-yasmina-50/30" x-data="{ 
+        sidebarOpen: localStorage.getItem('admin-sidebar') !== 'false',
+        toggleSidebar() {
+            this.sidebarOpen = !this.sidebarOpen;
+            localStorage.setItem('admin-sidebar', this.sidebarOpen);
+        }
+    }">
         <div class="min-h-screen flex">
             <!-- Sidebar -->
-            <aside class="w-64 bg-white border-x border-yasmina-100 shadow-sm flex flex-col h-screen sticky top-0">
-                <div class="p-6 border-b border-yasmina-50 flex items-center justify-center">
-                    <img src="{{ asset('assets/logo.png') }}" alt="{{ __('Yasmina Admin') }}" class="h-12 w-auto">
+            <aside 
+                class="bg-white border-x border-yasmina-100 shadow-sm flex flex-col h-screen sticky top-0 transition-all duration-300 overflow-hidden shrink-0"
+                :class="sidebarOpen ? 'w-64' : 'w-24'">
+                
+                <!-- Toggle Button -->
+                <button @click="toggleSidebar()" 
+                    class="absolute -end-0 top-10 w-8 h-8 bg-white border border-yasmina-100 rounded-s-xl flex items-center justify-center text-yasmina-400 hover:text-yasmina-600 shadow-sm z-50 transition-all hover:w-10">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform duration-300" :class="{'rotate-180': !sidebarOpen}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                </button>
+
+                <div class="p-6 border-b border-yasmina-50 flex items-center justify-center h-28 overflow-hidden">
+                    <img src="{{ asset('assets/logo.png') }}" alt="{{ __('Yasmina Admin') }}" class="h-12 w-auto shrink-0 transition-all" :class="sidebarOpen ? 'scale-100' : 'scale-75'">
                 </div>
                 <nav class="mt-6 px-4 space-y-2 flex-1">
                     <a href="{{ route('admin.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.index') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
-                        {{ __('Dashboard') }}
+                        <span x-show="sidebarOpen" x-transition class="truncate text-sm">{{ __('Dashboard') }}</span>
                     </a>
                     <!-- Catalog Management -->
                     <div x-data="{ open: {{ request()->routeIs('admin.categories.*') || request()->routeIs('admin.products.*') || request()->routeIs('admin.vendors.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                 </svg>
-                                <span class="font-bold text-sm">{{ __('Catalog') }}</span>
+                                <span x-show="sidebarOpen" class="font-bold text-sm truncate">{{ __('Catalog') }}</span>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-                        <div x-show="open" x-collapse class="mt-1 space-y-1 px-4">
+                        <div x-show="open && sidebarOpen" x-collapse class="mt-1 space-y-1 px-4">
                             @can('manage categories')
                                 <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.categories.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Categories') }}
+                                    <span x-show="sidebarOpen">• {{ __('Categories') }}</span>
                                 </a>
                             @endcan
                             @can('manage products')
                                 <a href="{{ route('admin.products.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.products.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ auth()->user()->vendor_id ? __('Your Items') : __('Products') }}
+                                    <span x-show="sidebarOpen">• {{ auth()->user()->vendor_id ? __('Your Items') : __('Products') }}</span>
                                 </a>
                             @endcan
                             @can('manage vendors')
                                 <a href="{{ route('admin.vendors.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.vendors.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Vendors') }}
+                                    <span x-show="sidebarOpen">• {{ __('Vendors') }}</span>
                                 </a>
                             @endcan
                         </div>
@@ -124,35 +162,35 @@
                     <div x-data="{ open: {{ request()->routeIs('admin.orders.*') || request()->routeIs('admin.coupons.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                 </svg>
-                                <span class="font-bold text-sm">{{ __('Sales') }}</span>
+                                <span x-show="sidebarOpen" class="font-bold text-sm truncate">{{ __('Sales') }}</span>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-                        <div x-show="open" x-collapse class="mt-1 space-y-1 px-4">
+                        <div x-show="open && sidebarOpen" x-collapse class="mt-1 space-y-1 px-4">
                             @can('manage orders')
                                 <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.orders.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Orders') }}
+                                    <span x-show="sidebarOpen">• {{ __('Orders') }}</span>
                                 </a>
                             @endcan
                             @can('manage coupons')
                                 <a href="{{ route('admin.coupons.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.coupons.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Coupons') }}
+                                    <span x-show="sidebarOpen">• {{ __('Coupons') }}</span>
                                 </a>
                                 <a href="{{ route('admin.promotions.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.promotions.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Promotions') }}
+                                    <span x-show="sidebarOpen">• {{ __('Promotions') }}</span>
                                 </a>
                             @endcan
                             @can('manage vendors')
                                 <a href="{{ route('admin.finances.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.finances.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Financial Reports') }}
+                                    <span x-show="sidebarOpen">• {{ __('Financial Reports') }}</span>
                                 </a>
                                 <a href="{{ route('admin.vendor_payments.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.vendor_payments.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Vendor Payments') }}
+                                    <span x-show="sidebarOpen">• {{ __('Vendor Payments') }}</span>
                                 </a>
                             @endcan
                         </div>
@@ -162,29 +200,29 @@
                     <div x-data="{ open: {{ request()->routeIs('admin.users.*') || request()->routeIs('admin.addresses.*') || request()->routeIs('admin.contact_requests.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                                 </svg>
-                                <span class="font-bold text-sm">{{ __('Customers') }}</span>
+                                <span x-show="sidebarOpen" class="font-bold text-sm truncate">{{ __('Customers') }}</span>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-                        <div x-show="open" x-collapse class="mt-1 space-y-1 px-4">
+                        <div x-show="open && sidebarOpen" x-collapse class="mt-1 space-y-1 px-4">
                             @can('manage users')
                                 <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.users.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Users List') }}
+                                    <span x-show="sidebarOpen">• {{ __('Users List') }}</span>
                                 </a>
                             @endcan
                             @can('manage addresses')
                                 <a href="{{ route('admin.addresses.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.addresses.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Addresses') }}
+                                    <span x-show="sidebarOpen">• {{ __('Addresses') }}</span>
                                 </a>
                             @endcan
                             @can('manage contact requests')
                                 <a href="{{ route('admin.contact_requests.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.contact_requests.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Contact Requests') }}
+                                    <span x-show="sidebarOpen">• {{ __('Contact Requests') }}</span>
                                 </a>
                             @endcan
                         </div>
@@ -194,23 +232,23 @@
                     <div x-data="{ open: {{ request()->routeIs('admin.governorates.*') || request()->routeIs('admin.regions.*') || request()->routeIs('admin.shipping_zones.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
-                                <span class="font-bold text-sm">{{ __('Shipping') }}</span>
+                                <span x-show="sidebarOpen" class="font-bold text-sm truncate">{{ __('Shipping') }}</span>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-                        <div x-show="open" x-collapse class="mt-1 space-y-1 px-4">
+                        <div x-show="open && sidebarOpen" x-collapse class="mt-1 space-y-1 px-4">
                             @can('manage shipping')
                                 <a href="{{ route('admin.governorates.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.governorates.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Governorates') }}
+                                    <span x-show="sidebarOpen">• {{ __('Governorates') }}</span>
                                 </a>
                                 <a href="{{ route('admin.regions.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.regions.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Regions') }}
+                                    <span x-show="sidebarOpen">• {{ __('Regions') }}</span>
                                 </a>
                             @endcan
                         </div>
@@ -220,16 +258,16 @@
                     <div x-data="{ open: {{ request()->routeIs('admin.slides.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
                                 </svg>
-                                <span class="font-bold text-sm">{{ __('Appearance') }}</span>
+                                <span x-show="sidebarOpen" class="font-bold text-sm truncate">{{ __('Appearance') }}</span>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-                        <div x-show="open" x-collapse class="mt-1 space-y-1 px-4">
+                        <div x-show="open && sidebarOpen" x-collapse class="mt-1 space-y-1 px-4">
                             @can('manage slides')
                                 <a href="{{ route('admin.slides.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.slides.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
                                     • {{ __('Slider Settings') }}
@@ -242,17 +280,17 @@
                     <div x-data="{ open: {{ request()->routeIs('admin.currencies.*') || request()->routeIs('admin.roles.*') || request()->routeIs('admin.settings.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
-                                <span class="font-bold text-sm">{{ __('Settings') }}</span>
+                                <span x-show="sidebarOpen" class="font-bold text-sm truncate">{{ __('Settings') }}</span>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-                        <div x-show="open" x-collapse class="mt-1 space-y-1 px-4">
+                        <div x-show="open && sidebarOpen" x-collapse class="mt-1 space-y-1 px-4">
                             @can('manage currencies')
                                 <a href="{{ route('admin.currencies.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.currencies.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
                                     • {{ __('Currencies') }}

@@ -9,7 +9,7 @@
 
         @if($promotions->count() > 0)
         <!-- Promotions Section -->
-        <section class="py-24 bg-rose-50/50 relative overflow-hidden">
+        <section class="py-24 bg-yasmina-50/50 relative overflow-hidden">
             <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
             <div class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
             
@@ -22,9 +22,9 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                     @foreach($promotions as $promotion)
-                        <div class="group relative bg-white rounded-[2.5rem] p-8 soft-shadow border border-rose-100 hover:border-primary/20 transition-all duration-500 overflow-hidden">
+                        <div class="group relative bg-white rounded-[2.5rem] p-8 soft-shadow border border-yasmina-100 hover:border-primary/20 transition-all duration-500 overflow-hidden">
                             <!-- Background Pattern -->
-                            <div class="absolute -top-10 -right-10 w-40 h-40 bg-rose-50 rounded-full group-hover:scale-150 transition-transform duration-700 opacity-50"></div>
+                            <div class="absolute -top-10 -right-10 w-40 h-40 bg-yasmina-50 rounded-full group-hover:scale-150 transition-transform duration-700 opacity-50"></div>
                             
                             <div class="relative z-10">
                                 <div class="flex justify-between items-start mb-8">
@@ -47,7 +47,7 @@
                                     @endif
                                 </p>
 
-                                <div class="flex items-center gap-6 mb-8 p-4 bg-rose-50/50 rounded-3xl border border-rose-100/50">
+                                <div class="flex items-center gap-6 mb-8 p-4 bg-yasmina-50/50 rounded-3xl border border-yasmina-100/50">
                                     <div class="flex -space-x-4">
                                         @if($promotion->buyProduct && $promotion->buyProduct->image)
                                             <img src="{{ asset('storage/' . $promotion->buyProduct->image) }}" class="w-12 h-12 rounded-2xl object-cover ring-4 ring-white" alt="">
@@ -93,7 +93,7 @@
                         <p class="mt-4 text-gray-600 text-lg">{{ __('Hand-selected pieces from our latest collections.') }}</p>
                     </div>
                     <div class="flex gap-2">
-                        <a href="{{ route('web.shop') }}" class="px-6 py-3 bg-rose-50 text-primary rounded-xl font-bold hover:bg-primary hover:text-white transition-all duration-300">
+                        <a href="{{ route('web.shop') }}" class="px-6 py-3 bg-yasmina-50 text-primary rounded-xl font-bold hover:bg-primary hover:text-white transition-all duration-300">
                             {{ __('View All Products') }}
                         </a>
                     </div>
@@ -101,8 +101,8 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     @forelse($featuredProducts as $product)
-                        <div class="group relative bg-white rounded-3xl overflow-hidden soft-shadow transition-all duration-500 border border-rose-50 hover:-translate-y-2 flex flex-col h-full">
-                            <div class="aspect-square w-full overflow-hidden bg-rose-50 relative">
+                        <div class="group relative bg-white rounded-3xl overflow-hidden soft-shadow transition-all duration-500 border border-yasmina-50 hover:-translate-y-2 flex flex-col h-full">
+                            <div class="aspect-square w-full overflow-hidden bg-yasmina-50 relative">
                                 <a href="{{ route('web.products.show', [$product->id, 'vendor_id' => $product->vendor_id]) }}" class="block w-full h-full">
                                     @if($product->image)
                                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -210,7 +210,7 @@
                             </div>
                         </div>
                     @empty
-                        <div class="col-span-full text-center py-20 bg-rose-50/30 rounded-3xl border-2 border-dashed border-rose-100">
+                        <div class="col-span-full text-center py-20 bg-yasmina-50/30 rounded-3xl border-2 border-dashed border-yasmina-100">
                             <p class="text-primary opacity-60">{{ __('No products available yet.') }}</p>
                         </div>
                     @endforelse
@@ -222,7 +222,7 @@
         <div id="categories">
             @foreach($categories as $category)
                 @if($category->products->count() > 0)
-                    <section id="category-{{ $category->id }}" class="py-20 border-t border-rose-50">
+                    <section id="category-{{ $category->id }}" class="py-20 border-t border-yasmina-50">
                         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <div class="flex justify-between items-end mb-10">
                                 <div>
@@ -235,7 +235,7 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                                     @foreach($category->products->where('vendor_id', $vendor?->id)->sortBy('rank')->take(4) as $product)
                                         <div class="group relative flex flex-col h-full">
-                                            <div class="aspect-square w-full rounded-2xl overflow-hidden bg-rose-50 shadow-sm transition-all duration-500 hover:-translate-y-1 relative">
+                                            <div class="aspect-square w-full rounded-2xl overflow-hidden bg-yasmina-50 shadow-sm transition-all duration-500 hover:-translate-y-1 relative">
                                                 <a href="{{ route('web.products.show', [$product->id, 'vendor_id' => $product->vendor_id]) }}" class="block w-full h-full">
                                                     @if($product->image)
                                                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">

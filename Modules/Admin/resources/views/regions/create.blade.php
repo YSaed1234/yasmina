@@ -56,7 +56,7 @@
                                class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
                     </div>
 
-                    <div class="flex items-center gap-4 p-6 bg-rose-50/30 rounded-3xl border border-rose-100">
+                    <div class="flex items-center gap-4 p-6 bg-yasmina-50/30 rounded-3xl border border-yasmina-100">
                         <div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full shadow-inner bg-gray-200 has-[:checked]:bg-primary">
                             <input type="checkbox" name="is_active" id="is_active" class="absolute w-6 h-6 bg-white border-4 border-gray-200 rounded-full appearance-none cursor-pointer checked:right-0 right-6 transition-all duration-200" {{ old('is_active', $region->is_active ?? true) ? 'checked' : '' }}>
                         </div>

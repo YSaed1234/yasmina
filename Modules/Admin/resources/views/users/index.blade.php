@@ -52,7 +52,7 @@
                 </thead>
                 <tbody>
                     @foreach($users as $user)
-                        <tr class="bg-gray-50/50 hover:bg-rose-50/30 transition-colors rounded-2xl">
+                        <tr class="bg-gray-50/50 hover:bg-yasmina-50/30 transition-colors rounded-2xl">
                         <td class="py-6 px-6 text-center text-sm font-bold text-gray-400 first:rounded-l-2xl">
                             {{ $loop->iteration + ($users->firstItem() - 1) }}
                         </td>
@@ -61,7 +61,7 @@
                                     @if($user->profile_image)
                                         <img src="{{ asset('storage/' . $user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
                                     @else
-                                        <div class="w-full h-full bg-rose-50 flex items-center justify-center text-primary font-bold text-xs uppercase">
+                                        <div class="w-full h-full bg-yasmina-50 flex items-center justify-center text-primary font-bold text-xs uppercase">
                                             {{ substr($user->name, 0, 2) }}
                                         </div>
                                     @endif

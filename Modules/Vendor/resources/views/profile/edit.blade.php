@@ -1,4 +1,24 @@
 <x-vendor::layouts.master>
+    @push('styles')
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+        <style>
+            .ql-editor {
+                min-height: 200px;
+                font-family: inherit;
+                font-size: 1rem;
+            }
+            .ql-toolbar.ql-snow {
+                border: none;
+                background: #f9fafb;
+                border-radius: 1rem 1rem 0 0;
+            }
+            .ql-container.ql-snow {
+                border: none;
+                background: #f9fafb;
+                border-radius: 0 0 1rem 1rem;
+            }
+        </style>
+    @endpush
     <div class="mb-10 flex justify-between items-center">
         <div>
             <h1 class="text-3xl font-black text-gray-900 tracking-tight">{{ __('Edit Profile') }}</h1>
@@ -120,7 +140,7 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <!-- Order Threshold Discount -->
-                    <div class="p-8 bg-rose-50/30 rounded-3xl border border-rose-50 space-y-6">
+                    <div class="p-8 bg-yasmina-50/30 rounded-3xl border border-yasmina-50 space-y-6">
                         <h4 class="font-bold text-gray-900 flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -204,6 +224,38 @@
                             class="w-full px-6 py-4 bg-white border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900" placeholder="0.00">
                     </div>
                 </div>
+
+                <!-- Theme Settings -->
+                <div class="mt-10 p-8 bg-amber-50/30 rounded-3xl border border-amber-50 space-y-6">
+                    <h4 class="font-bold text-gray-900 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                        </svg>
+                        {{ __('Theme & Branding Colors') }}
+                    </h4>
+                    <p class="text-xs text-gray-500">{{ __('Customize the colors of your storefront and dashboard.') }}</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Primary Color') }}</label>
+                            <div class="flex items-center gap-4">
+                                <input type="color" name="primary_color" value="{{ old('primary_color', $vendor->primary_color ?? '#865d58') }}" 
+                                    class="h-14 w-24 rounded-2xl border-none p-1 cursor-pointer bg-white shadow-sm">
+                                <input type="text" value="{{ old('primary_color', $vendor->primary_color ?? '#865d58') }}" readonly 
+                                    class="flex-1 px-6 py-4 bg-white border-none rounded-2xl font-mono text-gray-500 text-sm">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Secondary Color') }}</label>
+                            <div class="flex items-center gap-4">
+                                <input type="color" name="secondary_color" value="{{ old('secondary_color', $vendor->secondary_color ?? '#d6a6a1') }}" 
+                                    class="h-14 w-24 rounded-2xl border-none p-1 cursor-pointer bg-white shadow-sm">
+                                <input type="text" value="{{ old('secondary_color', $vendor->secondary_color ?? '#d6a6a1') }}" readonly 
+                                    class="flex-1 px-6 py-4 bg-white border-none rounded-2xl font-mono text-gray-500 text-sm">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Existing Section: About Us & Social Links -->
@@ -213,16 +265,30 @@
                     
                     <div>
                         <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('About Us (Arabic)') }}</label>
-                        <textarea name="about_ar" rows="6" 
-                            class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900">{{ old('about_ar', $vendor->about_ar) }}</textarea>
+                        <div id="editor_about_ar" class="bg-gray-50 rounded-2xl"></div>
+                        <input type="hidden" name="about_ar" id="about_ar" value="{{ old('about_ar', $vendor->about_ar) }}">
                         @error('about_ar') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                         <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('About Us (English)') }}</label>
-                        <textarea name="about_en" rows="6" 
-                            class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900">{{ old('about_en', $vendor->about_en) }}</textarea>
+                        <div id="editor_about_en" class="bg-gray-50 rounded-2xl"></div>
+                        <input type="hidden" name="about_en" id="about_en" value="{{ old('about_en', $vendor->about_en) }}">
                         @error('about_en') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="pt-6 border-t border-gray-50">
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Return Policy (Arabic)') }}</label>
+                        <div id="editor_return_policy_ar" class="bg-gray-50 rounded-2xl"></div>
+                        <input type="hidden" name="return_policy_ar" id="return_policy_ar" value="{{ old('return_policy_ar', $vendor->return_policy_ar) }}">
+                        @error('return_policy_ar') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Return Policy (English)') }}</label>
+                        <div id="editor_return_policy_en" class="bg-gray-50 rounded-2xl"></div>
+                        <input type="hidden" name="return_policy_en" id="return_policy_en" value="{{ old('return_policy_en', $vendor->return_policy_en) }}">
+                        @error('return_policy_en') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
                     </div>
                 </div>
 
@@ -281,4 +347,37 @@
             </div>
         </form>
     </div>
+    @push('scripts')
+        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+        <script>
+            function initQuill(editorId, inputId) {
+                var quill = new Quill('#' + editorId, {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            [{ 'size': ['small', false, 'large', 'huge'] }],
+                            [{ 'color': [] }, { 'background': [] }],
+                            ['bold', 'italic', 'underline'],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            ['clean']
+                        ]
+                    }
+                });
+
+                var input = document.getElementById(inputId);
+                quill.root.innerHTML = input.value;
+
+                quill.on('text-change', function() {
+                    input.value = quill.root.innerHTML;
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                initQuill('editor_about_ar', 'about_ar');
+                initQuill('editor_about_en', 'about_en');
+                initQuill('editor_return_policy_ar', 'return_policy_ar');
+                initQuill('editor_return_policy_en', 'return_policy_en');
+            });
+        </script>
+    @endpush
 </x-vendor::layouts.master>

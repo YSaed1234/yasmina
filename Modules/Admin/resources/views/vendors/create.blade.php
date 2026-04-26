@@ -90,7 +90,7 @@
                 <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-50 pt-8">
                     <h3 class="md:col-span-2 text-sm font-bold text-gray-900 uppercase tracking-widest">{{ __('Promotional Settings') }}</h3>
                     
-                    <div class="p-6 bg-rose-50/30 rounded-2xl border border-rose-50 space-y-4">
+                    <div class="p-6 bg-yasmina-50/30 rounded-2xl border border-yasmina-50 space-y-4">
                         <label class="block text-xs font-bold text-gray-900 uppercase tracking-widest">{{ __('Order Threshold Discount') }}</label>
                         <div class="grid grid-cols-1 gap-4">
                             <input type="number" step="0.01" name="order_threshold" value="{{ old('order_threshold') }}" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="{{ __('Min Order Amount') }}">
@@ -124,6 +124,26 @@
                     <input type="number" step="0.01" name="free_shipping_threshold" value="{{ old('free_shipping_threshold') }}" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="{{ __('Min Order for Free Shipping') }}">
                 </div>
 
+                <div class="md:col-span-2 p-6 bg-amber-50/30 rounded-2xl border border-amber-50 space-y-4">
+                    <label class="block text-xs font-bold text-gray-900 uppercase tracking-widest">{{ __('Theme Settings') }}</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-2">{{ __('Primary Color') }}</label>
+                            <div class="flex items-center gap-4">
+                                <input type="color" name="primary_color" value="{{ old('primary_color', '#e11d48') }}" class="h-12 w-20 rounded-lg border-none p-1 cursor-pointer bg-white shadow-sm">
+                                <input type="text" value="{{ old('primary_color', '#e11d48') }}" readonly class="flex-1 px-4 py-3 bg-white border border-gray-100 rounded-xl text-sm font-mono text-gray-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-2">{{ __('Secondary Color') }}</label>
+                            <div class="flex items-center gap-4">
+                                <input type="color" name="secondary_color" value="{{ old('secondary_color', '#4f46e5') }}" class="h-12 w-20 rounded-lg border-none p-1 cursor-pointer bg-white shadow-sm">
+                                <input type="text" value="{{ old('secondary_color', '#4f46e5') }}" readonly class="flex-1 px-4 py-3 bg-white border border-gray-100 rounded-xl text-sm font-mono text-gray-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="md:col-span-2 p-6 bg-indigo-50/30 rounded-2xl border border-indigo-50 space-y-4">
                     <label class="block text-xs font-bold text-gray-900 uppercase tracking-widest">{{ __('Commission Settings (Yasmina Share)') }}</label>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -153,4 +173,13 @@
             </div>
         </form>
     </div>
+    @push('scripts')
+    <script>
+        document.querySelectorAll('input[type="color"]').forEach(input => {
+            input.addEventListener('input', function() {
+                this.nextElementSibling.value = this.value;
+            });
+        });
+    </script>
+    @endpush
 </x-admin::layouts.master>

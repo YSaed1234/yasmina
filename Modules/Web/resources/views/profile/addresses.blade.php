@@ -9,7 +9,7 @@
 
                 <!-- Main Content -->
                 <div class="lg:col-span-3">
-                    <div class="bg-white rounded-3xl p-10 shadow-sm border border-rose-50">
+                    <div class="bg-white rounded-3xl p-10 shadow-sm border border-yasmina-50">
                         <div class="flex justify-between items-center mb-10">
                             <h1 class="text-3xl font-bold text-gray-900">{{ __('My Addresses') }}</h1>
                             <button onclick="toggleAddressForm()" class="px-6 py-3 bg-primary text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary/20 hover:opacity-90 transition-all">
@@ -17,27 +17,27 @@
                             </button>
                         </div>
                         <!-- Address Form (Hidden by default) -->
-                        <div id="addressForm" class="hidden mb-12 bg-rose-50/30 p-8 rounded-[2.5rem] border border-rose-100">
+                        <div id="addressForm" class="hidden mb-12 bg-yasmina-50/30 p-8 rounded-[2.5rem] border border-yasmina-100">
                             <h3 class="text-xl font-bold text-gray-900 mb-6">{{ __('Add a New Address') }}</h3>
                             <form action="{{ route('web.profile.addresses.store', ['vendor_id' => request('vendor_id')]) }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 @csrf
                         <input type="hidden" name="vendor_id" id="vendor_id" value="{{ $currentVendor->id ?? '' }}">
                                 <div class="md:col-span-2">
                                     <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Address Name (e.g. Home, Office)') }}</label>
-                                    <input type="text" name="name" required class="w-full px-5 py-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-primary outline-none text-sm">
+                                    <input type="text" name="name" required class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Phone Number') }}</label>
-                                    <input type="text" name="phone" required class="w-full px-5 py-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-primary outline-none text-sm">
+                                    <input type="text" name="phone" required class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Country') }}</label>
-                                    <input type="text" name="country" value="Egypt" required class="w-full px-5 py-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-primary outline-none text-sm">
+                                    <input type="text" name="country" value="Egypt" required class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm">
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
                                     <div>
                                         <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Governorate') }}</label>
-                                        <select name="governorate_id" id="governorate_select" required onchange="loadRegions(this.value)" class="w-full px-5 py-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-primary outline-none text-sm bg-white">
+                                        <select name="governorate_id" id="governorate_select" required onchange="loadRegions(this.value)" class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm bg-white">
                                             <option value="">{{ __('Select Governorate') }}</option>
                                             @foreach($governorates as $gov)
                                                 <option value="{{ $gov->id }}">{{ $gov->name }}</option>
@@ -47,7 +47,7 @@
                                     </div>
                                     <div>
                                         <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Area / Region') }}</label>
-                                        <select name="region_id" id="region_select" required class="w-full px-5 py-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-primary outline-none text-sm bg-white disabled:opacity-50" disabled>
+                                        <select name="region_id" id="region_select" required class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm bg-white disabled:opacity-50" disabled>
                                             <option value="">{{ __('Select area') }}</option>
                                         </select>
                                         @error('region_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
@@ -55,15 +55,15 @@
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Street Address') }}</label>
-                                    <input type="text" name="address_line1" required class="w-full px-5 py-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-primary outline-none text-sm">
+                                    <input type="text" name="address_line1" required class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('City') }}</label>
-                                    <input type="text" name="city" required class="w-full px-5 py-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-primary outline-none text-sm">
+                                    <input type="text" name="city" required class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Postal Code') }}</label>
-                                    <input type="text" name="postal_code" class="w-full px-5 py-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-primary outline-none text-sm">
+                                    <input type="text" name="postal_code" class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm">
                                 </div>
                                 <div class="md:col-span-2 flex justify-end gap-4">
                                     <button type="button" onclick="toggleAddressForm()" class="px-6 py-3 text-gray-500 font-bold text-sm">{{ __('Cancel') }}</button>

@@ -20,6 +20,7 @@
                     <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Logo') }}</th>
                     <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Name') }}</th>
                     <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Status') }}</th>
+                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('QR Code') }}</th>
                     <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">{{ __('Actions') }}</th>
                 </tr>
             </thead>
@@ -48,6 +49,15 @@
                         <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest {{ $vendor->status == 'active' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600' }}">
                             {{ $vendor->status }}
                         </span>
+                    </td>
+                    <td class="px-8 py-6">
+                        @php
+                            $storeUrl = route('home', ['vendor_id' => $vendor->slug ?: $vendor->id]);
+                            $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" . urlencode($storeUrl);
+                        @endphp
+                        <a href="{{ $qrUrl }}" target="_blank" class="block w-10 h-10 p-1 bg-white border border-gray-100 rounded-lg shadow-sm hover:scale-110 transition-transform group" title="{{ __('View QR Code') }}">
+                            <img src="{{ $qrUrl }}" class="w-full h-full object-contain">
+                        </a>
                     </td>
                     <td class="px-8 py-6 text-right">
                         <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">

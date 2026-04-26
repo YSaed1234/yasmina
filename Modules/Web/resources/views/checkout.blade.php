@@ -30,7 +30,7 @@
                     <input type="hidden" name="vendor_id" value="{{ $currentVendor->id ?? '' }}">
                     <div class="lg:col-span-2 space-y-8">
                         <!-- Shipping Information -->
-                        <div class="bg-white p-10 rounded-3xl shadow-sm border border-rose-50">
+                        <div class="bg-white p-10 rounded-3xl shadow-sm border border-yasmina-50">
                             <div class="flex justify-between items-center mb-8">
                                 <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
                                     <span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">1</span>
@@ -59,7 +59,7 @@
                                             }
                                             $isAvailable = $currentRegion && $currentRegion->is_active; 
                                         @endphp
-                                        <label class="relative flex p-6 border-2 rounded-2xl cursor-pointer hover:bg-rose-50/50 transition-all border-rose-50 has-[:checked]:border-primary has-[:checked]:bg-rose-50/50 {{ !$isAvailable ? 'opacity-60 cursor-not-allowed grayscale' : '' }}"
+                                        <label class="relative flex p-6 border-2 rounded-2xl cursor-pointer hover:bg-yasmina-50/50 transition-all border-yasmina-50 has-[:checked]:border-primary has-[:checked]:bg-yasmina-50/50 {{ !$isAvailable ? 'opacity-60 cursor-not-allowed grayscale' : '' }}"
                                                data-shipping-rate="{{ $currentRegion ? $currentRegion->rate : 0 }}"
                                                data-shipping-available="{{ $isAvailable ? 'true' : 'false' }}">
                                             <input type="radio" name="address_id" value="{{ $address->id }}" {{ $loop->first && $isAvailable ? 'checked' : '' }} onchange="updateSummary()" class="peer hidden" {{ !$isAvailable ? 'disabled' : '' }}>
@@ -83,7 +83,7 @@
                                     @endforeach
                                 </div>
                             @else
-                                <div class="p-8 bg-rose-50/50 rounded-2xl border border-dashed border-rose-200 text-center mb-8">
+                                <div class="p-8 bg-yasmina-50/50 rounded-2xl border border-dashed border-yasmina-200 text-center mb-8">
                                     <p class="text-sm text-gray-500 mb-4">{{ __('No saved addresses found.') }}</p>
                                     <a href="{{ route('web.profile.addresses', ['vendor_id' => request('vendor_id')]) }}" class="inline-block px-6 py-3 bg-primary text-white rounded-xl font-bold text-sm shadow-lg shadow-primary/20">
                                         {{ __('Add New Address') }}
@@ -98,14 +98,14 @@
                         </div>
 
                         <!-- Payment Method -->
-                        <div class="bg-white p-10 rounded-3xl shadow-sm border border-rose-50">
+                        <div class="bg-white p-10 rounded-3xl shadow-sm border border-yasmina-50">
                             <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
                                 <span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">2</span>
                                 {{ __('Payment Method') }}
                             </h2>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <label class="relative flex items-center p-6 border-2 rounded-2xl cursor-pointer hover:bg-rose-50/50 transition-all border-rose-50 has-[:checked]:border-primary has-[:checked]:bg-rose-50/50">
+                                <label class="relative flex items-center p-6 border-2 rounded-2xl cursor-pointer hover:bg-yasmina-50/50 transition-all border-yasmina-50 has-[:checked]:border-primary has-[:checked]:bg-yasmina-50/50">
                                     <input type="radio" name="payment_method" value="cod" checked class="peer hidden">
                                     <div class="flex-1">
                                         <div class="font-bold text-gray-900">{{ __('Cash on Delivery') }}</div>
@@ -115,7 +115,7 @@
                                         <div class="w-2 h-2 bg-white rounded-full"></div>
                                     </div>
                                 </label>
-                                {{-- <label class="relative flex items-center p-6 border-2 rounded-2xl cursor-pointer hover:bg-rose-50/50 transition-all border-rose-50 has-[:checked]:border-primary has-[:checked]:bg-rose-50/50">
+                                {{-- <label class="relative flex items-center p-6 border-2 rounded-2xl cursor-pointer hover:bg-yasmina-50/50 transition-all border-yasmina-50 has-[:checked]:border-primary has-[:checked]:bg-yasmina-50/50">
                                     <input type="radio" name="payment_method" value="card" class="peer hidden">
                                     <div class="flex-1">
                                         <div class="font-bold text-gray-900">{{ __('Credit Card') }}</div>
@@ -130,13 +130,13 @@
                     </div>
 
                     <div class="lg:col-span-1">
-                        <div class="bg-white p-10 rounded-3xl shadow-xl shadow-primary/5 border border-rose-50 sticky top-24">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-8 border-b border-rose-50 pb-6">{{ __('Order Review') }}</h2>
+                        <div class="bg-white p-10 rounded-3xl shadow-xl shadow-primary/5 border border-yasmina-50 sticky top-24">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-8 border-b border-yasmina-50 pb-6">{{ __('Order Review') }}</h2>
                             
                             <div class="space-y-4 mb-8 max-h-60 overflow-y-auto pr-2">
                                 @foreach($cart as $id => $details)
                                     <div class="flex gap-4 items-center">
-                                        <div class="w-16 h-16 rounded-xl bg-gray-50 overflow-hidden flex-shrink-0 border border-rose-50 relative">
+                                        <div class="w-16 h-16 rounded-xl bg-gray-50 overflow-hidden flex-shrink-0 border border-yasmina-50 relative">
                                             @if(isset($details['is_gift']) && $details['is_gift'])
                                                 <div class="absolute top-1 left-1 z-10">
                                                     <span class="bg-yasmina-500 text-white text-[6px] font-black uppercase tracking-widest px-1 py-0.5 rounded shadow-lg shadow-yasmina-500/20">
@@ -181,7 +181,7 @@
                                 @endforeach
                             </div>
 
-                            <div class="space-y-4 mb-8 border-t border-rose-50 pt-6">
+                            <div class="space-y-4 mb-8 border-t border-yasmina-50 pt-6">
                                 <div class="flex justify-between text-gray-500">
                                     <span>{{ __('Subtotal') }}</span>
                                     <span class="font-bold text-gray-900">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($totalOriginal, 2) }}</span>
@@ -219,7 +219,7 @@
                                     <span>{{ __('Shipping') }}</span>
                                     <span id="shipping-display" class="font-bold text-gray-900"></span>
                                 </div>
-                                <div class="border-t border-rose-50 pt-6 flex justify-between items-center">
+                                <div class="border-t border-yasmina-50 pt-6 flex justify-between items-center">
                                     <span class="text-lg font-bold text-gray-900">{{ __('Total') }}</span>
                                     <span id="total-display" class="text-3xl font-bold text-primary"></span>
                                 </div>

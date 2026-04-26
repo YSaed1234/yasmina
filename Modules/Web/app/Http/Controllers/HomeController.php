@@ -160,6 +160,22 @@ class HomeController extends Controller
             ->with('success', __('Your application has been submitted successfully! We will contact you soon.'));
     }
 
+    public function returns()
+    {
+        $vendor = request()->attributes->get('current_vendor');
+        $vendor_id = $vendor ? $vendor->id : null;
+
+        $slidesQuery = \App\Models\Slide::where('active', true);
+        if ($vendor_id) {
+            $slidesQuery->where('vendor_id', $vendor_id);
+        } else {
+            $slidesQuery->whereNull('vendor_id');
+        }
+        $slides = $slidesQuery->orderBy('order')->get();
+
+        return view('web::returns', compact('slides', 'vendor'));
+    }
+
     /**
      * Remove the specified resource from storage.
      */

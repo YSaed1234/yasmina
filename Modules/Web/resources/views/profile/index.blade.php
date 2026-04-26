@@ -9,7 +9,7 @@
 
                 <!-- Main Content -->
                 <div class="lg:col-span-3">
-                    <div class="bg-white rounded-3xl p-10 shadow-sm border border-rose-50">
+                    <div class="bg-white rounded-3xl p-10 shadow-sm border border-yasmina-50">
                         <h1 class="text-3xl font-bold text-gray-900 mb-8">{{ __('Account Overview') }}</h1>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
@@ -33,7 +33,7 @@
                                             @csrf
                                             <input type="number" name="points" max="{{ $user->points }}" min="{{ $minPoints }}" value="{{ $user->points }}" 
                                                 class="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl outline-none text-sm placeholder:text-white/40" placeholder="{{ __('Points to convert') }}">
-                                            <button type="submit" class="px-6 py-2 bg-white text-primary rounded-xl font-bold text-xs whitespace-nowrap hover:bg-rose-50 transition-colors">
+                                            <button type="submit" class="px-6 py-2 bg-white text-primary rounded-xl font-bold text-xs whitespace-nowrap hover:bg-yasmina-50 transition-colors">
                                                 {{ __('Convert Now') }}
                                             </button>
                                         </form>
@@ -63,7 +63,7 @@
                         </div>
 
                         <!-- Referral Card -->
-                        <div class="mb-12 p-8 bg-rose-50 rounded-[2.5rem] border border-rose-100 relative overflow-hidden group">
+                        <div class="mb-12 p-8 bg-yasmina-50 rounded-[2.5rem] border border-yasmina-100 relative overflow-hidden group">
                             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                                 <div>
                                     <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ __('Invite & Earn') }}</h3>
@@ -71,7 +71,7 @@
                                         {{ __('Share your referral code with friends! When they join Yasmina using your code, you will earn :points points.', ['points' => (int) \App\Models\PointSetting::getValue('referral_points', 50)]) }}
                                     </p>
                                 </div>
-                                <div class="bg-white p-4 rounded-3xl shadow-sm border border-rose-100 flex items-center gap-6 min-w-[250px]">
+                                <div class="bg-white p-4 rounded-3xl shadow-sm border border-yasmina-100 flex items-center gap-6 min-w-[250px]">
                                     <div class="flex-1">
                                         <span class="text-[10px] font-black text-primary uppercase tracking-[0.2em] block mb-1">{{ __('Your Invite Code') }}</span>
                                         <div class="text-2xl font-black text-gray-900 tracking-widest">{{ $user->referral_code }}</div>
@@ -87,15 +87,15 @@
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div class="p-6 bg-rose-50/50 rounded-3xl border border-rose-100">
+                            <div class="p-6 bg-yasmina-50/50 rounded-3xl border border-yasmina-100">
                                 <span class="text-xs font-bold text-primary uppercase tracking-widest block mb-2">{{ __('Full Name') }}</span>
                                 <p class="text-lg font-bold text-gray-900">{{ $user->name }}</p>
                             </div>
-                            <div class="p-6 bg-rose-50/50 rounded-3xl border border-rose-100">
+                            <div class="p-6 bg-yasmina-50/50 rounded-3xl border border-yasmina-100">
                                 <span class="text-xs font-bold text-primary uppercase tracking-widest block mb-2">{{ __('Email Address') }}</span>
                                 <p class="text-lg font-bold text-gray-900">{{ $user->email }}</p>
                             </div>
-                            <div class="p-6 bg-rose-50/50 rounded-3xl border border-rose-100">
+                            <div class="p-6 bg-yasmina-50/50 rounded-3xl border border-yasmina-100">
                                 <span class="text-xs font-bold text-primary uppercase tracking-widest block mb-2">{{ __('Phone Number') }}</span>
                                 <p class="text-lg font-bold text-gray-900">{{ $user->phone ?? __('Not Provided') }}</p>
                             </div>

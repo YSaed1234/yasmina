@@ -1,4 +1,38 @@
 <x-admin::layouts.master>
+    @push('styles')
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+        <style>
+            .ql-editor {
+                min-height: 180px;
+                font-family: inherit;
+                font-size: 1rem;
+                text-align: initial;
+            }
+            .ql-toolbar.ql-snow {
+                border: 1px solid #f3f4f6;
+                background: #f9fafb;
+                border-radius: 1.25rem 1.25rem 0 0;
+                padding: 12px;
+            }
+            .ql-container.ql-snow {
+                border: 1px solid #f3f4f6;
+                background: #f9fafb;
+                border-radius: 0 0 1.25rem 1.25rem;
+                font-size: 1rem;
+            }
+            [dir="rtl"] .ql-editor {
+                text-align: right;
+            }
+            [dir="rtl"] .ql-snow .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg {
+                right: auto;
+                left: 0;
+            }
+            [dir="rtl"] .ql-snow .ql-picker-label {
+                padding-left: 18px;
+                padding-right: 8px;
+            }
+        </style>
+    @endpush
     <div class="mb-10">
         <a href="{{ route('admin.vendors.index') }}" class="text-primary font-bold text-sm flex items-center gap-2 mb-4 hover:gap-3 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -158,7 +192,86 @@
 
                 <div class="md:col-span-2">
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Description') }}</label>
-                    <textarea name="description" rows="5" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">{{ old('description', $vendor->description) }}</textarea>
+                    <div id="editor_description" class="bg-gray-50 rounded-2xl"></div>
+                    <input type="hidden" name="description" id="description" value="{{ old('description', $vendor->description) }}">
+                </div>
+            </div>
+
+             <div class="mt-10 pt-10 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="space-y-8">
+                    <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest">{{ __('About Us Content') }}</h3>
+                    
+                    <div>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('About Us (Arabic)') }}</label>
+                        <div id="editor_about_ar" class="bg-gray-50 rounded-2xl"></div>
+                        <input type="hidden" name="about_ar" id="about_ar" value="{{ old('about_ar', $vendor->about_ar) }}">
+                        @error('about_ar') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('About Us (English)') }}</label>
+                        <div id="editor_about_en" class="bg-gray-50 rounded-2xl"></div>
+                        <input type="hidden" name="about_en" id="about_en" value="{{ old('about_en', $vendor->about_en) }}">
+                        @error('about_en') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="pt-6 border-t border-gray-50">
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Return Policy (Arabic)') }}</label>
+                        <div id="editor_return_policy_ar" class="bg-gray-50 rounded-2xl"></div>
+                        <input type="hidden" name="return_policy_ar" id="return_policy_ar" value="{{ old('return_policy_ar', $vendor->return_policy_ar) }}">
+                        @error('return_policy_ar') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Return Policy (English)') }}</label>
+                        <div id="editor_return_policy_en" class="bg-gray-50 rounded-2xl"></div>
+                        <input type="hidden" name="return_policy_en" id="return_policy_en" value="{{ old('return_policy_en', $vendor->return_policy_en) }}">
+                        @error('return_policy_en') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest">{{ __('Social Media Links') }}</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Facebook URL') }}</label>
+                            <input type="url" name="facebook" value="{{ old('facebook', $vendor->facebook) }}" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Instagram URL') }}</label>
+                            <input type="url" name="instagram" value="{{ old('instagram', $vendor->instagram) }}" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Twitter URL') }}</label>
+                            <input type="url" name="twitter" value="{{ old('twitter', $vendor->twitter) }}" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('WhatsApp Number') }}</label>
+                            <input type="text" name="whatsapp" value="{{ old('whatsapp', $vendor->whatsapp) }}" 
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-bold text-gray-900" placeholder="e.g. 201234567890">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-50">
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('About Image 1') }}</label>
+                            @if($vendor->about_image1)
+                                <img src="{{ asset('storage/' . $vendor->about_image1) }}" alt="About Image 1" class="w-20 h-20 rounded-2xl object-cover mb-3">
+                            @endif
+                            <input type="file" name="about_image1" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('About Image 2') }}</label>
+                            @if($vendor->about_image2)
+                                <img src="{{ asset('storage/' . $vendor->about_image2) }}" alt="About Image 2" class="w-20 h-20 rounded-2xl object-cover mb-3">
+                            @endif
+                            <input type="file" name="about_image2" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -169,4 +282,54 @@
             </div>
         </form>
     </div>
+     @push('scripts')
+        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+        <script>
+            function initQuill(editorId, inputId) {
+                var quill = new Quill('#' + editorId, {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            [{ 'size': ['small', false, 'large', 'huge'] }],
+                            [{ 'color': [] }, { 'background': [] }],
+                            ['bold', 'italic', 'underline'],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            ['clean']
+                        ]
+                    }
+                });
+
+                var input = document.getElementById(inputId);
+                quill.root.innerHTML = input.value || '';
+
+                quill.on('text-change', function() {
+                    input.value = quill.root.innerHTML;
+                });
+            }
+
+            function decodeHtml(html) {
+                if(!html) return '';
+                var txt = document.createElement("textarea");
+                txt.innerHTML = html;
+                return txt.value;
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var fields = ['description', 'about_ar', 'about_en', 'return_policy_ar', 'return_policy_en'];
+                
+                fields.forEach(id => {
+                    var input = document.getElementById(id);
+                    if(input) {
+                        input.value = decodeHtml(input.value);
+                    }
+                });
+
+                initQuill('editor_description', 'description');
+                initQuill('editor_about_ar', 'about_ar');
+                initQuill('editor_about_en', 'about_en');
+                initQuill('editor_return_policy_ar', 'return_policy_ar');
+                initQuill('editor_return_policy_en', 'return_policy_en');
+            });
+        </script>
+    @endpush
 </x-admin::layouts.master>

@@ -9,7 +9,7 @@
 
                 <!-- Main Content -->
                 <div class="lg:col-span-3">
-                    <div class="bg-white rounded-3xl p-10 shadow-sm border border-rose-50">
+                    <div class="bg-white rounded-3xl p-10 shadow-sm border border-yasmina-50">
                         <div class="flex justify-between items-center mb-8">
                             <h1 class="text-3xl font-bold text-gray-900">{{ __('Notifications') }}</h1>
                             <form action="{{ route('web.notifications.mark-all-read', ['vendor_id' => request('vendor_id')]) }}" method="POST">
@@ -20,7 +20,7 @@
                         
                         <div class="space-y-4">
                             @forelse($notifications as $notification)
-                                <div id="notification-page-{{ $notification->id }}" class="group p-6 rounded-3xl border border-rose-50 transition-all hover:border-primary/30 relative {{ $notification->read_at ? 'bg-white' : 'bg-rose-50/10' }}">
+                                <div id="notification-page-{{ $notification->id }}" class="group p-6 rounded-3xl border border-yasmina-50 transition-all hover:border-primary/30 relative {{ $notification->read_at ? 'bg-white' : 'bg-yasmina-50/10' }}">
                                     <div class="flex gap-6 items-start">
                                         <div class="w-12 h-12 rounded-2xl {{ $notification->read_at ? 'bg-gray-50 text-gray-400' : 'bg-primary/10 text-primary' }} flex items-center justify-center shrink-0 transition-colors">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -81,7 +81,7 @@
             markAsRead(id, btn.parentElement); // Use existing function in master layout
             const item = document.getElementById(`notification-page-${id}`);
             item.classList.add('bg-white');
-            item.classList.remove('bg-rose-50/10');
+            item.classList.remove('bg-yasmina-50/10');
             item.classList.add('opacity-60');
             btn.remove();
         }

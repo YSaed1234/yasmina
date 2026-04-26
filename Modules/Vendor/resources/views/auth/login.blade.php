@@ -69,7 +69,7 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(134, 93, 88, 0.4);
+            box-shadow: 0 10px 20px -5px color-mix(in srgb, #865d58, transparent 60%);
         }
     </style>
 </head>

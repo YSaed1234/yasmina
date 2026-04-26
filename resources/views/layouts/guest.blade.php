@@ -15,10 +15,17 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
             :root {
-                --yasmina-primary: #865d58;
-                --yasmina-primary-hover: #75514c;
-                --yasmina-secondary: #d6a6a1;
-                --yasmina-bg-soft: #fdf8f7;
+                @if(isset($currentVendor) && $currentVendor)
+                    --yasmina-primary: {{ $currentVendor->primary_color ?? '#865d58' }};
+                    --yasmina-primary-hover: color-mix(in srgb, {{ $currentVendor->primary_color ?? '#865d58' }}, black 10%);
+                    --yasmina-secondary: {{ $currentVendor->secondary_color ?? '#d6a6a1' }};
+                    --yasmina-bg-soft: color-mix(in srgb, {{ $currentVendor->primary_color ?? '#865d58' }}, white 95%);
+                @else
+                    --yasmina-primary: #865d58;
+                    --yasmina-primary-hover: #75514c;
+                    --yasmina-secondary: #d6a6a1;
+                    --yasmina-bg-soft: #fdf8f7;
+                @endif
             }
 
             [data-theme="barbie"] {

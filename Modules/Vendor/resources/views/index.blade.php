@@ -5,7 +5,7 @@
     </div>
 
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 mb-12">
         <!-- Total Sales -->
         <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-primary/10 transition-all group">
             <div class="flex items-center justify-between mb-4">
@@ -35,14 +35,14 @@
         <!-- Yasmina Commission -->
         <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-primary/10 transition-all group">
             <div class="flex items-center justify-between mb-4">
-                <div class="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-all">
+                <div class="w-14 h-14 bg-yasmina-50 rounded-2xl flex items-center justify-center text-yasmina-500 group-hover:bg-yasmina-500 group-hover:text-white transition-all">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                 </div>
             </div>
             <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">{{ __('Yasmina Commission') }}</h3>
-            <p class="text-3xl font-black text-gray-900 text-rose-500">{{ number_format($stats['total_commission'], 2) }} <span class="text-sm font-bold text-gray-400">{{ __('LE') }}</span></p>
+            <p class="text-3xl font-black text-gray-900 text-yasmina-500">{{ number_format($stats['total_commission'], 2) }} <span class="text-sm font-bold text-gray-400">{{ __('LE') }}</span></p>
         </div>
 
         <!-- Promotional Discounts -->
@@ -69,6 +69,30 @@
             </div>
             <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">{{ __('Active Products') }}</h3>
             <p class="text-3xl font-black text-gray-900">{{ $stats['products_count'] }}</p>
+        </div>
+
+        <!-- Share Store (QR Code) -->
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-primary/10 transition-all group">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-14 h-14 bg-primary/5 rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                    </svg>
+                </div>
+                @php
+                    $storeUrl = route('home', ['vendor_id' => auth('vendor')->user()->slug ?: auth('vendor')->user()->id]);
+                    $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" . urlencode($storeUrl);
+                @endphp
+                <a href="{{ $qrUrl }}&download=1" target="_blank" class="text-xs font-bold text-primary hover:underline">{{ __('Download') }}</a>
+            </div>
+            <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">{{ __('Share Your Store') }}</h3>
+            <div class="mt-4 flex items-center gap-4">
+                <img src="{{ $qrUrl }}" class="w-14 h-14 rounded-xl border border-gray-100 p-1 bg-white shadow-sm">
+                <div class="flex-1 min-w-0">
+                    <span class="text-[10px] text-gray-400 font-bold uppercase block">{{ __('Store Link') }}</span>
+                    <a href="{{ $storeUrl }}" target="_blank" class="text-xs font-black text-gray-900 truncate block hover:text-primary transition-colors">{{ str_replace(['http://', 'https://'], '', $storeUrl) }}</a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -207,7 +231,7 @@
                     toolbar: { show: false },
                     fontFamily: 'Outfit, Tajawal, sans-serif'
                 },
-                colors: ['#865d58', '#10b981'],
+                colors: [getComputedStyle(document.documentElement).getPropertyValue('--yasmina-primary').trim(), '#10b981'],
                 dataLabels: { enabled: false },
                 stroke: { curve: 'smooth', width: 3 },
                 xaxis: {

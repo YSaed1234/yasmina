@@ -12,10 +12,10 @@
                 <div>
                     @if($vendor)
                         <h2 class="text-4xl font-bold text-gray-900 mb-8">{{ $vendor->name }}</h2>
-                        <div class="prose prose-rose max-w-none">
-                            <p class="text-lg text-gray-600 leading-relaxed mb-6 whitespace-pre-line">
-                                {{ app()->getLocale() == 'ar' ? ($vendor->about_ar ?? $vendor->description) : ($vendor->about_en ?? $vendor->description) }}
-                            </p>
+                        <div class="prose prose-yasmina max-w-none">
+                            <div class="text-lg text-gray-600 leading-relaxed mb-6">
+                                {!! app()->getLocale() == 'ar' ? ($vendor->about_ar ?? $vendor->description) : ($vendor->about_en ?? $vendor->description) !!}
+                            </div>
                         </div>
                     @else
                         <h2 class="text-4xl font-bold text-gray-900 mb-8">{{ __('Craftsmanship & Quality') }}</h2>
@@ -28,10 +28,10 @@
                     @endif
                 </div>
                 <div class="grid grid-cols-2 gap-6">
-                    <div class="aspect-square bg-rose-50 rounded-3xl overflow-hidden shadow-lg">
+                    <div class="aspect-square bg-yasmina-50 rounded-3xl overflow-hidden shadow-lg">
                         <img src="{{ ($vendor && $vendor->about_image1) ? asset('storage/' . $vendor->about_image1) : 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=600' }}" class="w-full h-full object-cover" alt="Fashion">
                     </div>
-                    <div class="aspect-square bg-rose-50 rounded-3xl overflow-hidden shadow-lg translate-y-12">
+                    <div class="aspect-square bg-yasmina-50 rounded-3xl overflow-hidden shadow-lg translate-y-12">
                         <img src="{{ ($vendor && $vendor->about_image2) ? asset('storage/' . $vendor->about_image2) : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=600' }}" class="w-full h-full object-cover" alt="Product">
                     </div>
                 </div>

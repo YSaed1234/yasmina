@@ -23,7 +23,7 @@
                         <div>
                             <label class="block text-sm font-bold text-gray-900 uppercase tracking-widest mb-4">{{ __('Search') }}</label>
                             <div class="relative">
-                                <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Product name...') }}" class="w-full pl-10 pr-4 py-3 bg-white border border-rose-50 rounded-2xl focus:ring-2 focus:ring-primary outline-none text-sm transition-all shadow-sm">
+                                <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Product name...') }}" class="w-full pl-10 pr-4 py-3 bg-white border border-yasmina-50 rounded-2xl focus:ring-2 focus:ring-primary outline-none text-sm transition-all shadow-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
@@ -33,7 +33,7 @@
                         <!-- Category -->
                         <div>
                             <label class="block text-sm font-bold text-gray-900 uppercase tracking-widest mb-4">{{ __('Category') }}</label>
-                            <select name="category_id" class="w-full px-4 py-3 bg-white border border-rose-50 rounded-2xl focus:ring-2 focus:ring-primary outline-none text-sm appearance-none cursor-pointer shadow-sm">
+                            <select name="category_id" class="w-full px-4 py-3 bg-white border border-yasmina-50 rounded-2xl focus:ring-2 focus:ring-primary outline-none text-sm appearance-none cursor-pointer shadow-sm">
                                 <option value="">{{ __('All Categories') }}</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -44,7 +44,7 @@
                         <!-- Currency -->
                         <div>
                             <label class="block text-sm font-bold text-gray-900 uppercase tracking-widest mb-4">{{ __('Currency') }}</label>
-                            <select name="currency_id" class="w-full px-4 py-3 bg-white border border-rose-50 rounded-2xl focus:ring-2 focus:ring-primary outline-none text-sm appearance-none cursor-pointer shadow-sm">
+                            <select name="currency_id" class="w-full px-4 py-3 bg-white border border-yasmina-50 rounded-2xl focus:ring-2 focus:ring-primary outline-none text-sm appearance-none cursor-pointer shadow-sm">
                                 <option value="">{{ __('All Currencies') }}</option>
                                 @foreach($currencies as $currency)
                                     <option value="{{ $currency->id }}" {{ request('currency_id') == $currency->id ? 'selected' : '' }}>{{ $currency->name }} ({{ $currency->code }})</option>
@@ -56,8 +56,8 @@
                         <div>
                             <label class="block text-sm font-bold text-gray-900 uppercase tracking-widest mb-4">{{ __('Price Range') }}</label>
                             <div class="grid grid-cols-2 gap-3">
-                                <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="{{ __('Min') }}" class="w-full px-4 py-3 bg-white border border-rose-50 rounded-2xl focus:ring-2 focus:ring-primary outline-none text-sm shadow-sm">
-                                <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="{{ __('Max') }}" class="w-full px-4 py-3 bg-white border border-rose-50 rounded-2xl focus:ring-2 focus:ring-primary outline-none text-sm shadow-sm">
+                                <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="{{ __('Min') }}" class="w-full px-4 py-3 bg-white border border-yasmina-50 rounded-2xl focus:ring-2 focus:ring-primary outline-none text-sm shadow-sm">
+                                <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="{{ __('Max') }}" class="w-full px-4 py-3 bg-white border border-yasmina-50 rounded-2xl focus:ring-2 focus:ring-primary outline-none text-sm shadow-sm">
                             </div>
                         </div>
 
@@ -77,8 +77,8 @@
                 <div class="flex-1">
                     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
                         @forelse($products as $product)
-                            <div class="group bg-white rounded-3xl overflow-hidden soft-shadow transition-all duration-500 border border-rose-50 hover:-translate-y-2 flex flex-col relative">
-                                <div class="aspect-square w-full overflow-hidden bg-rose-50 relative">
+                            <div class="group bg-white rounded-3xl overflow-hidden soft-shadow transition-all duration-500 border border-yasmina-50 hover:-translate-y-2 flex flex-col relative">
+                                <div class="aspect-square w-full overflow-hidden bg-yasmina-50 relative">
                                     <a href="{{ route('web.products.show', [$product->id, 'vendor_id' => request()->has('vendor_id') ? request('vendor_id') : $product->vendor_id]) }}" class="block w-full h-full">
                                         @if($product->image)
                                             <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -166,7 +166,7 @@
                                         </div>
                                         <form action="{{ route('web.cart.add', ['id' => $product->id, 'vendor_id' => request('vendor_id')]) }}" method="POST">
                                             @csrf
-                                            <button type="submit" @if($product->stock <= 0) disabled @endif class="p-3 rounded-2xl {{ $product->stock <= 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-rose-50 text-primary hover:bg-primary hover:text-white' }} transition-all duration-300 shadow-sm flex items-center gap-2 group/btn">
+                                            <button type="submit" @if($product->stock <= 0) disabled @endif class="p-3 rounded-2xl {{ $product->stock <= 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-yasmina-50 text-primary hover:bg-primary hover:text-white' }} transition-all duration-300 shadow-sm flex items-center gap-2 group/btn">
                                                 @if($product->stock <= 0)
                                                     <span class="text-[8px] font-black uppercase tracking-widest">{{ __('Sold Out') }}</span>
                                                 @else
@@ -180,8 +180,8 @@
                                 </div>
                             </div>
                         @empty
-                            <div class="col-span-full text-center py-24 bg-rose-50/30 rounded-3xl border-2 border-dashed border-rose-100">
-                                <div class="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-6 text-primary">
+                            <div class="col-span-full text-center py-24 bg-yasmina-50/30 rounded-3xl border-2 border-dashed border-yasmina-100">
+                                <div class="w-20 h-20 bg-yasmina-50 rounded-full flex items-center justify-center mx-auto mb-6 text-primary">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>

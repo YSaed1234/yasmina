@@ -5,7 +5,7 @@
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Promotion Header -->
             <div class="text-center mb-16">
-                <span class="inline-block px-4 py-1.5 bg-rose-50 text-primary text-xs font-black uppercase tracking-[0.2em] rounded-full mb-4">
+                <span class="inline-block px-4 py-1.5 bg-yasmina-50 text-primary text-xs font-black uppercase tracking-[0.2em] rounded-full mb-4">
                     {{ $promotion->type === 'bogo_same' ? __('BOGO Deal') : __('Special Bundle') }}
                 </span>
                 <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -15,10 +15,10 @@
             </div>
 
             <!-- Promotion Logic Section -->
-            <div class="bg-white rounded-[3rem] p-8 md:p-12 soft-shadow border border-rose-100 relative overflow-hidden mb-16">
+            <div class="bg-white rounded-[3rem] p-8 md:p-12 soft-shadow border border-yasmina-100 relative overflow-hidden mb-16">
                 <!-- Background Decoration -->
-                <div class="absolute -top-24 -right-24 w-64 h-64 bg-rose-50 rounded-full opacity-50"></div>
-                <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-rose-50 rounded-full opacity-50"></div>
+                <div class="absolute -top-24 -right-24 w-64 h-64 bg-yasmina-50 rounded-full opacity-50"></div>
+                <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-yasmina-50 rounded-full opacity-50"></div>
 
                 <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     <div class="space-y-6">
@@ -65,10 +65,10 @@
             <!-- Products Involved -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Buy Product -->
-                <div class="group bg-white rounded-[2.5rem] p-6 soft-shadow border border-rose-50 hover:border-primary/20 transition-all duration-500">
+                <div class="group bg-white rounded-[2.5rem] p-6 soft-shadow border border-yasmina-50 hover:border-primary/20 transition-all duration-500">
                     <div class="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">{{ __('Buy Item') }}</div>
                     <div class="flex items-center gap-6">
-                        <div class="w-24 h-24 rounded-2xl overflow-hidden bg-rose-50 flex-shrink-0">
+                        <div class="w-24 h-24 rounded-2xl overflow-hidden bg-yasmina-50 flex-shrink-0">
                             @if($promotion->buyProduct->image)
                                 <img src="{{ asset('storage/' . $promotion->buyProduct->image) }}" class="w-full h-full object-cover">
                             @else
@@ -90,10 +90,10 @@
 
                 @if($promotion->type === 'bogo_different')
                     <!-- Get Product -->
-                    <div class="group bg-white rounded-[2.5rem] p-6 soft-shadow border border-rose-50 hover:border-primary/20 transition-all duration-500">
+                    <div class="group bg-white rounded-[2.5rem] p-6 soft-shadow border border-yasmina-50 hover:border-primary/20 transition-all duration-500">
                         <div class="text-xs font-black text-primary uppercase tracking-widest mb-4">{{ __('Get Item Free') }}</div>
                         <div class="flex items-center gap-6">
-                            <div class="w-24 h-24 rounded-2xl overflow-hidden bg-rose-50 flex-shrink-0">
+                            <div class="w-24 h-24 rounded-2xl overflow-hidden bg-yasmina-50 flex-shrink-0">
                                 @if($promotion->getProduct->image)
                                     <img src="{{ asset('storage/' . $promotion->getProduct->image) }}" class="w-full h-full object-cover">
                                 @else
@@ -114,10 +114,10 @@
                     </div>
                 @else
                    <!-- Same Product -->
-                   <div class="group bg-white rounded-[2.5rem] p-6 soft-shadow border border-rose-50 hover:border-primary/20 transition-all duration-500">
+                   <div class="group bg-white rounded-[2.5rem] p-6 soft-shadow border border-yasmina-50 hover:border-primary/20 transition-all duration-500">
                         <div class="text-xs font-black text-primary uppercase tracking-widest mb-4">{{ __('Get Item Free') }}</div>
                         <div class="flex items-center gap-6">
-                            <div class="w-24 h-24 rounded-2xl overflow-hidden bg-rose-50 flex-shrink-0 opacity-50 grayscale">
+                            <div class="w-24 h-24 rounded-2xl overflow-hidden bg-yasmina-50 flex-shrink-0 opacity-50 grayscale">
                                 @if($promotion->buyProduct->image)
                                     <img src="{{ asset('storage/' . $promotion->buyProduct->image) }}" class="w-full h-full object-cover">
                                 @else
@@ -153,7 +153,7 @@
 
             <!-- Vendor Contact Info -->
             @if($currentVendor)
-                <div class="mt-16 bg-white rounded-[3rem] p-8 md:p-12 soft-shadow border border-rose-100 relative overflow-hidden">
+                <div class="mt-16 bg-white rounded-[3rem] p-8 md:p-12 soft-shadow border border-yasmina-100 relative overflow-hidden">
                     <div class="relative z-10">
                         <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
                             <div>
@@ -162,7 +162,7 @@
                             </div>
                             <div class="flex flex-wrap gap-4">
                                 @if($currentVendor->phone)
-                                    <a href="tel:{{ $currentVendor->phone }}" class="flex items-center gap-3 px-6 py-3 bg-rose-50 text-primary rounded-2xl font-bold hover:bg-primary hover:text-white transition-all">
+                                    <a href="tel:{{ $currentVendor->phone }}" class="flex items-center gap-3 px-6 py-3 bg-yasmina-50 text-primary rounded-2xl font-bold hover:bg-primary hover:text-white transition-all">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                         </svg>

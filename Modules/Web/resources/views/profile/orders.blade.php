@@ -9,7 +9,7 @@
 
                 <!-- Main Content -->
                 <div class="lg:col-span-3">
-                    <div class="bg-white rounded-3xl p-10 shadow-sm border border-rose-50">
+                    <div class="bg-white rounded-3xl p-10 shadow-sm border border-yasmina-50">
                         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
                             <h1 class="text-3xl font-bold text-gray-900">{{ __('Order History') }}</h1>
                             
@@ -34,7 +34,7 @@
                             <div class="space-y-6">
                                 @foreach($orders as $order)
                                     <div class="border border-gray-100 rounded-[2.5rem] overflow-hidden bg-white hover:border-primary transition-all duration-300">
-                                        <div class="bg-rose-50/30 p-6 flex flex-wrap justify-between items-center gap-4 border-b border-gray-100">
+                                        <div class="bg-yasmina-50/30 p-6 flex flex-wrap justify-between items-center gap-4 border-b border-gray-100">
                                             <div class="flex gap-8">
                                                 <div>
                                                     <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">{{ __('Order Placed') }}</span>
@@ -165,7 +165,7 @@
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 bg-gray-500/75 backdrop-blur-sm transition-opacity" aria-hidden="true" onclick="closeOrderDetails()"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-[3rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-rose-50">
+            <div class="inline-block align-bottom bg-white rounded-[3rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-yasmina-50">
                 <div class="bg-white px-8 pt-10 pb-8 sm:p-10 sm:pb-8">
                     <div class="flex justify-between items-center mb-8">
                         <h3 class="text-2xl font-bold text-gray-900" id="modal-order-id"></h3>
@@ -186,7 +186,7 @@
                         </div>
 
                         <!-- Summary -->
-                        <div class="bg-rose-50/30 rounded-3xl p-6 border border-rose-100">
+                        <div class="bg-yasmina-50/30 rounded-3xl p-6 border border-yasmina-100">
                             <div class="space-y-3">
                                 <div class="flex justify-between text-sm">
                                     <span class="text-gray-500">{{ __('Subtotal') }}</span>
@@ -212,7 +212,7 @@
                                     <span class="text-gray-500">{{ __('Shipping') }}</span>
                                     <span id="modal-shipping" class="font-bold text-gray-900"></span>
                                 </div>
-                                <div class="border-t border-rose-100 pt-3 flex justify-between">
+                                <div class="border-t border-yasmina-100 pt-3 flex justify-between">
                                     <span class="font-bold text-gray-900">{{ __('Total') }}</span>
                                     <span id="modal-total" class="font-bold text-primary text-lg"></span>
                                 </div>

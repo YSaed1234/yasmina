@@ -79,7 +79,7 @@
                         <td class="px-8 py-6">
                             <p class="font-bold text-gray-900">{{ number_format($order->total, 2) }} {{ $currency }}</p>
                             <div class="flex flex-col mt-1">
-                                <span class="text-[10px] text-rose-500 font-medium">-{{ number_format($order->commission_amount, 2) }} {{ $currency }} {{ __('Yasmina Commission') }}</span>
+                                <span class="text-[10px] text-yasmina-500 font-medium">-{{ number_format($order->commission_amount, 2) }} {{ $currency }} {{ __('Yasmina Commission') }}</span>
                                 <span class="text-[10px] text-emerald-600 font-bold">{{ number_format($order->vendor_net_amount, 2) }} {{ $currency }} {{ __('Vendor Net') }}</span>
                             </div>
                         </td>

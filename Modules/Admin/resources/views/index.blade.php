@@ -28,14 +28,14 @@
         <!-- Yasmina Share -->
         <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-yasmina-50 hover:shadow-xl hover:shadow-yasmina-100/50 transition-all group">
             <div class="flex items-center justify-between mb-4">
-                <div class="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-all">
+                <div class="w-14 h-14 bg-yasmina-50 rounded-2xl flex items-center justify-center text-yasmina-500 group-hover:bg-yasmina-500 group-hover:text-white transition-all">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
             </div>
             <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">{{ __('Yasmina Share') }}</h3>
-            <p class="text-3xl font-black text-rose-600">{{ number_format($stats['total_commission'], 2) }} <span class="text-sm font-bold text-gray-400">{{ __('LE') }}</span></p>
+            <p class="text-3xl font-black text-yasmina-600">{{ number_format($stats['total_commission'], 2) }} <span class="text-sm font-bold text-gray-400">{{ __('LE') }}</span></p>
         </div>
 
         <!-- Vendor Net -->
@@ -131,7 +131,7 @@
                             </td>
                             <td class="py-6 text-center font-bold text-gray-600">{{ $vendor['orders_count'] }}</td>
                             <td class="py-6 text-center font-black text-gray-900">{{ number_format($vendor['revenue'], 2) }}</td>
-                            <td class="py-6 text-center font-black text-rose-500">{{ number_format($vendor['commission'], 2) }}</td>
+                            <td class="py-6 text-center font-black text-yasmina-500">{{ number_format($vendor['commission'], 2) }}</td>
                             <td class="py-6 text-right">
                                 <span class="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl font-black text-sm">
                                     {{ number_format($vendor['revenue'] - $vendor['commission'], 2) }}

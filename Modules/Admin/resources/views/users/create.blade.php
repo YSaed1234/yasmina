@@ -9,7 +9,7 @@
             <form action="{{ route('admin.users.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
                 @csrf
 
-                <div class="flex items-center gap-8 p-8 bg-rose-50/30 rounded-3xl border border-rose-50/50 mb-10">
+                <div class="flex items-center gap-8 p-8 bg-yasmina-50/30 rounded-3xl border border-yasmina-50/50 mb-10">
                     <div class="relative group">
                         <div class="w-24 h-24 rounded-3xl bg-white shadow-md border-2 border-white overflow-hidden">
                             <img id="imagePreview" src="https://ui-avatars.com/api/?name=User&background=fff&color=865d58&bold=true" class="w-full h-full object-cover">

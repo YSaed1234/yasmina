@@ -30,7 +30,7 @@
                         </td>
                         <td class="px-8 py-6 font-bold text-gray-900">{{ $gov->name }}</td>
                         <td class="px-8 py-6">
-                            <span class="px-3 py-1 bg-rose-50 text-primary rounded-full text-xs font-bold">
+                            <span class="px-3 py-1 bg-yasmina-50 text-primary rounded-full text-xs font-bold">
                                 {{ $gov->regions_count ?? $gov->regions()->count() }} {{ __('Regions') }}
                             </span>
                         </td>

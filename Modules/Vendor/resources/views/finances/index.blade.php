@@ -13,9 +13,9 @@
         </div>
 
         <!-- Total Commission -->
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-rose-100 transition-all group">
-            <h3 class="text-rose-400 text-xs font-bold uppercase tracking-widest mb-1">{{ __('Yasmina Commission') }}</h3>
-            <p class="text-3xl font-black text-rose-500">-{{ number_format($stats['total_commission'], 2) }} <span class="text-sm font-bold text-rose-300">LE</span></p>
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-yasmina-100 transition-all group">
+            <h3 class="text-yasmina-400 text-xs font-bold uppercase tracking-widest mb-1">{{ __('Yasmina Commission') }}</h3>
+            <p class="text-3xl font-black text-yasmina-500">-{{ number_format($stats['total_commission'], 2) }} <span class="text-sm font-bold text-yasmina-300">LE</span></p>
         </div>
 
         <!-- Promotional Discounts -->
@@ -54,7 +54,7 @@
                             <td class="px-8 py-6 font-bold text-gray-900">#{{ $order->id }}</td>
                             <td class="px-8 py-6 text-gray-500">{{ $order->created_at->format('Y-m-d') }}</td>
                             <td class="px-8 py-6 font-bold text-gray-900">{{ number_format($order->total, 2) }} LE</td>
-                            <td class="px-8 py-6 text-rose-500 font-medium">-{{ number_format($order->commission_amount, 2) }} LE</td>
+                            <td class="px-8 py-6 text-yasmina-500 font-medium">-{{ number_format($order->commission_amount, 2) }} LE</td>
                             <td class="px-8 py-6 text-emerald-600 font-bold">{{ number_format($order->vendor_net_amount, 2) }} LE</td>
                             <td class="px-8 py-6">
                                 <span class="px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest {{ $order->status->color() }}">

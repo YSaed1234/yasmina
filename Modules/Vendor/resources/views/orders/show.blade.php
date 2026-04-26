@@ -110,11 +110,11 @@
                             <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-900 uppercase tracking-widest text-[10px]">{{ __('Total Amount') }}</td>
                             <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->total, 2) }} {{ $currency }}</td>
                         </tr>
-                        <tr class="bg-rose-50/30">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-rose-600 uppercase tracking-widest text-[10px]">
+                        <tr class="bg-yasmina-50/30">
+                            <td colspan="3" class="px-8 py-4 text-right font-bold text-yasmina-600 uppercase tracking-widest text-[10px]">
                                 {{ __('Yasmina Commission') }}
                             </td>
-                            <td class="px-8 py-4 text-right font-bold text-rose-600">
+                            <td class="px-8 py-4 text-right font-bold text-yasmina-600">
                                 -{{ number_format($order->commission_amount, 2) }} {{ $currency }}
                             </td>
                         </tr>

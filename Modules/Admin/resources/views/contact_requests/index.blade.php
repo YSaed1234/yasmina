@@ -58,7 +58,7 @@
                 </thead>
                 <tbody>
                     @forelse($requests as $request)
-                        <tr class="bg-gray-50/50 hover:bg-rose-50/30 transition-colors rounded-2xl">
+                        <tr class="bg-gray-50/50 hover:bg-yasmina-50/30 transition-colors rounded-2xl">
                             <td class="py-6 px-6 text-center text-sm font-bold text-gray-400 first:rounded-l-2xl">
                                 {{ $loop->iteration + ($requests->firstItem() - 1) }}
                             </td>
@@ -127,7 +127,7 @@
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             <div class="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full p-10">
                 <div class="text-center">
-                    <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-rose-50 mb-6">
+                    <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-yasmina-50 mb-6">
                         <svg class="h-10 w-10 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>

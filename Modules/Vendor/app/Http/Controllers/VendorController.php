@@ -139,6 +139,8 @@ class VendorController extends Controller
             'instagram' => 'nullable|url|max:255',
             'twitter' => 'nullable|url|max:255',
             'whatsapp' => 'nullable|string|max:20',
+            'return_policy_ar' => 'nullable|string',
+            'return_policy_en' => 'nullable|string',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'about_image1' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'about_image2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
@@ -150,6 +152,8 @@ class VendorController extends Controller
             'items_discount_amount' => 'nullable|numeric|min:0',
             'items_discount_type' => 'required|in:fixed,percentage',
             'free_shipping_threshold' => 'nullable|numeric|min:0',
+            'primary_color' => 'nullable|string|max:7',
+            'secondary_color' => 'nullable|string|max:7',
         ]);
 
         $data = $request->only([
@@ -157,7 +161,8 @@ class VendorController extends Controller
             'address', 'facebook', 'instagram', 'twitter', 'whatsapp',
             'order_threshold', 'order_threshold_discount', 'order_threshold_discount_type',
             'min_items_for_discount', 'items_discount_amount', 'items_discount_type',
-            'free_shipping_threshold'
+            'free_shipping_threshold', 'primary_color', 'secondary_color',
+            'return_policy_ar', 'return_policy_en'
         ]);
         $data['slug'] = $request->slug ? \Str::slug($request->slug) : \Str::slug($request->name);
 

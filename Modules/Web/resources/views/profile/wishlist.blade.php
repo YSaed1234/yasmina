@@ -9,15 +9,15 @@
 
                 <!-- Main Content -->
                 <div class="lg:col-span-3">
-                    <div class="bg-white rounded-3xl p-10 shadow-sm border border-rose-50">
+                    <div class="bg-white rounded-3xl p-10 shadow-sm border border-yasmina-50">
                         <h1 class="text-3xl font-bold text-gray-900 mb-8">{{ __('My Favorites') }}</h1>
                         
                         @if($wishlistItems->count() > 0)
                             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                                 @foreach($wishlistItems as $item)
                                     @php $product = $item->product; @endphp
-                                    <div id="wishlist-item-{{ $product->id }}" class="group bg-white rounded-3xl overflow-hidden soft-shadow transition-all duration-500 border border-rose-50 hover:-translate-y-2 flex flex-col relative">
-                                        <div class="aspect-square w-full overflow-hidden bg-rose-50 relative">
+                                    <div id="wishlist-item-{{ $product->id }}" class="group bg-white rounded-3xl overflow-hidden soft-shadow transition-all duration-500 border border-yasmina-50 hover:-translate-y-2 flex flex-col relative">
+                                        <div class="aspect-square w-full overflow-hidden bg-yasmina-50 relative">
                                             <a href="{{ route('web.products.show', ['id' => $product->id, 'vendor_id' => request('vendor_id')]) }}" class="block w-full h-full">
                                                 @if($product->image)
                                                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -102,7 +102,7 @@
                                                 </div>
                                                 <form action="{{ route('web.cart.add', ['id' => $product->id, 'vendor_id' => request('vendor_id')]) }}" method="POST">
                                                     @csrf
-                                                    <button type="submit" class="p-3 rounded-2xl bg-rose-50 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm flex items-center gap-2 group/btn">
+                                                    <button type="submit" class="p-3 rounded-2xl bg-yasmina-50 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm flex items-center gap-2 group/btn">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                                         </svg>

@@ -13,7 +13,7 @@
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                         <div class="lg:col-span-2 space-y-6">
                             @foreach($cart as $id => $details)
-                                <div class="bg-white p-8 rounded-3xl shadow-sm border border-rose-50 flex gap-8 items-center group">
+                                <div class="bg-white p-8 rounded-3xl shadow-sm border border-yasmina-50 flex gap-8 items-center group">
                                     <div class="w-32 h-32 rounded-2xl overflow-hidden bg-gray-50 flex-shrink-0 relative">
                                         @if(isset($details['is_gift']) && $details['is_gift'])
                                             <div class="absolute top-2 left-2 z-10">
@@ -134,8 +134,8 @@
                         </div>
 
                         <div class="lg:col-span-1">
-                            <div class="bg-white p-10 rounded-3xl shadow-xl shadow-primary/5 border border-rose-50 sticky top-24">
-                                <h2 class="text-2xl font-bold text-gray-900 mb-8 border-b border-rose-50 pb-6">{{ __('Order Summary') }}</h2>
+                            <div class="bg-white p-10 rounded-3xl shadow-xl shadow-primary/5 border border-yasmina-50 sticky top-24">
+                                <h2 class="text-2xl font-bold text-gray-900 mb-8 border-b border-yasmina-50 pb-6">{{ __('Order Summary') }}</h2>
                                 
                                 <!-- Coupon Input -->
                                 <div class="mb-8">
@@ -197,7 +197,7 @@
                                         </div>
                                     @endif
                                 </div>
-                                <div class="border-t border-rose-50 pt-6 mb-10">
+                                <div class="border-t border-yasmina-50 pt-6 mb-10">
                                     <div class="flex justify-between items-center">
                                         <span class="text-lg font-bold text-gray-900">{{ __('Total') }}</span>
                                         <span class="text-3xl font-bold text-primary">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($finalTotal, 2) }}</span>
@@ -213,8 +213,8 @@
                         </div>
                     </div>
                 @else
-                    <div class="bg-white rounded-3xl p-20 text-center shadow-sm border border-rose-50">
-                        <div class="w-24 h-24 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-8 text-primary">
+                    <div class="bg-white rounded-3xl p-20 text-center shadow-sm border border-yasmina-50">
+                        <div class="w-24 h-24 bg-yasmina-50 rounded-full flex items-center justify-center mx-auto mb-8 text-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>

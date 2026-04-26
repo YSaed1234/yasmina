@@ -47,6 +47,10 @@ class UpdateVendorRequest extends FormRequest
             'free_shipping_threshold' => 'nullable|numeric|min:0',
             'commission_type' => 'required|in:fixed,percentage',
             'commission_value' => 'nullable|numeric|min:0',
+            'primary_color' => 'nullable|string|max:7',
+            'secondary_color' => 'nullable|string|max:7',
+            'return_policy_ar' => 'nullable|string',
+            'return_policy_en' => 'nullable|string',
         ];
     }
 
@@ -69,6 +73,8 @@ class UpdateVendorRequest extends FormRequest
             'logo.max' => __('The logo size cannot exceed 5MB.'),
             'about_image1.image' => __('The first about image must be an image file.'),
             'about_image2.image' => __('The second about image must be an image file.'),
+            'primary_color.max' => __('Primary color must be a valid hex code.'),
+            'secondary_color.max' => __('Secondary color must be a valid hex code.'),
         ];
     }
 }
