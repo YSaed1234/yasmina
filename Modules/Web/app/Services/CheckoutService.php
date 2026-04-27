@@ -33,7 +33,10 @@ class CheckoutService
             ->where('vendor_id', $vendor->id ?? null)
             ->get();
 
-        return array_merge($cartData, ['addresses' => $addresses]);
+        return array_merge($cartData, [
+            'addresses' => $addresses,
+            'walletBalance' => auth()->user()->balance
+        ]);
     }
 
     public function placeOrder(array $data, $vendor)
@@ -111,6 +114,15 @@ class CheckoutService
                 'vendor_discount_type' => count($cartData['appliedVendorDiscounts']) > 0 ? $cartData['appliedVendorDiscounts'][0]['type'] : null,
                 'promotional_discount_amount' => $cartData['promotionalDiscount'],
             ]);
+
+            if ($data['payment_method'] === 'wallet') {
+                auth()->user()->subtractWalletBalance(
+                    $finalTotal,
+                    __('Payment for order #:id', ['id' => $order->id]),
+                    $order
+                );
+                $order->update(['payment_status' => 'paid']);
+            }
 
             foreach ($cartData['cart'] as $key => $details) {
                 $productId = $details['product_id'];

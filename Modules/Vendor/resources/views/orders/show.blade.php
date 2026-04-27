@@ -141,7 +141,7 @@
                 <div class="space-y-4">
                     <div>
                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{{ __('Name') }}</p>
-                        <p class="font-bold text-gray-800">{{ $order->shipping_details['name'] ?? 'N/A' }}</p>
+                            <span class="font-bold text-gray-900">{{ $order->user->name . "( ".$order->shipping_details['name']. " ) " }}</span>
                     </div>
                     <div>
                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{{ __('Phone') }}</p>
@@ -153,6 +153,10 @@
                             {{ $order->shipping_details['address'] ?? '' }}, 
                             {{ $order->shipping_details['city'] ?? '' }}
                         </p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-50">
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{{ __('Payment Method') }}</p>
+                        <p class="font-bold text-primary">{{ strtoupper($order->payment_method) }}</p>
                     </div>
                 </div>
             </div>

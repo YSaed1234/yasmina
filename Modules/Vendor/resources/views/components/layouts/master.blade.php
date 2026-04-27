@@ -216,6 +216,38 @@
                         </svg>
                         <span x-show="sidebarOpen" x-transition class="truncate">{{ __('Yasmina Commission') }}</span>
                     </a>
+
+                    <!-- Reports -->
+                    <div x-data="{ open: {{ request()->routeIs('vendor.reports.*') || request()->routeIs('vendor.inventory.*') || request()->routeIs('vendor.traffic.*') ? 'true' : 'false' }} }">
+                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-gray-50">
+                            <div class="flex items-center gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                                <span x-show="sidebarOpen" class="font-bold text-sm truncate">{{ __('Reports') }}</span>
+                            </div>
+                            <svg x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div x-show="open && sidebarOpen" x-collapse class="mt-1 space-y-1 px-4">
+                            <a href="{{ route('vendor.reports.inventory') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('vendor.reports.inventory') ? 'text-primary font-bold' : 'text-gray-500 hover:text-primary' }}">
+                                <span x-show="sidebarOpen">📦 {{ __('Inventory') }}</span>
+                            </a>
+                            <a href="{{ route('vendor.reports.traffic') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('vendor.reports.traffic') ? 'text-primary font-bold' : 'text-gray-500 hover:text-primary' }}">
+                                <span x-show="sidebarOpen">👀 {{ __('Traffic') }}</span>
+                            </a>
+                            <a href="{{ route('vendor.reports.sales') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('vendor.reports.sales') ? 'text-primary font-bold' : 'text-gray-500 hover:text-primary' }}">
+                                <span x-show="sidebarOpen">📈 {{ __('Sales Analysis') }}</span>
+                            </a>
+                            <a href="{{ route('vendor.reports.customers') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('vendor.reports.customers') ? 'text-primary font-bold' : 'text-gray-500 hover:text-primary' }}">
+                                <span x-show="sidebarOpen">👥 {{ __('Customers') }}</span>
+                            </a>
+                            <a href="{{ route('vendor.reports.returns') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('vendor.reports.returns') ? 'text-primary font-bold' : 'text-gray-500 hover:text-primary' }}">
+                                <span x-show="sidebarOpen">🔄 {{ __('Returns') }}</span>
+                            </a>
+                        </div>
+                    </div>
                 </nav>
 
                 <div class="p-6 border-t border-gray-50">

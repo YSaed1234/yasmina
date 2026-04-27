@@ -376,7 +376,7 @@
             document.getElementById('modal-total').innerText = currency + totalAmount.toFixed(2);
             
             // Payment info
-            document.getElementById('modal-payment-method').innerText = order.payment_method === 'cod' ? '{{ __("Cash on Delivery") }}' : '{{ __("Credit Card") }}';
+            document.getElementById('modal-payment-method').innerText = order.payment_method === 'cod' ? '{{ __("Cash on Delivery") }}' : (order.payment_method === 'wallet' ? '{{ __("Wallet") }}' : order.payment_method);
             
             const pStatus = document.getElementById('modal-payment-status');
             const pWrapper = document.getElementById('modal-payment-status-wrapper');

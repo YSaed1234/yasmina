@@ -29,8 +29,8 @@
                         <p class="text-[10px] text-gray-400 font-medium uppercase">{{ $order->created_at->format('M d, Y') }}</p>
                     </td>
                     <td class="px-8 py-5">
-                        <p class="font-bold text-gray-800">{{ $order->shipping_details['name'] ?? __('Guest') }}</p>
-                        <p class="text-xs text-gray-400">{{ $order->shipping_details['phone'] ?? '' }}</p>
+                        <p class="font-bold text-gray-800">{{ $order->user->name  . "( ". $order->shipping_details['name']." )"  }}</p>
+                        <p class="text-xs text-gray-400">{{ $order->user->phone ?? $order->shipping_details['phone'] }}</p>
                     </td>
                     <td class="px-8 py-5">
                         <span class="px-3 py-1 rounded-full bg-primary/5 text-primary text-[10px] font-black uppercase border border-primary/10">

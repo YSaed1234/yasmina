@@ -146,7 +146,7 @@
                                     </div>
                                 @endif
                                 @auth
-                                    @php $isFavorited = auth()->user()->wishlist()->where('product_id', $product->id)->exists(); @endphp
+                                    @php $isFavorited = auth()->user()?->wishlist()?->where('product_id', $product->id)->exists(); @endphp
                                     <form action="{{ route('web.wishlist.toggle', $product->id) }}" method="POST" class="absolute top-4 right-4 z-30">
                                         @csrf
                                         <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}">
@@ -280,6 +280,8 @@
                                                 @endif
                                                 @auth
                                                     @php $isFavorited = auth()->user()->wishlist()->where('product_id', $product->id)->exists(); @endphp
+                                                @auth
+                                                    @php $isFavorited = auth()->user()->wishlist()->where('product_id', $product->id)->exists(); @endphp
                                                     <form action="{{ route('web.wishlist.toggle', $product->id) }}" method="POST" class="absolute top-3 right-3 z-30">
                                                         @csrf
                                                         <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}">
@@ -289,6 +291,7 @@
                                                             </svg>
                                                         </button>
                                                     </form>
+                                                @endauth
                                                 @endauth
                                                 <div class="absolute inset-0 bg-black/0 group-hover:bg-primary/5 pointer-events-none transition-all duration-500"></div>
                                             </div>

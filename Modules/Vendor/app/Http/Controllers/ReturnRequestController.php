@@ -61,13 +61,26 @@ class ReturnRequestController extends Controller
             ]);
 
             // If status is approved, process the refund (consistency with Admin flow)
-            if ($newStatus === 'approved' && $oldStatus !== 'approved' && $refundAmount > 0) {
-                if ($returnRequest->refund_method === 'wallet') {
+            if ($newStatus === 'approved' && $oldStatus !== 'approved') {
+                // Process Refund
+                if ($refundAmount > 0 && $returnRequest->refund_method === 'wallet') {
                     $returnRequest->user->addWalletBalance(
                         $refundAmount,
                         __('Refund for order #:id', ['id' => $returnRequest->order_id]),
                         $returnRequest
                     );
+                }
+
+                // Restore Stock
+                foreach ($returnRequest->items as $item) {
+                    $orderItem = $item->orderItem;
+                    if ($orderItem) {
+                        if ($orderItem->variant_id) {
+                            $orderItem->variant()->increment('stock', $item->quantity);
+                        } else {
+                            $orderItem->product()->increment('stock', $item->quantity);
+                        }
+                    }
                 }
             }
 

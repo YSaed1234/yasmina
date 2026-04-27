@@ -142,7 +142,7 @@
                     <div class="space-y-4">
                         <div class="flex flex-col">
                             <span class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">{{ __('Full Name') }}</span>
-                            <span class="font-bold text-gray-900">{{ $order->shipping_details['name'] ?? '' }}</span>
+                            <span class="font-bold text-gray-900">{{ $order->user->name . "( ".$order->shipping_details['name']. " ) " }}</span>
                         </div>
                         <div class="flex flex-col">
                             <span class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">{{ __('Contact') }}</span>
@@ -198,6 +198,13 @@
                             @endforeach
                         </select>
                     </form>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Payment Method') }}</label>
+                        <div class="px-5 py-4 bg-yasmina-50/50 border border-yasmina-100 rounded-2xl font-bold text-primary">
+                            {{ strtoupper($order->payment_method) }}
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mt-8 pt-8 border-t border-gray-50">

@@ -59,9 +59,9 @@
                         </td>
                         <td class="px-8 py-6">
                             <div class="flex flex-col">
-                                <span class="font-bold text-gray-900">{{ $order->shipping_details['name'] ?? __('Guest') }}</span>
-                                <span class="text-xs text-gray-400">{{ $order->shipping_details['email'] ?? '' }}</span>
-                            </div>
+                                   <p class="font-bold text-gray-800">{{ $order->user->name  . "( ". $order->shipping_details['name']." )"  }}</p>
+                        <p class="text-xs text-gray-400">{{ $order->user->phone ?? $order->shipping_details['phone'] }}</p>
+                    </div>
                         </td>
                         <td class="px-8 py-6">
                             @php

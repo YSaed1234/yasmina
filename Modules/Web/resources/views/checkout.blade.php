@@ -115,6 +115,17 @@
                                         <div class="w-2 h-2 bg-white rounded-full"></div>
                                     </div>
                                 </label>
+
+                                <label id="wallet-payment-option" class="relative flex items-center p-6 border-2 rounded-2xl cursor-pointer hover:bg-yasmina-50/50 transition-all border-yasmina-50 has-[:checked]:border-primary has-[:checked]:bg-yasmina-50/50">
+                                    <input type="radio" name="payment_method" value="wallet" class="peer hidden">
+                                    <div class="flex-1">
+                                        <div class="font-bold text-gray-900">{{ __('Pay with Wallet') }}</div>
+                                        <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider">{{ __('Available Balance') }}: {{ number_format($walletBalance, 2) }} {{ reset($cart)['currency'] ?? '$' }}</div>
+                                    </div>
+                                    <div class="w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center bg-white peer-checked:bg-primary transition-all">
+                                        <div class="w-2 h-2 bg-white rounded-full"></div>
+                                    </div>
+                                </label>
                                 {{-- <label class="relative flex items-center p-6 border-2 rounded-2xl cursor-pointer hover:bg-yasmina-50/50 transition-all border-yasmina-50 has-[:checked]:border-primary has-[:checked]:bg-yasmina-50/50">
                                     <input type="radio" name="payment_method" value="card" class="peer hidden">
                                     <div class="flex-1">
@@ -240,6 +251,7 @@
     @push('scripts')
     <script>
         const baseTotal = {{ $finalTotal }};
+        const walletBalance = {{ $walletBalance }};
         const isFreeShipping = {{ (isset($freeShippingVendors) && $currentVendor && in_array($currentVendor->id, $freeShippingVendors)) ? 'true' : 'false' }};
         const currency = "{{ reset($cart)['currency'] ?? '$' }}";
         const hasStockIssues = {{ $hasStockIssues ? 'true' : 'false' }};
@@ -249,6 +261,8 @@
             const submitBtn = document.querySelector('button[type="submit"]');
             const shippingDisplay = document.getElementById('shipping-display');
             const totalDisplay = document.getElementById('total-display');
+            const walletOption = document.getElementById('wallet-payment-option');
+            const walletInput = walletOption.querySelector('input');
             
             if (hasStockIssues) {
                 submitBtn.disabled = true;
@@ -266,6 +280,18 @@
                     const total = baseTotal + finalRate;
                     totalDisplay.innerText = currency + Math.max(0, total).toFixed(2);
                     
+                    // Wallet Sufficiency Check
+                    if (walletBalance < total) {
+                        walletOption.classList.add('opacity-50', 'grayscale', 'cursor-not-allowed');
+                        walletInput.disabled = true;
+                        if (walletInput.checked) {
+                            document.querySelector('input[name="payment_method"][value="cod"]').checked = true;
+                        }
+                    } else {
+                        walletOption.classList.remove('opacity-50', 'grayscale', 'cursor-not-allowed');
+                        walletInput.disabled = false;
+                    }
+
                     if (!hasStockIssues) {
                         submitBtn.disabled = false;
                         submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');

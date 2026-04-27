@@ -299,6 +299,15 @@
                             <a href="{{ route('admin.traffic.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.traffic.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
                                 <span x-show="sidebarOpen">👀 {{ __('Traffic') }}</span>
                             </a>
+                            <a href="{{ route('admin.reports.sales') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.reports.sales') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                <span x-show="sidebarOpen">📈 {{ __('Sales Analysis') }}</span>
+                            </a>
+                            <a href="{{ route('admin.reports.customers') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.reports.customers') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                <span x-show="sidebarOpen">👥 {{ __('Customers') }}</span>
+                            </a>
+                            <a href="{{ route('admin.reports.returns') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.reports.returns') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                <span x-show="sidebarOpen">🔄 {{ __('Returns') }}</span>
+                            </a>
                         </div>
                     </div>
 

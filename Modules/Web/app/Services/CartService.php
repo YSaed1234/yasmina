@@ -359,7 +359,7 @@ class CartService
                 $cart[$key] = [
                     "product_id" => $productId,
                     "variant_id" => $variantId,
-                    "quantity" => $quantity,
+                    "quantity" => $newQuantity,
                 ];
             }
             Session::put($sessionKey, $cart);

@@ -56,5 +56,14 @@ Route::prefix('vendor-panel')->group(function () {
         // Profile
         Route::get('profile', [VendorController::class, 'editProfile'])->name('vendor.profile.edit');
         Route::put('profile', [VendorController::class, 'updateProfile'])->name('vendor.profile.update');
+
+        // Reports
+        Route::prefix('reports')->name('vendor.reports.')->group(function () {
+            Route::get('inventory', [\Modules\Vendor\Http\Controllers\ReportController::class, 'inventory'])->name('inventory');
+            Route::get('traffic', [\Modules\Vendor\Http\Controllers\ReportController::class, 'traffic'])->name('traffic');
+            Route::get('sales', [\Modules\Vendor\Http\Controllers\ReportController::class, 'sales'])->name('sales');
+            Route::get('customers', [\Modules\Vendor\Http\Controllers\ReportController::class, 'customers'])->name('customers');
+            Route::get('returns', [\Modules\Vendor\Http\Controllers\ReportController::class, 'returns'])->name('returns');
+        });
     });
 });

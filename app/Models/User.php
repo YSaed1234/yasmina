@@ -83,6 +83,23 @@ class User extends Authenticatable
         ]);
     }
 
+    public function subtractWalletBalance(float $amount, string $description = null, $reference = null)
+    {
+        if ($this->balance < $amount) {
+            throw new \Exception(__('Insufficient wallet balance.'));
+        }
+
+        $this->decrement('balance', $amount);
+
+        return $this->walletTransactions()->create([
+            'amount' => -$amount,
+            'type' => 'debit',
+            'description' => $description,
+            'reference_type' => $reference ? get_class($reference) : null,
+            'reference_id' => $reference ? $reference->id : null,
+        ]);
+    }
+
     public function convertPointsToBalance(int $pointsToConvert)
     {
         $minPoints = (int) PointSetting::getValue('min_points_to_convert', 100);

@@ -31,7 +31,7 @@ class CheckoutController extends Controller
     {
         $request->validate([
             'address_id' => 'required|exists:addresses,id,user_id,' . auth()->id(),
-            'payment_method' => 'required|string|in:cod,card',
+            'payment_method' => 'required|string|in:cod,card,wallet',
             'notes' => 'nullable|string',
         ]);
 
