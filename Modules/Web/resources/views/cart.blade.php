@@ -31,8 +31,8 @@
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                         <div class="lg:col-span-2 space-y-6">
                             @foreach($cart as $id => $details)
-                                <div class="bg-white p-8 rounded-3xl shadow-sm border border-yasmina-50 flex gap-8 items-center group">
-                                    <div class="w-32 h-32 rounded-2xl overflow-hidden bg-gray-50 flex-shrink-0 relative">
+                                <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-yasmina-50 flex flex-col sm:flex-row gap-6 sm:gap-8 items-start sm:items-center group">
+                                    <div class="w-full sm:w-32 h-48 sm:h-32 rounded-2xl overflow-hidden bg-gray-50 flex-shrink-0 relative">
                                         @if(isset($details['is_gift']) && $details['is_gift'])
                                             <div class="absolute top-2 left-2 z-10">
                                                 <span class="bg-yasmina-500 text-white text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-lg shadow-lg shadow-yasmina-500/20 flex items-center gap-1">
@@ -53,7 +53,7 @@
                                             </div>
                                         @endif
                                     </div>
-                                    <div class="flex-1">
+                                    <div class="flex-1 w-full">
                                         <div class="flex justify-between mb-2">
                                             <div>
                                                 <h3 class="text-xl font-bold text-gray-900">{{ $details['name'] }}</h3>

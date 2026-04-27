@@ -331,7 +331,7 @@
 
                                 <div class="max-h-[400px] overflow-y-auto">
                                     @forelse(auth('vendor')->user()->unreadNotifications->take(10) as $notification)
-                                        <button @click="markRead('{{ $notification->id }}', '{{ $notification->data['action_url'] ?? '#' }}')" 
+                                        <button @click="markRead('{{ $notification->id }}', '{{ $notification->data['action_url'] ?? route('vendor.notifications.index') }}')" 
                                             class="w-full text-start px-6 py-4 hover:bg-gray-50 transition-colors flex gap-4 border-b border-gray-50 last:border-0">
                                             <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">

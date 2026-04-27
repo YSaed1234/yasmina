@@ -12,7 +12,7 @@
 ])
 
 @if($slides && $slides->count() > 0)
-    <div class="relative min-h-[60vh] md:min-h-[90vh] pt-20">
+    <div class="relative min-h-[60vh] md:min-h-[90vh] pt-20 hidden lg:block">
         <div class="swiper hero-swiper h-[50vh] md:h-[80vh]">
             <div class="swiper-wrapper">
                 @foreach($slides as $slide)
@@ -60,7 +60,7 @@
         </div>
     </div>
 @else
-    <header class="relative {{ $compact ? 'py-24' : 'min-h-[80vh]' }} flex items-center pt-20 overflow-hidden bg-gray-900">
+    <header class="relative {{ $compact ? 'py-24' : 'min-h-[80vh]' }} flex items-center pt-20 overflow-hidden bg-gray-900 hidden lg:block">
         <div class="absolute inset-0 z-0">
             <div class="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent z-10"></div>
             <img src="{{ $image }}" alt="{{ $title }}" class="w-full h-full object-cover">

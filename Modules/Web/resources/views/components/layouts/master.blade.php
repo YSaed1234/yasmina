@@ -59,6 +59,7 @@
                 }
             }
         </script>
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
         <style>
             :root {
@@ -114,6 +115,7 @@
             .ql-size-small { font-size: 0.75em; }
             .ql-size-large { font-size: 1.5em; }
             .ql-size-huge { font-size: 2.5em; }
+            [x-cloak] { display: none !important; }
         </style>
     </head>
     <body class="antialiased text-gray-900 transition-colors duration-500 overflow-x-hidden" 
@@ -138,286 +140,194 @@
                         @endif
                     </div>
                     
-                    <div class="flex items-center gap-4">
-                        <!-- Desktop Navigation -->
-                        <div class="hidden lg:flex gap-8 text-sm font-bold uppercase tracking-widest text-gray-600 items-center">
-                        <a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('home') ? 'text-primary' : '' }}">{{ __('Home') }}</a>
-                        
-                        <div class="relative group">
-                            <button class="flex items-center gap-1 hover:text-primary transition-colors py-8">
-                                {{ __('Institutions') }}
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div class="absolute left-0 top-full w-64 bg-white rounded-2xl shadow-2xl border border-yasmina-50 p-4 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
-                                <div class="grid gap-2">
-                                    <a href="{{ route('home') }}" class="px-4 py-3 hover:bg-yasmina-50 rounded-xl transition-all flex items-center justify-between group/item">
-                                        <span class="font-bold text-gray-700 group-hover/item:text-primary">{{ __('Main Store') }}</span>
-                                        @if(!$currentVendor)
-                                            <span class="w-2 h-2 bg-primary rounded-full"></span>
-                                        @endif
-                                    </a>
-                                    @foreach($globalVendors as $vendor)
-                                        <a href="{{ route('home', ['vendor_id' => $vendor->slug]) }}" class="px-4 py-3 hover:bg-yasmina-50 rounded-xl transition-all flex items-center justify-between group/item">
-                                            <div class="flex items-center gap-3">
-                                                @if($vendor->logo)
-                                                    <img src="{{ asset('storage/' . $vendor->logo) }}" class="w-6 h-6 rounded-full object-contain bg-gray-50">
-                                                @endif
-                                                <span class="font-bold text-gray-700 group-hover/item:text-primary">{{ $vendor->name }}</span>
-                                            </div>
-                                            @if($currentVendor && $currentVendor->id == $vendor->id)
-                                                <span class="w-2 h-2 bg-primary rounded-full"></span>
-                                            @endif
-                                        </a>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="relative group">
-                            <button class="flex items-center gap-1 hover:text-primary transition-colors py-8">
-                                {{ __('Categories') }}
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div class="absolute left-0 top-full w-64 bg-white rounded-2xl shadow-2xl border border-yasmina-50 p-4 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
-                                <div class="grid gap-2">
-                                   
-                                    @foreach($globalCategories as $category)
-                                        <a href="{{ route('web.shop', ['category_id' => $category->id, 'vendor_id' => request('vendor_id')]) }}" class="px-4 py-3 hover:bg-yasmina-50 rounded-xl transition-all flex items-center justify-between group/item">
-                                            <span class="font-bold text-gray-700 group-hover/item:text-primary">{{ $category->name }}</span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300 group-hover/item:text-primary opacity-0 group-hover/item:opacity-100 -translate-x-2 group-hover/item:translate-x-0 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                            </svg>
-                                        </a>
-                                    @endforeach
-
-
-                                    <div class="mt-2 pt-2 border-t border-yasmina-50">
-                                        <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="block text-center py-2 text-xs font-bold text-primary hover:underline">
-                                            {{ __('View All Categories') }}
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.shop') ? 'text-primary' : '' }}">{{ __('Shop') }}</a>
-                        
-                        <a href="{{ route('web.promotions.index', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.promotions.index') ? 'text-primary' : '' }}">{{ __('Promotions') }}</a>
-                        
-                        <a href="{{ route('web.about', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.about') ? 'text-primary' : '' }}">{{ __('About Us') }}</a>
-                        
-                        <a href="{{ route('web.contact', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.contact') ? 'text-primary' : '' }}">{{ __('Contact Us') }}</a>
-                        
-                        <a href="{{ route('web.returns', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.returns') ? 'text-primary' : '' }}">{{ __('Return Policy') }}</a>
-                        
-                        <a href="{{ route('web.become-vendor',['vendor_id'=>request('vendor_id')]) }}" class="px-6 py-2 bg-primary text-white rounded-full text-xs font-bold hover:bg-primary-hover transition-all shadow-lg shadow-primary/20">
-                            {{ __('Join Us') }}
-                        </a>
-                        
-                        <!-- Cart Icon -->
-                        <a href="{{ route('web.cart', ['vendor_id' => request('vendor_id')]) }}" class="relative group p-2 hover:bg-yasmina-50 rounded-xl transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                            </svg>
-                            @php $cartCount = app(\Modules\Web\Services\CartService::class)->getCartCount(); @endphp
-                            @if($cartCount > 0)
-                                <span class="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-lg shadow-primary/20 border-2 border-white">
-                                    {{ $cartCount }}
-                                </span>
-                            @endif
-                        </a>
-
-                        <!-- Notifications -->
-                        @auth
+                    <div class="flex items-center gap-4 xl:gap-8">
+                        <!-- Desktop Navigation Links -->
+                        <div class="hidden xl:flex items-center gap-6 text-[11px] font-bold uppercase tracking-widest text-gray-600">
+                            <a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('home') ? 'text-primary' : '' }}">{{ __('Home') }}</a>
+                            
                             <div class="relative group">
-                                <button class="relative p-2 hover:bg-yasmina-50 rounded-xl transition-all">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                                    </svg>
-                                    @php 
-                                        $vendorId = request()->vendor_id;
-                                        $unreadCount = auth()->user()->vendorUnreadNotifications($vendorId)->count(); 
-                                    @endphp
-                                    @if($unreadCount > 0)
-                                        <span id="notification-badge" class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full border border-white">
-                                            {{ $unreadCount }}
-                                        </span>
-                                    @endif
-                                </button>
-                                
-                                <div class="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-yasmina-50 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-[60] overflow-hidden">
-                                    <div class="p-4 border-b border-yasmina-50 flex justify-between items-center bg-yasmina-50/10">
-                                        <span class="font-bold text-gray-900 text-sm">{{ __('Notifications') }}</span>
-                                        @if($unreadCount > 0)
-                                            <form action="{{ route('web.notifications.mark-all-read', ['vendor_id' => request('vendor_id')]) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="text-[10px] font-bold text-primary hover:underline">{{ __('Mark all as read') }}</button>
-                                            </form>
-                                        @endif
-                                    </div>
-                                    <div class="max-h-96 overflow-y-auto">
-                                        @forelse(auth()->user()->vendorNotifications($vendorId)->take(10)->get() as $notification)
-                                            <div id="notification-{{ $notification->id }}" class="p-4 border-b border-yasmina-50/50 hover:bg-yasmina-50/30 transition-all {{ $notification->read_at ? 'opacity-60' : 'bg-yasmina-50/10' }}">
-                                                <div class="flex gap-3">
-                                                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                        </svg>
-                                                    </div>
-                                                    <div class="flex-1">
-                                                        @if(isset($notification->data['action_url']))
-                                                            <a href="{{ $notification->data['action_url'] }}" onclick="markAsRead('{{ $notification->id }}', this)" class="block">
-                                                                <p class="text-xs font-bold text-gray-800 leading-relaxed hover:text-primary transition-colors">{{ $notification->data['message'] ?? '' }}</p>
-                                                            </a>
-                                                        @else
-                                                            <p class="text-xs font-bold text-gray-800 leading-relaxed">{{ $notification->data['message'] ?? '' }}</p>
-                                                        @endif
-                                                        <span class="text-[10px] text-gray-400 mt-1 block">{{ $notification->created_at->diffForHumans() }}</span>
-                                                    </div>
-                                                    @unless($notification->read_at)
-                                                        <button onclick="markAsRead('{{ $notification->id }}', this)" class="w-2 h-2 bg-primary rounded-full mt-2" title="{{ __('Mark as read') }}"></button>
-                                                    @endunless
-                                                </div>
-                                            </div>
-                                        @empty
-                                            <div class="p-8 text-center text-gray-400">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-3 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                                                </svg>
-                                                <p class="text-xs">{{ __('No notifications yet') }}</p>
-                                            </div>
-                                        @endforelse
-                                    </div>
-                                    <a href="{{ route('web.notifications', ['vendor_id' => request('vendor_id')]) }}" class="block py-3 text-center text-xs font-bold text-primary bg-yasmina-50/20 hover:bg-yasmina-50/50 transition-all border-t border-yasmina-50">
-                                        {{ __('View All Notifications') }}
-                                    </a>
-                                </div>
-                            </div>
-                        @endauth
-
-                        @guest
-                            <a href="{{ route('login', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors">{{ __('Login') }}</a>
-                        @else
-                            <div class="relative group">
-                                <button class="flex items-center gap-2 hover:text-primary transition-colors py-2">
-                                    <div class="w-8 h-8 rounded-full bg-yasmina-50 flex items-center justify-center text-primary font-bold text-xs border border-yasmina-100 uppercase">
-                                        {{ substr(auth()->user()->name, 0, 2) }}
-                                    </div>
-                                    <span class="text-xs font-bold text-gray-700">{{ auth()->user()->name }}</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <button class="flex items-center gap-1 hover:text-primary transition-colors py-8">
+                                    {{ __('Institutions') }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </button>
-                                <div class="absolute right-0 top-full w-56 bg-white rounded-2xl shadow-2xl border border-yasmina-50 p-2 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
-                                    <div class="grid gap-1">
-                                        @if(auth()->user()->isAdmin())
-                                            <a href="{{ route('admin.index') }}" class="px-4 py-2.5 hover:bg-yasmina-50 rounded-xl transition-all flex items-center gap-3 group/item">
-                                                <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                                                    </svg>
+                                <div class="absolute left-0 top-full w-64 bg-white rounded-2xl shadow-2xl border border-yasmina-50 p-4 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
+                                    <div class="grid gap-2">
+                                        <a href="{{ route('home') }}" class="px-4 py-3 hover:bg-yasmina-50 rounded-xl transition-all flex items-center justify-between group/item">
+                                            <span class="font-bold text-gray-700 group-hover/item:text-primary">{{ __('Main Store') }}</span>
+                                            @if(!$currentVendor)
+                                                <span class="w-2 h-2 bg-primary rounded-full"></span>
+                                            @endif
+                                        </a>
+                                        @foreach($globalVendors as $vendor)
+                                            <a href="{{ route('home', ['vendor_id' => $vendor->slug]) }}" class="px-4 py-3 hover:bg-yasmina-50 rounded-xl transition-all flex items-center justify-between group/item">
+                                                <div class="flex items-center gap-3">
+                                                    @if($vendor->logo)
+                                                        <img src="{{ asset('storage/' . $vendor->logo) }}" class="w-6 h-6 rounded-full object-contain bg-gray-50">
+                                                    @endif
+                                                    <span class="font-bold text-gray-700 group-hover/item:text-primary">{{ $vendor->name }}</span>
                                                 </div>
-                                                <span class="font-bold text-gray-700 text-xs">{{ __('Admin Dashboard') }}</span>
+                                                @if($currentVendor && $currentVendor->id == $vendor->id)
+                                                    <span class="w-2 h-2 bg-primary rounded-full"></span>
+                                                @endif
                                             </a>
-                                        @endif
-
-                                        @if(auth()->user()->vendor_id)
-                                            <a href="{{ route('vendor.dashboard') }}" class="px-4 py-2.5 hover:bg-yasmina-50 rounded-xl transition-all flex items-center gap-3 group/item">
-                                                <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                                    </svg>
-                                                </div>
-                                                <span class="font-bold text-gray-700 text-xs">{{ __('Vendor Panel') }}</span>
-                                            </a>
-                                        @endif
-                                        
-                                        <a href="{{ route('web.profile', ['vendor_id' => request('vendor_id')]) }}" class="px-4 py-2.5 hover:bg-yasmina-50 rounded-xl transition-all flex items-center gap-3 group/item">
-                                            <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover/item:text-primary transition-colors">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                </svg>
-                                            </div>
-                                            <span class="font-bold text-gray-700 text-xs">{{ __('My Account') }}</span>
-                                        </a>
-
-                                        <a href="{{ route('web.profile.orders', ['vendor_id' => request('vendor_id')]) }}" class="px-4 py-2.5 hover:bg-yasmina-50 rounded-xl transition-all flex items-center gap-3 group/item">
-                                            <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover/item:text-primary transition-colors">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                                </svg>
-                                            </div>
-                                            <span class="font-bold text-gray-700 text-xs">{{ __('My Orders') }}</span>
-                                        </a>
-
-                                        <a href="{{ route('web.profile.addresses', ['vendor_id' => request('vendor_id')]) }}" class="px-4 py-2.5 hover:bg-yasmina-50 rounded-xl transition-all flex items-center gap-3 group/item">
-                                            <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover/item:text-primary transition-colors">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                </svg>
-                                            </div>
-                                            <span class="font-bold text-gray-700 text-xs">{{ __('My Addresses') }}</span>
-                                        </a>
-
-                                        <div class="border-t border-yasmina-50 my-1"></div>
-
-                                        <form method="POST" action="{{ route('logout') }}" class="block">
-                                            @csrf
-                                            <button type="submit" class="w-full px-4 py-2.5 hover:bg-red-50 text-red-500 rounded-xl transition-all flex items-center gap-3 group/item">
-                                                <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-400">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4-4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                                    </svg>
-                                                </div>
-                                                <span class="font-bold text-xs text-left">{{ __('Logout') }}</span>
-                                            </button>
-                                        </form>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
-                        @endguest
+                            
+                            <div class="relative group">
+                                <button class="flex items-center gap-1 hover:text-primary transition-colors py-8">
+                                    {{ __('Categories') }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                <div class="absolute left-0 top-full w-64 bg-white rounded-2xl shadow-2xl border border-yasmina-50 p-4 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
+                                    <div class="grid gap-2">
+                                        @foreach($globalCategories as $category)
+                                            <a href="{{ route('web.shop', ['category_id' => $category->id, 'vendor_id' => request('vendor_id')]) }}" class="px-4 py-3 hover:bg-yasmina-50 rounded-xl transition-all flex items-center justify-between group/item">
+                                                <span class="font-bold text-gray-700 group-hover/item:text-primary">{{ $category->name }}</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300 group-hover/item:text-primary opacity-0 group-hover/item:opacity-100 -translate-x-2 group-hover/item:translate-x-0 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </a>
+                                        @endforeach
+                                        <div class="mt-2 pt-2 border-t border-yasmina-50">
+                                            <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="block text-center py-2 text-xs font-bold text-primary hover:underline">
+                                                {{ __('View All Categories') }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- Theme Switcher -->
-                        <div class="hidden lg:flex items-center gap-2 pl-6 border-l border-yasmina-100">
-                            <button onclick="setTheme('yasmina')" 
-                                class="w-6 h-6 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform active:scale-95" 
-                                style="background: linear-gradient(to right, {{ ($currentVendor && $currentVendor->primary_color) ? $currentVendor->primary_color : '#865d58' }}, {{ ($currentVendor && $currentVendor->secondary_color) ? $currentVendor->secondary_color : '#d6a6a1' }})"
-                                title="{{ $currentVendor ? __('Institution Theme') : __('Yasmina Theme') }}"></button>
-                            <button onclick="setTheme('barbie')" class="w-6 h-6 rounded-full bg-[#e0218a] border-2 border-white shadow-sm hover:scale-110 transition-transform active:scale-95" title="{{ __('Barbie Theme') }}"></button>
+                            <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.shop') ? 'text-primary' : '' }}">{{ __('Shop') }}</a>
+                            <a href="{{ route('web.promotions.index', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.promotions.index') ? 'text-primary' : '' }}">{{ __('Promotions') }}</a>
+                            <a href="{{ route('web.about', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.about') ? 'text-primary' : '' }}">{{ __('About Us') }}</a>
+                            <a href="{{ route('web.contact', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.contact') ? 'text-primary' : '' }}">{{ __('Contact Us') }}</a>
+                            <a href="{{ route('web.returns', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('web.returns') ? 'text-primary' : '' }}">{{ __('Return Policy') }}</a>
+                            
+                            <a href="{{ route('web.become-vendor', ['vendor_id' => request('vendor_id')]) }}" class="px-5 py-2 bg-primary text-white rounded-full text-[10px] font-bold hover:bg-primary-hover transition-all shadow-lg shadow-primary/20 whitespace-nowrap">
+                                {{ __('Join Us') }}
+                            </a>
                         </div>
-                        <!-- Language Switcher -->
-                        <div class="hidden lg:flex items-center bg-yasmina-50 rounded-2xl p-1 shadow-sm border border-yasmina-100 ml-6">
-                            <a href="{{ route('lang.switch', 'en') }}" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all {{ app()->getLocale() == 'en' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-primary' }}">EN</a>
-                            <a href="{{ route('lang.switch', 'ar') }}" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all {{ app()->getLocale() == 'ar' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-primary' }}">AR</a>
-                        </div>
-                        </div>
-                    </div>
 
-                    <!-- Mobile Navigation Actions (Cart + Hamburger) -->
-                    <div class="flex lg:hidden items-center gap-2">
-                        <!-- Mobile Cart -->
-                        <a href="{{ route('web.cart', ['vendor_id' => request('vendor_id')]) }}" class="relative p-2 text-gray-700 hover:text-primary transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                            </svg>
-                            @if($cartCount > 0)
-                                <span class="absolute top-1 right-1 w-4 h-4 bg-primary text-white text-[8px] font-bold flex items-center justify-center rounded-full border border-white">
-                                    {{ $cartCount }}
-                                </span>
-                            @endif
-                        </a>
-                        
-                        <!-- Hamburger Toggle -->
-                        <button @click="mobileMenu = true" class="p-2 text-gray-700 hover:text-primary transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        </button>
+                        <!-- Desktop Actions -->
+                        <div class="hidden xl:flex items-center gap-4 border-l border-yasmina-100 pl-4">
+                            <!-- Cart -->
+                            <a href="{{ route('web.cart', ['vendor_id' => request('vendor_id')]) }}" class="relative group p-2 hover:bg-yasmina-50 rounded-xl transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                </svg>
+                                @php $cartCount = app(\Modules\Web\Services\CartService::class)->getCartCount(); @endphp
+                                @if($cartCount > 0)
+                                    <span class="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-lg shadow-primary/20 border-2 border-white">
+                                        {{ $cartCount }}
+                                    </span>
+                                @endif
+                            </a>
+
+                            <!-- Notifications -->
+                            @auth
+                                <div class="relative" x-data="{ 
+                                    open: false,
+                                    markRead(id, url) {
+                                        fetch(`/notifications/${id}/read`, {
+                                            method: 'POST',
+                                            headers: {
+                                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                                'Content-Type': 'application/json',
+                                                'Accept': 'application/json'
+                                            }
+                                        }).then(() => {
+                                            window.location.href = url;
+                                        });
+                                    }
+                                }">
+                                    <button @click="open = !open" @click.away="open = false" class="relative p-2 hover:bg-yasmina-50 rounded-xl transition-all">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                        </svg>
+                                        @php 
+                                            $vendorId = request()->vendor_id;
+                                            $unreadCount = auth()->user()->vendorUnreadNotifications($vendorId)->count(); 
+                                        @endphp
+                                        @if($unreadCount > 0)
+                                            <span class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full border border-white">
+                                                {{ $unreadCount }}
+                                            </span>
+                                        @endif
+                                    </button>
+                                    <div x-show="open" 
+                                         x-transition:enter="transition ease-out duration-200"
+                                         x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                         class="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-yasmina-50 z-[60] overflow-hidden" style="display: none;">
+                                        <div class="p-4 border-b border-yasmina-50 flex justify-between items-center bg-yasmina-50/10">
+                                            <span class="font-bold text-gray-900 text-sm">{{ __('Notifications') }}</span>
+                                        </div>
+                                        <div class="max-h-96 overflow-y-auto">
+                                            @forelse(auth()->user()->vendorNotifications($vendorId)->take(5)->get() as $notification)
+                                                <button @click="markRead('{{ $notification->id }}', '{{ $notification->data['action_url'] ?? route('web.notifications', ['vendor_id' => request('vendor_id')]) }}')" 
+                                                   class="w-full text-start p-4 border-b border-yasmina-50/50 hover:bg-yasmina-50/30 transition-all block">
+                                                    <p class="text-xs font-bold text-gray-800 leading-snug">{{ $notification->data['message'] ?? '' }}</p>
+                                                    <span class="text-[10px] text-gray-400 mt-1 block font-bold">{{ $notification->created_at->diffForHumans() }}</span>
+                                                </button>
+                                            @empty
+                                                <div class="p-8 text-center text-gray-400 text-xs font-bold">{{ __('No notifications yet') }}</div>
+                                            @endforelse
+                                        </div>
+                                        <a href="{{ route('web.notifications', ['vendor_id' => request('vendor_id')]) }}" class="block py-3 text-center text-xs font-bold text-primary bg-yasmina-50/20 hover:bg-yasmina-50/50 transition-all border-t border-yasmina-50">{{ __('View All') }}</a>
+                                    </div>
+                                </div>
+                            @endauth
+
+                            <!-- User Profile -->
+                            @guest
+                                <a href="{{ route('login', ['vendor_id' => request('vendor_id')]) }}" class="text-sm font-bold text-gray-700 hover:text-primary transition-colors">{{ __('Login') }}</a>
+                            @else
+                                <div class="relative group">
+                                    <button class="flex items-center gap-2 hover:text-primary transition-colors">
+                                        <div class="w-8 h-8 rounded-full bg-yasmina-50 flex items-center justify-center text-primary font-bold text-xs border border-yasmina-100 uppercase">
+                                            {{ substr(auth()->user()->name, 0, 2) }}
+                                        </div>
+                                    </button>
+                                    <div class="absolute right-0 top-full w-56 bg-white rounded-2xl shadow-2xl border border-yasmina-50 p-2 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
+                                        <a href="{{ route('web.profile', ['vendor_id' => request('vendor_id')]) }}" class="block px-4 py-2 hover:bg-yasmina-50 rounded-xl text-xs font-bold text-gray-700">{{ __('My Profile') }}</a>
+                                        <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="w-full text-left px-4 py-2 hover:bg-red-50 rounded-xl text-xs font-bold text-red-500">{{ __('Logout') }}</button></form>
+                                    </div>
+                                </div>
+                            @endguest
+
+                            <!-- Theme & Lang -->
+                            <div class="flex items-center gap-2 pl-4 border-l border-yasmina-100">
+                                <button onclick="setTheme('yasmina')" class="w-5 h-5 rounded-full border border-gray-200" style="background: var(--yasmina-primary)"></button>
+                                <button onclick="setTheme('barbie')" class="w-5 h-5 rounded-full border border-gray-200 bg-[#e0218a]"></button>
+                            </div>
+                            <div class="flex items-center bg-yasmina-50 rounded-xl p-1 text-[10px] font-bold">
+                                <a href="{{ route('lang.switch', 'en') }}" class="px-2 py-1 rounded-lg {{ app()->getLocale() == 'en' ? 'bg-white text-primary' : 'text-gray-400' }}">EN</a>
+                                <a href="{{ route('lang.switch', 'ar') }}" class="px-2 py-1 rounded-lg {{ app()->getLocale() == 'ar' ? 'bg-white text-primary' : 'text-gray-400' }}">AR</a>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Header Actions -->
+                        <div class="flex xl:hidden items-center gap-2">
+                            <a href="{{ route('web.cart', ['vendor_id' => request('vendor_id')]) }}" class="relative p-2 text-gray-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                </svg>
+                                @if($cartCount > 0)
+                                    <span class="absolute top-1 right-1 w-4 h-4 bg-primary text-white text-[8px] font-bold flex items-center justify-center rounded-full border border-white">{{ $cartCount }}</span>
+                                @endif
+                            </a>
+                            <button @click="mobileMenu = true" class="p-2 text-gray-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -430,7 +340,7 @@
                  x-transition:leave="transition ease-in duration-200"
                  x-transition:leave-start="translate-x-0"
                  x-transition:leave-end="{{ app()->getLocale() == 'ar' ? 'translate-x-full' : '-translate-x-full' }}"
-                 class="fixed inset-0 z-[100] lg:hidden" style="display: none;" x-cloak>
+                 class="fixed inset-0 z-[100] xl:hidden" style="display: none;" x-cloak>
                 <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-md" @click="mobileMenu = false"></div>
                 <div class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'right-0' : 'left-0' }} w-[85%] sm:w-80 bg-white shadow-2xl flex flex-col border-{{ app()->getLocale() == 'ar' ? 'l' : 'r' }} border-yasmina-50/50">
                     <div class="p-6 border-b border-yasmina-50 flex items-center justify-between bg-yasmina-50/20">
@@ -446,25 +356,45 @@
                         <!-- Navigation -->
                         <div class="flex flex-col gap-5">
                             <a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}" class="text-xl font-bold {{ request()->routeIs('home') ? 'text-primary' : 'text-gray-900' }}">{{ __('Home') }}</a>
-                            <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="text-xl font-bold {{ request()->routeIs('web.shop') ? 'text-primary' : 'text-gray-900' }}">{{ __('Shop') }}</a>
-                            <a href="{{ route('web.promotions.index', ['vendor_id' => request('vendor_id')]) }}" class="text-xl font-bold {{ request()->routeIs('web.promotions.index') ? 'text-primary' : 'text-gray-900' }}">{{ __('Promotions') }}</a>
-                            <a href="{{ route('web.about', ['vendor_id' => request('vendor_id')]) }}" class="text-xl font-bold {{ request()->routeIs('web.about') ? 'text-primary' : 'text-gray-900' }}">{{ __('About Us') }}</a>
-                            <a href="{{ route('web.contact', ['vendor_id' => request('vendor_id')]) }}" class="text-xl font-bold {{ request()->routeIs('web.contact') ? 'text-primary' : 'text-gray-900' }}">{{ __('Contact Us') }}</a>
-                            <a href="{{ route('web.returns', ['vendor_id' => request('vendor_id')]) }}" class="text-xl font-bold {{ request()->routeIs('web.returns') ? 'text-primary' : 'text-gray-900' }}">{{ __('Return Policy') }}</a>
-                        </div>
-
-                        <!-- Categories Section -->
-                        <div class="pt-8 border-t border-yasmina-50">
-                            <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">{{ __('Explore Categories') }}</h4>
-                            <div class="grid grid-cols-1 gap-4">
-                                @foreach($globalCategories->take(6) as $category)
-                                    <a href="{{ route('web.shop', ['category_id' => $category->id, 'vendor_id' => request('vendor_id')]) }}" class="flex items-center justify-between group">
-                                        <span class="text-sm font-bold text-gray-600 group-hover:text-primary transition-colors">{{ $category->name }}</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                        </svg>
+                            
+                            <!-- Institutions (Always Visible) -->
+                            <div class="space-y-4">
+                                <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest">{{ __('Institutions') }}</h4>
+                                <div class="grid gap-2">
+                                    <a href="{{ route('home') }}" class="flex items-center justify-between py-2 text-sm font-bold text-gray-600">
+                                        {{ __('Main Store') }}
+                                        @if(!$currentVendor) <span class="w-1.5 h-1.5 bg-primary rounded-full"></span> @endif
                                     </a>
-                                @endforeach
+                                    @foreach($globalVendors as $vendor)
+                                        <a href="{{ route('home', ['vendor_id' => $vendor->slug]) }}" class="flex items-center justify-between py-2">
+                                            <span class="text-sm font-bold text-gray-600">{{ $vendor->name }}</span>
+                                            @if($currentVendor && $currentVendor->id == $vendor->id) <span class="w-1.5 h-1.5 bg-primary rounded-full"></span> @endif
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Categories (Always Visible) -->
+                            <div class="space-y-4 pt-4 border-t border-yasmina-50">
+                                <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest">{{ __('Categories') }}</h4>
+                                <div class="grid gap-2">
+                                    @foreach($globalCategories as $category)
+                                        <a href="{{ route('web.shop', ['category_id' => $category->id, 'vendor_id' => request('vendor_id')]) }}" class="block py-2 text-sm font-bold text-gray-600">
+                                            {{ $category->name }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="space-y-4 pt-4 border-t border-yasmina-50">
+                                <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="block text-xl font-bold {{ request()->routeIs('web.shop') ? 'text-primary' : 'text-gray-900' }}">{{ __('Shop') }}</a>
+                                <a href="{{ route('web.promotions.index', ['vendor_id' => request('vendor_id')]) }}" class="block text-xl font-bold {{ request()->routeIs('web.promotions.index') ? 'text-primary' : 'text-gray-900' }}">{{ __('Promotions') }}</a>
+                                <a href="{{ route('web.about', ['vendor_id' => request('vendor_id')]) }}" class="block text-xl font-bold {{ request()->routeIs('web.about') ? 'text-primary' : 'text-gray-900' }}">{{ __('About Us') }}</a>
+                                <a href="{{ route('web.contact', ['vendor_id' => request('vendor_id')]) }}" class="block text-xl font-bold {{ request()->routeIs('web.contact') ? 'text-primary' : 'text-gray-900' }}">{{ __('Contact Us') }}</a>
+                                <a href="{{ route('web.returns', ['vendor_id' => request('vendor_id')]) }}" class="block text-xl font-bold {{ request()->routeIs('web.returns') ? 'text-primary' : 'text-gray-900' }}">{{ __('Return Policy') }}</a>
+                                <a href="{{ route('web.become-vendor', ['vendor_id' => request('vendor_id')]) }}" class="w-full py-4 bg-primary text-white rounded-2xl text-center font-bold block shadow-lg shadow-primary/20 mt-4">
+                                    {{ __('Join Us') }}
+                                </a>
                             </div>
                         </div>
 
