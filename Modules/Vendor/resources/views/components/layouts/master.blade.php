@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>{{ $title ?? __('Vendor Panel') }} - Yasmina</title>
+        <link rel="icon" href="{{ auth('vendor')->user()->logo ? asset('storage/' . auth('vendor')->user()->logo) : asset('assets/logo.png') }}" type="image/png">
         
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
