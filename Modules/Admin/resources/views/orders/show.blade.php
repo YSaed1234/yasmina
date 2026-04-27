@@ -202,7 +202,7 @@
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Payment Method') }}</label>
                         <div class="px-5 py-4 bg-yasmina-50/50 border border-yasmina-100 rounded-2xl font-bold text-primary">
-                            {{ $order->payment_method === 'cod' ? __('Cash on Delivery') : strtoupper($order->payment_method) }}
+                            {{ in_array($order->payment_method, ['cod', 'wallet']) ? __($order->payment_method) : strtoupper($order->payment_method) }}
                         </div>
                     </div>
                 </div>
