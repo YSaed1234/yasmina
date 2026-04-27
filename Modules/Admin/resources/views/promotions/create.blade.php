@@ -156,12 +156,12 @@
                     </div>
                     <div class="flex items-center gap-4 py-4 bg-gray-50 px-6 rounded-2xl border border-gray-100">
                         <label class="text-sm font-bold text-gray-700 flex-1">{{ __('Active Status') }}</label>
-                        <div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full cursor-pointer">
+                        <label class="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full cursor-pointer">
                             <input type="hidden" name="is_active" value="0">
                             <input type="checkbox" name="is_active" value="1" checked class="peer sr-only">
                             <div class="w-full h-full bg-gray-200 rounded-full peer-checked:bg-emerald-500 transition-all"></div>
                             <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-all peer-checked:left-7"></div>
-                        </div>
+                        </label>
                     </div>
                 </div>
             </div>

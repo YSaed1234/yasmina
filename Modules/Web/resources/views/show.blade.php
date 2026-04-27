@@ -34,9 +34,9 @@
                     <div class="flex flex-col">
                       @if($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture())
                             <div class="flex items-baseline gap-3 mb-2">
-                                <span class="text-4xl font-black text-amber-600">{{ number_format($product->flash_sale_price, 2) }}</span>
+                                <span id="main-price-display" class="text-4xl font-black text-amber-600">{{ number_format($product->flash_sale_price, 2) }}</span>
                                 <span class="text-xl font-bold text-amber-600">{{ $product->currency?->symbol ?? '$' }}</span>
-                                <span class="text-lg text-gray-400 line-through ml-2">{{ number_format($product->price, 2) }}</span>
+                                <span id="compare-price-display" class="text-lg text-gray-400 line-through ml-2">{{ number_format($product->price, 2) }}</span>
                             </div>
                             <div class="mt-4 bg-amber-50/50 border border-amber-100 rounded-3xl p-6 flex flex-col items-center gap-4 shadow-sm">
                                     <div class="flex items-center gap-2 text-amber-600">
@@ -63,14 +63,18 @@
                                     </div>
                                 </div>
                         @elseif($product->discount_price && $product->discount_price < $product->price)
-                            <div class="flex flex-col items-center">
-                                <span class="text-xs text-red-400 line-through">{{ number_format($product->price, 2) }}</span>
-                                <span class="text-lg font-black text-gray-900">{{ number_format($product->discount_price, 2) }}</span>
-                                <span class="text-[10px] font-bold text-yasmina-500">{{ $product->currency?->symbol ?? '$' }}</span>
+                            <div class="flex flex-col">
+                                <span id="compare-price-display" class="text-sm text-gray-400 line-through">{{ number_format($product->price, 2) }}</span>
+                                <div class="flex items-baseline gap-1">
+                                    <span id="main-price-display" class="text-3xl font-black text-gray-900">{{ number_format($product->discount_price, 2) }}</span>
+                                    <span class="text-sm font-bold text-yasmina-500">{{ $product->currency?->symbol ?? '$' }}</span>
+                                </div>
                             </div>
                         @else
-                            <span class="text-lg font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
-                            <span class="text-sm font-bold text-yasmina-500 ml-1">{{ $product->currency?->symbol ?? '$' }}</span>
+                            <div class="flex items-baseline gap-1">
+                                <span id="main-price-display" class="text-3xl font-bold text-gray-900">{{ number_format($product->price, 2) }}</span>
+                                <span class="text-sm font-bold text-yasmina-500">{{ $product->currency?->symbol ?? '$' }}</span>
+                            </div>
                         @endif
                     </div>
 
@@ -131,6 +135,15 @@
                                 @csrf
                                 <input type="hidden" name="variant_id" id="selected-variant-id">
                                 
+                                <div class="mb-8">
+                                    <label class="block text-xs font-black text-yasmina-400 uppercase tracking-widest mb-3">{{ __('Quantity') }}</label>
+                                    <div class="flex items-center bg-yasmina-50/50 rounded-2xl p-2 w-max border border-yasmina-100/50">
+                                        <button type="button" onclick="adjustQty(-1)" class="w-12 h-12 flex items-center justify-center rounded-xl bg-white soft-shadow hover:text-primary transition-all font-bold text-xl">-</button>
+                                        <input type="number" name="quantity" id="quantity-input" value="1" min="1" max="{{ $product->stock }}" class="w-20 text-center bg-transparent border-none focus:ring-0 font-bold text-lg" readonly>
+                                        <button type="button" onclick="adjustQty(1)" class="w-12 h-12 flex items-center justify-center rounded-xl bg-white soft-shadow hover:text-primary transition-all font-bold text-xl">+</button>
+                                    </div>
+                                </div>
+
                                 <button type="submit" @if($product->total_stock <= 0) disabled @endif id="add-to-cart-btn" class="w-full py-5 {{ $product->total_stock <= 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-primary text-white hover:opacity-90 shadow-primary/20' }} rounded-2xl font-bold text-lg transition-all shadow-xl flex items-center justify-center gap-3">
                                     @if($product->total_stock <= 0)
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -172,6 +185,14 @@
                             const basePrice = {{ $product->getEffectivePriceAttribute() }};
                             const hasFlashSale = {{ $product->hasActiveFlashSale() ? 'true' : 'false' }};
                             const currencySymbol = '{{ $product->currency?->symbol ?? "$" }}';
+
+                            function adjustQty(amount) {
+                                const input = document.getElementById('quantity-input');
+                                let val = parseInt(input.value) + amount;
+                                if (val < 1) val = 1;
+                                if (val > parseInt(input.max)) val = parseInt(input.max);
+                                input.value = val;
+                            }
 
                             function selectVariantOption(type, value) {
                                 // Toggle selection
@@ -217,7 +238,6 @@
                                 });
 
                                 // 3. Find the specific selected variant
-                                // We only consider it "selected" if both color and size are picked (or if one doesn't exist)
                                 const colorExists = document.querySelectorAll('.variant-btn[data-option-type="color"]').length > 0;
                                 const sizeExists = document.querySelectorAll('.variant-btn[data-option-type="size"]').length > 0;
                                 const isFullySelected = (!colorExists || selections.color) && (!sizeExists || selections.size);
@@ -228,15 +248,25 @@
                                     return matchColor && matchSize;
                                 });
 
-                                const priceDisplay = document.querySelector('.text-4xl.font-black, .text-lg.font-bold.text-gray-900');
+                                const mainPriceDisplay = document.getElementById('main-price-display');
+                                const comparePriceDisplay = document.getElementById('compare-price-display');
                                 const variantIdInput = document.getElementById('selected-variant-id');
                                 const addToCartBtn = document.getElementById('add-to-cart-btn');
+                                const qtyInput = document.getElementById('quantity-input');
 
                                 if (isFullySelected && variant) {
-                                    // Price Logic: Flash Sale > Variant Price > Base Effective Price
-                                    let finalPrice = hasFlashSale ? basePrice : (variant.price || basePrice);
-                                    if (priceDisplay) priceDisplay.textContent = parseFloat(finalPrice).toLocaleString(undefined, {minimumFractionDigits: 2});
+                                    // Update Price
+                                    let finalPrice = hasFlashSale ? {{ $product->flash_sale_price ?? 0 }} : (variant.price || basePrice);
+                                    let originalPrice = variant.price || {{ $product->price }};
+                                    
+                                    if (mainPriceDisplay) mainPriceDisplay.textContent = parseFloat(finalPrice).toLocaleString(undefined, {minimumFractionDigits: 2});
+                                    if (comparePriceDisplay) comparePriceDisplay.textContent = parseFloat(originalPrice).toLocaleString(undefined, {minimumFractionDigits: 2});
+
                                     variantIdInput.value = variant.id;
+                                    
+                                    // Update Quantity Max based on variant stock
+                                    qtyInput.max = variant.stock;
+                                    if (parseInt(qtyInput.value) > variant.stock) qtyInput.value = Math.max(1, variant.stock);
                                     
                                     if (variant.stock <= 0) {
                                         addToCartBtn.disabled = true;
@@ -250,23 +280,28 @@
                                         addToCartBtn.classList.add('bg-primary', 'text-white');
                                     }
                                 } else {
-                                    if (priceDisplay) priceDisplay.textContent = parseFloat(basePrice).toLocaleString(undefined, {minimumFractionDigits: 2});
-                                    variantIdInput.value = '';
+                                    if (mainPriceDisplay) mainPriceDisplay.textContent = parseFloat(basePrice).toLocaleString(undefined, {minimumFractionDigits: 2});
+                                    if (comparePriceDisplay) comparePriceDisplay.textContent = parseFloat({{ $product->price }}).toLocaleString(undefined, {minimumFractionDigits: 2});
                                     
-                                    // Disable button if not fully selected but variants exist
+                                    variantIdInput.value = '';
+                                    qtyInput.max = {{ $product->stock }};
+                                    
                                     if ((colorExists || sizeExists) && !isFullySelected) {
                                         addToCartBtn.disabled = true;
                                         addToCartBtn.innerHTML = `{{ __('Select Options') }}`;
                                         addToCartBtn.classList.add('bg-gray-100', 'text-gray-400');
                                         addToCartBtn.classList.remove('bg-primary', 'text-white');
                                     } else {
-                                        // Base product stock check
                                         @if($product->stock <= 0)
                                             addToCartBtn.disabled = true;
                                             addToCartBtn.innerHTML = `{{ __('Sold Out') }}`;
+                                            addToCartBtn.classList.add('bg-gray-100', 'text-gray-400');
+                                            addToCartBtn.classList.remove('bg-primary', 'text-white');
                                         @else
                                             addToCartBtn.disabled = false;
                                             addToCartBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg> {{ __('Add to Bag') }}`;
+                                            addToCartBtn.classList.remove('bg-gray-100', 'text-gray-400');
+                                            addToCartBtn.classList.add('bg-primary', 'text-white');
                                         @endif
                                     }
                                 }

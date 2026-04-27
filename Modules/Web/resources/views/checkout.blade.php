@@ -239,23 +239,20 @@
 
     @push('scripts')
     <script>
-        const subtotal = {{ $totalOriginal }};
-        const productSavings = {{ $productSavings }};
-        const promotionalDiscount = {{ $promotionalDiscount }};
-        const vendorDiscount = {{ $vendorDiscount }};
-        const discount = {{ $discount }};
-        const isFreeShipping = {{ (isset($currentVendor) && in_array($currentVendor->id, $freeShippingVendors)) ? 'true' : 'false' }};
+        const baseTotal = {{ $finalTotal }};
+        const isFreeShipping = {{ (isset($freeShippingVendors) && $currentVendor && in_array($currentVendor->id, $freeShippingVendors)) ? 'true' : 'false' }};
         const currency = "{{ reset($cart)['currency'] ?? '$' }}";
         const hasStockIssues = {{ $hasStockIssues ? 'true' : 'false' }};
 
         function updateSummary() {
             const selectedAddress = document.querySelector('input[name="address_id"]:checked');
             const submitBtn = document.querySelector('button[type="submit"]');
+            const shippingDisplay = document.getElementById('shipping-display');
+            const totalDisplay = document.getElementById('total-display');
             
             if (hasStockIssues) {
                 submitBtn.disabled = true;
                 submitBtn.classList.add('opacity-50', 'cursor-not-allowed', 'grayscale');
-                // Even if address is selected, stock issues take priority for disabling
             }
 
             if (selectedAddress) {
@@ -265,17 +262,23 @@
                 
                 if (isAvailable) {
                     const finalRate = isFreeShipping ? 0 : rate;
-                    document.getElementById('shipping-display').innerText = finalRate > 0 ? currency + finalRate.toFixed(2) : "{{ __('Free') }}";
-                    document.getElementById('total-display').innerText = currency + (subtotal - productSavings - promotionalDiscount - vendorDiscount - discount + finalRate).toFixed(2);
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    shippingDisplay.innerText = finalRate > 0 ? currency + finalRate.toFixed(2) : "{{ __('Free') }}";
+                    const total = baseTotal + finalRate;
+                    totalDisplay.innerText = currency + Math.max(0, total).toFixed(2);
+                    
+                    if (!hasStockIssues) {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
                 } else {
-                    document.getElementById('shipping-display').innerText = "{{ __('Not Available') }}";
-                    document.getElementById('total-display').innerText = "{{ __('N/A') }}";
+                    shippingDisplay.innerText = "{{ __('Not Available') }}";
+                    totalDisplay.innerText = "{{ __('N/A') }}";
                     submitBtn.disabled = true;
                     submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
                 }
             } else {
+                shippingDisplay.innerText = "{{ __('Pending') }}";
+                totalDisplay.innerText = currency + baseTotal.toFixed(2);
                 submitBtn.disabled = true;
                 submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }

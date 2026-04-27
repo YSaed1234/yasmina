@@ -59,6 +59,7 @@ class CheckoutService
 
         $cartData = $this->cartService->getCartData($vendor->id ?? null);
 
+        // dd($cartData);
         if (empty($cartData['cart'])) {
             return ['success' => false, 'error' => __('Your cart is empty!')];
         }

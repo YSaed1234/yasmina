@@ -242,7 +242,8 @@ class CartService
         $coupon = null;
         $discount = 0;
 
-        $totalAfterVendorDiscounts = max(0, $totalAfterPromotions - $vendorDiscount);
+        $totalAfterVendorDiscounts = $totalAfterPromotions - $vendorDiscount;
+
         $freeShippingVendors = [];
         foreach ($vendorGroups as $vId => $group) {
             if ($group['vendor']->free_shipping_threshold && $group['total'] >= $group['vendor']->free_shipping_threshold) {
@@ -268,9 +269,9 @@ class CartService
                 Session::forget('coupon');
             }
         }
-
-        $finalTotal = max(0, $totalAfterVendorDiscounts - $discount);
-
+        // $finalTotal = max(0, ($totalAfterVendorDiscounts - $discount));
+        $finalTotal = ($totalAfterVendorDiscounts - $discount);
+        // dd($finalTotal);
         return [
             'cart' => $cart,
             'total' => $total,
@@ -303,7 +304,7 @@ class CartService
 
         $variant = $variantId ? \App\Models\ProductVariant::findOrFail($variantId) : null;
 
-        $key = $variantId ? (string)$productId . ':' . (string)$variantId : (string)$productId;
+        $key = $variantId ? (string) $productId . ':' . (string) $variantId : (string) $productId;
 
         if (Auth::check()) {
             $cart = Cart::firstOrCreate([

@@ -298,9 +298,12 @@
             const list = document.getElementById('modal-items-list');
             list.innerHTML = '';
             
+            let subtotalAmount = 0;
             order.items.forEach(item => {
+                const itemSubtotal = parseFloat(item.quantity) * parseFloat(item.price);
+                subtotalAmount += itemSubtotal;
+                
                 const div = document.createElement('div');
-                div.className = 'flex items-center gap-4 py-2 border-b border-gray-50 last:border-0';
                 div.innerHTML = `
                     <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-50 border border-gray-100 shrink-0 relative">
                         ${item.is_gift ? `
@@ -317,29 +320,27 @@
                         <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">${item.quantity} × ${parseFloat(item.price).toFixed(2)}</p>
                     </div>
                     <div class="text-sm font-bold text-gray-900">
-                        ${(item.quantity * item.price).toFixed(2)}
+                        ${order.currency_symbol || '$'}${itemSubtotal.toFixed(2)}
                     </div>
                 `;
                 list.appendChild(div);
             });
 
+            const currency = order.currency_symbol || '$';
             const shippingAmount = parseFloat(order.shipping_amount || 0);
             const discountAmount = parseFloat(order.discount_amount || 0);
             const vendorDiscountAmount = parseFloat(order.vendor_discount_amount || 0);
             const promotionalDiscountAmount = parseFloat(order.promotional_discount_amount || 0);
-            const totalPromotionalDiscount = vendorDiscountAmount + promotionalDiscountAmount;
-            
             const totalAmount = parseFloat(order.total);
-            const subtotalAmount = totalAmount - shippingAmount + discountAmount + totalPromotionalDiscount;
 
-            document.getElementById('modal-subtotal').innerText = subtotalAmount.toFixed(2);
-            document.getElementById('modal-shipping').innerText = shippingAmount.toFixed(2);
+            document.getElementById('modal-subtotal').innerText = currency + subtotalAmount.toFixed(2);
+            document.getElementById('modal-shipping').innerText = shippingAmount > 0 ? currency + shippingAmount.toFixed(2) : '{{ __("Free") }}';
             
             // Coupon Discount
             const couponRow = document.getElementById('modal-coupon-row');
             if (discountAmount > 0) {
                 couponRow.classList.remove('hidden');
-                document.getElementById('modal-discount').innerText = `-${discountAmount.toFixed(2)}`;
+                document.getElementById('modal-discount').innerText = `-${currency}${discountAmount.toFixed(2)}`;
             } else {
                 couponRow.classList.add('hidden');
             }
@@ -350,7 +351,7 @@
                 vendorRow.classList.remove('hidden');
                 const label = order.vendor_discount_type === 'threshold' ? '{{ __("Order Threshold Discount") }}' : '{{ __("Multi-item Discount") }}';
                 document.getElementById('modal-vendor-discount-label').innerText = label;
-                document.getElementById('modal-vendor-discount').innerText = `-${vendorDiscountAmount.toFixed(2)}`;
+                document.getElementById('modal-vendor-discount').innerText = `-${currency}${vendorDiscountAmount.toFixed(2)}`;
             } else {
                 vendorRow.classList.add('hidden');
             }
@@ -359,7 +360,7 @@
             const promoRow = document.getElementById('modal-promo-discount-row');
             if (promotionalDiscountAmount > 0) {
                 promoRow.classList.remove('hidden');
-                document.getElementById('modal-promo-discount').innerText = `-${promotionalDiscountAmount.toFixed(2)}`;
+                document.getElementById('modal-promo-discount').innerText = `-${currency}${promotionalDiscountAmount.toFixed(2)}`;
             } else {
                 promoRow.classList.add('hidden');
             }
@@ -372,7 +373,7 @@
                 specialBlock.classList.add('hidden');
             }
 
-            document.getElementById('modal-total').innerText = totalAmount.toFixed(2);
+            document.getElementById('modal-total').innerText = currency + totalAmount.toFixed(2);
             
             // Payment info
             document.getElementById('modal-payment-method').innerText = order.payment_method === 'cod' ? '{{ __("Cash on Delivery") }}' : '{{ __("Credit Card") }}';

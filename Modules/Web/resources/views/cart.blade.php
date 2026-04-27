@@ -9,6 +9,24 @@
                     </span>
                 </div>
 
+                @php
+                    $hasStockIssues = collect($cart)->contains(fn($item) => isset($item['in_stock']) && !$item['in_stock']);
+                @endphp
+
+                @if($hasStockIssues)
+                    <div class="mb-12 p-6 bg-red-50 border border-red-100 rounded-[2rem] flex items-center gap-6 text-red-700 shadow-sm animate-pulse">
+                        <div class="w-12 h-12 rounded-2xl bg-red-100 flex items-center justify-center flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg">{{ __('Some items have insufficient stock.') }}</p>
+                            <p class="text-sm opacity-80">{{ __('Please adjust quantities or remove unavailable items to continue.') }}</p>
+                        </div>
+                    </div>
+                @endif
+
                 @if(count($cart) > 0)
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                         <div class="lg:col-span-2 space-y-6">
@@ -203,7 +221,8 @@
                                         <span class="text-3xl font-bold text-primary">{{ reset($cart)['currency'] ?? '$' }}{{ number_format($finalTotal, 2) }}</span>
                                     </div>
                                 </div>
-                                <a href="{{ route('web.checkout', ['vendor_id' => request('vendor_id')]) }}" class="block w-full py-5 bg-primary text-white text-center rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">
+                                <a href="{{ $hasStockIssues ? 'javascript:void(0)' : route('web.checkout', ['vendor_id' => request('vendor_id')]) }}" 
+                                   class="block w-full py-5 bg-primary text-white text-center rounded-2xl font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20 {{ $hasStockIssues ? 'opacity-50 cursor-not-allowed grayscale' : '' }}">
                                     {{ __('Proceed to Checkout') }}
                                 </a>
                                 <p class="text-center text-gray-400 text-xs mt-6">

@@ -19,7 +19,7 @@ class CheckoutController extends Controller
     {
         $vendor = $request->attributes->get('current_vendor');
         $data = $this->checkoutService->getCheckoutData($vendor);
-
+        // dd($data);
         if (isset($data['error'])) {
             return redirect()->route('web.shop', ['vendor_id' => request('vendor_id')])->with('error', $data['error']);
         }
