@@ -66,5 +66,9 @@ Route::prefix('admin-dashboard-2026')->group(function () {
         Route::delete('vendor-payments/{payment}', [\Modules\Admin\Http\Controllers\VendorPaymentController::class, 'destroy'])->name('vendor_payments.destroy')->middleware('permission:manage vendors');
 
         Route::resource('vendors', \Modules\Admin\Http\Controllers\VendorController::class)->names('vendors')->middleware('permission:manage vendors');
+
+        // Reports
+        Route::get('inventory', [\Modules\Admin\Http\Controllers\ReportController::class, 'inventory'])->name('inventory.index');
+        Route::get('traffic', [\Modules\Admin\Http\Controllers\ReportController::class, 'traffic'])->name('traffic.index');
     });
 });

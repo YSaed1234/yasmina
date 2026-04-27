@@ -85,22 +85,29 @@
                     </div>
 
                     @if($product->variants->count() > 0)
-                        <div class="space-y-6 pt-4">
+                        <div class="space-y-10 pt-4">
                             <!-- Variant Selection -->
                             <div id="product-variants" data-variants="{{ $product->variants->toJson() }}">
                                 <!-- Colors -->
                                 @php $colors = $product->variants->pluck('color')->unique()->filter(); @endphp
                                 @if($colors->count() > 0)
-                                    <div class="mb-6">
-                                        <label class="block text-xs font-black text-yasmina-400 uppercase tracking-widest mb-3">{{ __('Select Color') }}</label>
-                                        <div class="flex flex-wrap gap-3">
+                                    <div class="mb-8">
+                                        <div class="flex justify-between items-center mb-4">
+                                            <label class="text-xs font-black text-yasmina-400 uppercase tracking-widest">{{ __('Select Color') }}</label>
+                                            <span id="selected-color-name" class="text-xs font-bold text-primary italic"></span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-4">
                                             @foreach($colors as $color)
                                                 <button type="button" 
                                                     onclick="selectVariantOption('color', '{{ $color }}')"
                                                     data-option-type="color"
                                                     data-option-value="{{ $color }}"
-                                                    class="variant-btn px-6 py-2.5 rounded-xl border-2 border-yasmina-50 bg-white text-sm font-bold text-gray-700 hover:border-primary transition-all">
+                                                    class="variant-btn group relative px-6 py-3 rounded-2xl border-2 border-yasmina-50 bg-white text-sm font-bold text-gray-700 hover:border-primary/30 transition-all flex items-center gap-3">
+                                                    <span class="w-2 h-2 rounded-full bg-gray-200 group-hover:bg-primary/50 transition-colors"></span>
                                                     {{ $color }}
+                                                    <div class="absolute -top-2 -right-2 w-5 h-5 bg-primary text-white rounded-full flex items-center justify-center scale-0 group-[.active]:scale-100 transition-transform shadow-lg border-2 border-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                                                    </div>
                                                 </button>
                                             @endforeach
                                         </div>
@@ -110,16 +117,22 @@
                                 <!-- Sizes -->
                                 @php $sizes = $product->variants->pluck('size')->unique()->filter(); @endphp
                                 @if($sizes->count() > 0)
-                                    <div class="mb-6">
-                                        <label class="block text-xs font-black text-yasmina-400 uppercase tracking-widest mb-3">{{ __('Select Size') }}</label>
-                                        <div class="flex flex-wrap gap-3">
+                                    <div class="mb-8">
+                                        <div class="flex justify-between items-center mb-4">
+                                            <label class="text-xs font-black text-yasmina-400 uppercase tracking-widest">{{ __('Select Size') }}</label>
+                                            <span id="selected-size-name" class="text-xs font-bold text-primary italic"></span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-4">
                                             @foreach($sizes as $size)
                                                 <button type="button"
                                                     onclick="selectVariantOption('size', '{{ $size }}')"
                                                     data-option-type="size"
                                                     data-option-value="{{ $size }}"
-                                                    class="variant-btn px-6 py-2.5 rounded-xl border-2 border-yasmina-50 bg-white text-sm font-bold text-gray-700 hover:border-primary transition-all">
+                                                    class="variant-btn group relative px-8 py-3 rounded-2xl border-2 border-yasmina-50 bg-white text-sm font-bold text-gray-700 hover:border-primary/30 transition-all">
                                                     {{ $size }}
+                                                    <div class="absolute -top-2 -right-2 w-5 h-5 bg-primary text-white rounded-full flex items-center justify-center scale-0 group-[.active]:scale-100 transition-transform shadow-lg border-2 border-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                                                    </div>
                                                 </button>
                                             @endforeach
                                         </div>
@@ -200,15 +213,39 @@
                                     selections[type] = null;
                                 } else {
                                     selections[type] = value;
+                                    
+                                    // Auto-reset other selection if incompatible
+                                    const otherType = type === 'color' ? 'size' : 'color';
+                                    if (selections[otherType]) {
+                                        const isCompatible = variants.some(v => 
+                                            v[type] === selections[type] && 
+                                            v[otherType] === selections[otherType]
+                                        );
+                                        if (!isCompatible) {
+                                            selections[otherType] = null;
+                                            const otherTextDisplay = document.getElementById(`selected-${otherType}-name`);
+                                            if (otherTextDisplay) otherTextDisplay.textContent = '';
+                                            
+                                            // Reset other UI buttons
+                                            document.querySelectorAll(`.variant-btn[data-option-type="${otherType}"]`).forEach(btn => {
+                                                btn.classList.remove('border-primary', 'bg-yasmina-50', 'text-primary', 'active');
+                                                btn.classList.add('border-yasmina-50', 'bg-white', 'text-gray-700');
+                                            });
+                                        }
+                                    }
                                 }
+
+                                // Update text display
+                                const textDisplay = document.getElementById(`selected-${type}-name`);
+                                if (textDisplay) textDisplay.textContent = selections[type] || '';
 
                                 // Update UI
                                 document.querySelectorAll(`.variant-btn[data-option-type="${type}"]`).forEach(btn => {
                                     if (btn.dataset.optionValue === value && selections[type] !== null) {
-                                        btn.classList.add('border-primary', 'bg-yasmina-50', 'text-primary');
+                                        btn.classList.add('border-primary', 'bg-yasmina-50', 'text-primary', 'active');
                                         btn.classList.remove('border-yasmina-50', 'bg-white', 'text-gray-700');
                                     } else {
-                                        btn.classList.remove('border-primary', 'bg-yasmina-50', 'text-primary');
+                                        btn.classList.remove('border-primary', 'bg-yasmina-50', 'text-primary', 'active');
                                         btn.classList.add('border-yasmina-50', 'bg-white', 'text-gray-700');
                                     }
                                 });
@@ -221,19 +258,19 @@
                                 const availableColors = [...new Set(variants.filter(v => !selections.size || v.size === selections.size).map(v => v.color))];
                                 const availableSizes = [...new Set(variants.filter(v => !selections.color || v.color === selections.color).map(v => v.size))];
 
-                                // 2. Update UI for buttons (Disable/Opacity if not available)
+                                // 2. Update UI for buttons (Visual hint only, NO pointer-events-none)
                                 document.querySelectorAll('.variant-btn[data-option-type="color"]').forEach(btn => {
                                     if (availableColors.includes(btn.dataset.optionValue)) {
-                                        btn.classList.remove('opacity-20', 'cursor-not-allowed', 'pointer-events-none');
+                                        btn.classList.remove('opacity-40', 'grayscale-[0.5]');
                                     } else {
-                                        btn.classList.add('opacity-20', 'cursor-not-allowed', 'pointer-events-none');
+                                        btn.classList.add('opacity-40', 'grayscale-[0.5]');
                                     }
                                 });
                                 document.querySelectorAll('.variant-btn[data-option-type="size"]').forEach(btn => {
                                     if (availableSizes.includes(btn.dataset.optionValue)) {
-                                        btn.classList.remove('opacity-20', 'cursor-not-allowed', 'pointer-events-none');
+                                        btn.classList.remove('opacity-40', 'grayscale-[0.5]');
                                     } else {
-                                        btn.classList.add('opacity-20', 'cursor-not-allowed', 'pointer-events-none');
+                                        btn.classList.add('opacity-40', 'grayscale-[0.5]');
                                     }
                                 });
 

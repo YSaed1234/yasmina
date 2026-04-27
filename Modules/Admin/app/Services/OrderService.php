@@ -22,6 +22,18 @@ class OrderService
             $query->where('status', $filters['status']);
         }
 
+        if (!empty($filters['product_id'])) {
+            $query->whereHas('items', function($q) use ($filters) {
+                $q->where('product_id', $filters['product_id']);
+            });
+        }
+
+        if (auth()->user()->vendor_id) {
+            $query->where('vendor_id', auth()->user()->vendor_id);
+        } elseif (!empty($filters['vendor_id'])) {
+            $query->where('vendor_id', $filters['vendor_id']);
+        }
+
         return $query->paginate($limit);
     }
 

@@ -53,6 +53,12 @@ class ProductDisplayController extends Controller
             abort(404);
         }
 
+        // Record Visit
+        \App\Models\Visit::record([
+            'product_id' => $product->id,
+            'vendor_id' => $product->vendor_id
+        ]);
+
         return view('web::show', compact('product'));
     }
 

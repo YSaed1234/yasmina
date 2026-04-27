@@ -279,6 +279,29 @@
                         </div>
                     </div>
 
+                    <!-- Reports -->
+                    <div x-data="{ open: {{ request()->routeIs('admin.inventory.*') || request()->routeIs('admin.traffic.*') ? 'true' : 'false' }} }">
+                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
+                            <div class="flex items-center gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                                <span x-show="sidebarOpen" class="font-bold text-sm truncate">{{ __('Reports') }}</span>
+                            </div>
+                            <svg x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div x-show="open && sidebarOpen" x-collapse class="mt-1 space-y-1 px-4">
+                            <a href="{{ route('admin.inventory.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.inventory.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                <span x-show="sidebarOpen">📦 {{ __('Inventory') }}</span>
+                            </a>
+                            <a href="{{ route('admin.traffic.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.traffic.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                <span x-show="sidebarOpen">👀 {{ __('Traffic') }}</span>
+                            </a>
+                        </div>
+                    </div>
+
                     <!-- System Settings -->
                     <div x-data="{ open: {{ request()->routeIs('admin.currencies.*') || request()->routeIs('admin.roles.*') || request()->routeIs('admin.settings.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">

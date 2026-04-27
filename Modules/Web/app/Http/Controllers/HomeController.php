@@ -17,6 +17,11 @@ class HomeController extends Controller
         $vendor = $request->attributes->get('current_vendor');
         $vendor_id = $vendor ? $vendor->id : null;
 
+        // Record Visit
+        \App\Models\Visit::record([
+            'vendor_id' => $vendor_id
+        ]);
+
         $categoriesQuery = \App\Models\Category::with(['products' => function($q) {
             $q->withValidPrice();
         }])->orderBy('rank');
