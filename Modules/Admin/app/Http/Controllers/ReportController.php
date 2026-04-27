@@ -190,4 +190,26 @@ class ReportController extends Controller
 
         return view('admin::reports.returns', compact('returnStats', 'recentReturns', 'vendors', 'vendorId', 'vendorSearch'));
     }
+
+    public function vendorTransactions(Request $request)
+    {
+        $vendorSearch = $request->get('vendor_search');
+        
+        $vendorStats = \App\Models\Vendor::withCount(['orders' => function($q) {
+                $q->where('status', 'delivered');
+            }])
+            ->withCount(['orders as returned_orders_count' => function($q) {
+                $q->whereHas('returnRequests');
+            }])
+            ->withSum(['orders' => function($q) {
+                $q->where('status', 'delivered');
+            }], 'total')
+            ->when($vendorSearch, function($q) use ($vendorSearch) {
+                $q->where('name', 'like', "%{$vendorSearch}%");
+            })
+            ->orderByDesc('orders_sum_total')
+            ->paginate(20);
+
+        return view('admin::reports.vendor_transactions', compact('vendorStats', 'vendorSearch'));
+    }
 }

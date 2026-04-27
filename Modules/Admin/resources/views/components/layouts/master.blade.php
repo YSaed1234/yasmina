@@ -308,6 +308,10 @@
                             <a href="{{ route('admin.reports.returns') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.reports.returns') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
                                 <span x-show="sidebarOpen">🔄 {{ __('Returns') }}</span>
                             </a>
+
+                            <a href="{{ route('admin.reports.vendor_transactions') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.reports.vendor_transactions') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                <span x-show="sidebarOpen">💼 {{ __('Vendor Transactions') }}</span>
+                            </a>
                         </div>
                     </div>
 

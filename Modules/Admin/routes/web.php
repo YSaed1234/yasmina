@@ -73,5 +73,6 @@ Route::prefix('admin-dashboard-2026')->group(function () {
         Route::get('reports/sales', [\Modules\Admin\Http\Controllers\ReportController::class, 'sales'])->name('reports.sales');
         Route::get('reports/customers', [\Modules\Admin\Http\Controllers\ReportController::class, 'customers'])->name('reports.customers');
         Route::get('reports/returns', [\Modules\Admin\Http\Controllers\ReportController::class, 'returns'])->name('reports.returns');
+        Route::get('reports/vendor-transactions', [\Modules\Admin\Http\Controllers\ReportController::class, 'vendorTransactions'])->name('reports.vendor_transactions');
     });
 });
