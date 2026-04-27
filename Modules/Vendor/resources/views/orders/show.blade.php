@@ -156,7 +156,7 @@
                     </div>
                     <div class="pt-4 border-t border-gray-50">
                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{{ __('Payment Method') }}</p>
-                        <p class="font-bold text-primary">{{ strtoupper($order->payment_method) }}</p>
+                        <p class="font-bold text-primary">{{ $order->payment_method === 'cod' ? __('Cash on Delivery') : strtoupper($order->payment_method) }}</p>
                     </div>
                 </div>
             </div>

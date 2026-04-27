@@ -37,6 +37,13 @@ Route::prefix('vendor-panel')->group(function () {
         Route::get('returns/{returnRequest}', [\Modules\Vendor\Http\Controllers\ReturnRequestController::class, 'show'])->name('vendor.returns.show');
         Route::put('returns/{returnRequest}/notes', [\Modules\Vendor\Http\Controllers\ReturnRequestController::class, 'updateNotes'])->name('vendor.returns.update-notes');
 
+        // Notifications
+        Route::prefix('notifications')->name('vendor.notifications.')->group(function () {
+            Route::get('/', [VendorController::class, 'notifications'])->name('index');
+            Route::post('{id}/read', [VendorController::class, 'markNotificationRead'])->name('read');
+            Route::post('read-all', [VendorController::class, 'markAllNotificationsRead'])->name('read-all');
+        });
+
         // Shipping
         Route::resource('shipping', \Modules\Vendor\Http\Controllers\RegionController::class)->names('vendor.shipping');
 

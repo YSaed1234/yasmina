@@ -186,6 +186,11 @@ class CheckoutService
             // Send Notification to user
             auth()->user()->notify(new NewOrderNotification($order));
 
+            // Send Notification to Vendor
+            if ($vendor) {
+                $vendor->notify(new \App\Notifications\VendorNewOrderNotification($order));
+            }
+
             $this->cartService->clearCart($vendor->id ?? null);
 
             return ['success' => true, 'order' => $order];

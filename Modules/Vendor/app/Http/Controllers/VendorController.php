@@ -197,6 +197,34 @@ class VendorController extends Controller
     }
 
     /**
+     * Display all notifications for the vendor.
+     */
+    public function notifications()
+    {
+        $notifications = auth('vendor')->user()->notifications()->latest()->paginate(20);
+        return view('vendor::notifications.index', compact('notifications'));
+    }
+
+    /**
+     * Mark a specific notification as read.
+     */
+    public function markNotificationRead($id)
+    {
+        $notification = auth('vendor')->user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Mark all notifications as read.
+     */
+    public function markAllNotificationsRead()
+    {
+        auth('vendor')->user()->unreadNotifications->markAsRead();
+        return response()->json(['success' => true]);
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id) {}

@@ -274,6 +274,99 @@
                     </div>
 
                     <div class="flex items-center gap-6">
+                        <!-- Notifications -->
+                        <div class="relative" x-data="{ 
+                            open: false,
+                            unreadCount: {{ auth('vendor')->user()->unreadNotifications->count() }},
+                            markRead(id, url) {
+                                fetch(`/vendor-panel/notifications/${id}/read`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                                        'Content-Type': 'application/json',
+                                        'Accept': 'application/json'
+                                    }
+                                }).then(() => {
+                                    window.location.href = url;
+                                });
+                            },
+                            markAllRead() {
+                                fetch('/vendor-panel/notifications/read-all', {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                                        'Content-Type': 'application/json',
+                                        'Accept': 'application/json'
+                                    }
+                                }).then(() => {
+                                    this.unreadCount = 0;
+                                    this.open = false;
+                                    location.reload();
+                                });
+                            }
+                        }">
+                            <button @click="open = !open" @click.away="open = false" class="relative p-2 text-gray-400 hover:text-primary transition-colors bg-gray-50 rounded-2xl border border-gray-100 shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                                <template x-if="unreadCount > 0">
+                                    <span class="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white"></span>
+                                </template>
+                            </button>
+
+                            <div x-show="open" 
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                 class="absolute end-0 mt-4 w-96 bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden z-50">
+                                
+                                <div class="px-6 py-4 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
+                                    <h3 class="font-bold text-gray-900">{{ __('Notifications') }}</h3>
+                                    <template x-if="unreadCount > 0">
+                                        <button @click="markAllRead()" class="text-xs font-bold text-primary hover:underline">
+                                            {{ __('Mark all as read') }}
+                                        </button>
+                                    </template>
+                                </div>
+
+                                <div class="max-h-[400px] overflow-y-auto">
+                                    @forelse(auth('vendor')->user()->unreadNotifications->take(10) as $notification)
+                                        <button @click="markRead('{{ $notification->id }}', '{{ $notification->data['action_url'] ?? '#' }}')" 
+                                            class="w-full text-start px-6 py-4 hover:bg-gray-50 transition-colors flex gap-4 border-b border-gray-50 last:border-0">
+                                            <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                                </svg>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm font-medium text-gray-900 leading-snug">
+                                                    {{ $notification->data['message'] }}
+                                                </p>
+                                                <p class="text-[10px] text-gray-400 mt-1 font-bold">
+                                                    {{ $notification->created_at->diffForHumans() }}
+                                                </p>
+                                            </div>
+                                        </button>
+                                    @empty
+                                        <div class="px-6 py-12 text-center">
+                                            <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                                </svg>
+                                            </div>
+                                            <p class="text-sm text-gray-500 font-medium">{{ __('No notifications yet') }}</p>
+                                        </div>
+                                    @endforelse
+                                </div>
+
+                                <div class="p-4 bg-gray-50 border-t border-gray-100 text-center">
+                                    <a href="{{ route('vendor.notifications.index') }}" class="text-xs font-bold text-gray-400 hover:text-primary transition-colors">
+                                        {{ __('View All Notifications') }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Theme Switcher -->
                         <div class="flex items-center bg-gray-50 rounded-2xl p-1 shadow-sm border border-gray-100">
                             <button onclick="changeTheme('yasmina')" class="p-1.5 rounded-xl transition-all hover:bg-white group" title="{{ __('Institution Theme') }}">
