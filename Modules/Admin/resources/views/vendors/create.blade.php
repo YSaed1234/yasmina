@@ -155,6 +155,19 @@
                     </div>
                 </div>
 
+                <div class="md:col-span-2 p-6 bg-emerald-50/30 rounded-2xl border border-emerald-50 space-y-4">
+                    <label class="block text-xs font-bold text-emerald-900 uppercase tracking-widest">{{ __('Product Commission Settings (Per Item)') }}</label>
+                    <p class="text-[10px] text-emerald-600 font-medium uppercase tracking-widest mb-2">{{ __('If set, this will be applied per product unit. If zero, the general commission above will be used.') }}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <select name="product_commission_type" class="w-full px-6 py-4 bg-white border border-emerald-100 rounded-2xl focus:ring-4 focus:ring-emerald-100 outline-none transition-all font-medium">
+                            <option value="">{{ __('None') }}</option>
+                            <option value="percentage" {{ old('product_commission_type') == 'percentage' ? 'selected' : '' }}>{{ __('Percentage') }} (%)</option>
+                            <option value="fixed" {{ old('product_commission_type') == 'fixed' ? 'selected' : '' }}>{{ __('Fixed Amount') }}</option>
+                        </select>
+                        <input type="number" step="0.01" name="product_commission_value" value="{{ old('product_commission_value') }}" class="w-full px-6 py-4 bg-white border border-emerald-100 rounded-2xl focus:ring-4 focus:ring-emerald-100 outline-none transition-all font-medium" placeholder="{{ __('Product Commission Value') }}">
+                    </div>
+                </div>
+
                 <div class="md:col-span-2">
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Address') }}</label>
                     <textarea name="address" rows="3" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">{{ old('address') }}</textarea>

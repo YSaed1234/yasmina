@@ -193,7 +193,7 @@ class Product extends Model implements TranslatableContract
             $price = $this->discount_price;
         }
 
-        return max(0, (float)$price);
+        return max(0, (float) $price);
     }
 
     /**

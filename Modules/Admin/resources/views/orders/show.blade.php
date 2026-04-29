@@ -32,6 +32,7 @@
                             <th class="px-8 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Product') }}</th>
                             <th class="px-8 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-center">{{ __('Quantity') }}</th>
                             <th class="px-8 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">{{ __('Price') }}</th>
+                            <th class="px-8 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">{{ __('Commission') }}</th>
                             <th class="px-8 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">{{ __('Total') }}</th>
                         </tr>
                     </thead>
@@ -73,6 +74,9 @@
                                         {{ number_format($item->price, 2) }} {{ $item->product->currency->symbol ?? __('LE') }}
                                     @endif
                                 </td>
+                                <td class="px-8 py-6 text-right font-medium text-yasmina-600">
+                                    {{ number_format($item->commission_amount, 2) }} {{ $item->product->currency->symbol ?? __('LE') }}
+                                </td>
                                 <td class="px-8 py-6 text-right font-bold text-gray-900">
                                     @if($item->is_gift)
                                         <span class="text-yasmina-600 uppercase text-[10px]">{{ __('Free') }}</span>
@@ -86,12 +90,12 @@
                     <tfoot>
                         @php $currency = $order->items->first()?->product?->currency?->symbol ?? __('LE'); @endphp
                         <tr class="bg-gray-50/50">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Subtotal') }}</td>
-                                                   <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->items->sum(fn($i) => $i->price * $i->quantity), 2) }} {{ $currency }}</td>
- </tr>
+                            <td colspan="4" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Subtotal') }}</td>
+                            <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->items->sum(fn($i) => $i->price * $i->quantity), 2) }} {{ $currency }}</td>
+                        </tr>
                         @if($order->vendor_discount_amount > 0)
                         <tr class="bg-gray-50/50">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">
+                            <td colspan="4" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">
                                 {{ $order->vendor_discount_type === 'threshold' ? __('Order Threshold Discount') : __('Multi-item Discount') }}
                             </td>
                             <td class="px-8 py-4 text-right font-bold text-yasmina-600">-{{ number_format($order->vendor_discount_amount, 2) }} {{ $currency }}</td>
@@ -99,30 +103,30 @@
                         @endif
                         @if($order->promotional_discount_amount > 0)
                         <tr class="bg-gray-50/50">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Promotional Discount') }}</td>
+                            <td colspan="4" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Promotional Discount') }}</td>
                             <td class="px-8 py-4 text-right font-bold text-amber-600">-{{ number_format($order->promotional_discount_amount, 2) }} {{ $currency }}</td>
                         </tr>
                         @endif
                         @if($order->discount_amount > 0)
                         <tr class="bg-gray-50/50">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Coupon Discount') }}</td>
+                            <td colspan="4" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Coupon Discount') }}</td>
                             <td class="px-8 py-4 text-right font-bold text-green-600">-{{ number_format($order->discount_amount, 2) }} {{ $currency }}</td>
                         </tr>
                         @endif
                         <tr class="bg-gray-50/50">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Shipping') }}</td>
+                            <td colspan="4" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Shipping') }}</td>
                             <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->shipping_amount, 2) }} {{ $currency }}</td>
                         </tr>
                         <tr class="bg-yasmina-50/30">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-yasmina-600 uppercase tracking-widest text-[10px]">{{ __('Yasmina Commission') }}</td>
+                            <td colspan="4" class="px-8 py-4 text-right font-bold text-yasmina-600 uppercase tracking-widest text-[10px]">{{ __('Yasmina Commission') }}</td>
                             <td class="px-8 py-4 text-right font-bold text-yasmina-600">-{{ number_format($order->commission_amount, 2) }} {{ $currency }}</td>
                         </tr>
                         <tr class="bg-emerald-50/30">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-emerald-600 uppercase tracking-widest text-[10px]">{{ __('Vendor Net') }}</td>
+                            <td colspan="4" class="px-8 py-4 text-right font-bold text-emerald-600 uppercase tracking-widest text-[10px]">{{ __('Vendor Net') }}</td>
                             <td class="px-8 py-4 text-right font-bold text-emerald-600">{{ number_format($order->vendor_net_amount, 2) }} {{ $currency }}</td>
                         </tr>
                         <tr class="bg-gray-50/50 border-t border-gray-100">
-                            <td colspan="3" class="px-8 py-6 text-right font-bold text-gray-500 uppercase tracking-widest text-xs">{{ __('Grand Total') }}</td>
+                            <td colspan="4" class="px-8 py-6 text-right font-bold text-gray-500 uppercase tracking-widest text-xs">{{ __('Grand Total') }}</td>
                             <td class="px-8 py-6 text-right font-black text-2xl text-primary">{{ number_format($order->total, 2) }} {{ $currency }}</td>
                         </tr>
                     </tfoot>
@@ -199,12 +203,42 @@
                         </select>
                     </form>
 
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Payment Method') }}</label>
-                        <div class="px-5 py-4 bg-yasmina-50/50 border border-yasmina-100 rounded-2xl font-bold text-primary">
-                            {{ in_array($order->payment_method, ['cod', 'wallet']) ? __($order->payment_method) : strtoupper($order->payment_method) }}
+
                         </div>
                     </div>
+
+                    @if($order->commission_value > 0 || $order->product_commission_value > 0)
+                        <div class="p-5 bg-gray-50/50 border border-gray-100 rounded-2xl">
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">{{ __('Applied Commission Rule') }}</label>
+                            <div class="space-y-2">
+                                @if($order->product_commission_value > 0)
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[10px] font-bold text-gray-500 uppercase">{{ __('Per-Item') }}</span>
+                                        <span class="text-xs font-black text-emerald-600">
+                                            @if($order->product_commission_type == 'percentage')
+                                                {{ $order->product_commission_value }}%
+                                            @else
+                                                {{ number_format($order->product_commission_value, 2) }} {{ __('LE') }}
+                                            @endif
+                                        </span>
+                                    </div>
+                                @endif
+                                
+                                @if($order->commission_value > 0)
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[10px] font-bold text-gray-500 uppercase">{{ __('Global') }}</span>
+                                        <span class="text-xs font-black text-indigo-600">
+                                            @if($order->commission_type == 'percentage')
+                                                {{ $order->commission_value }}%
+                                            @else
+                                                {{ number_format($order->commission_value, 2) }} {{ __('LE') }}
+                                            @endif
+                                        </span>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="mt-8 pt-8 border-t border-gray-50">

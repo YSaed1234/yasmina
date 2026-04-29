@@ -25,6 +25,7 @@
                             <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Product') }}</th>
                             <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Price') }}</th>
                             <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Qty') }}</th>
+                            <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">{{ __('Commission') }}</th>
                             <th class="px-8 py-5 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">{{ __('Total') }}</th>
                         </tr>
                     </thead>
@@ -66,6 +67,9 @@
                             <td class="px-8 py-6 font-bold text-gray-600">
                                 {{ $item->quantity }}
                             </td>
+                            <td class="px-8 py-6 text-right font-medium text-yasmina-600">
+                                {{ number_format($item->commission_amount, 2) }}
+                            </td>
                             <td class="px-8 py-6 text-right font-black text-primary">
                                 @if($item->is_gift)
                                     <span class="text-yasmina-600 uppercase text-[10px]">{{ __('Free') }}</span>
@@ -79,12 +83,12 @@
                     <tfoot>
                         @php $currency = $order->items->first()?->product?->currency?->symbol ?? __('LE'); @endphp
                         <tr class="bg-gray-50/50">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Subtotal') }}</td>
+                            <td colspan="4" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Subtotal') }}</td>
                             <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->items->sum(fn($i) => $i->price * $i->quantity), 2) }} {{ $currency }}</td>
                         </tr>
                         @if($order->vendor_discount_amount > 0)
                         <tr class="bg-yasmina-50/30">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-yasmina-600 uppercase tracking-widest text-[10px]">
+                            <td colspan="4" class="px-8 py-4 text-right font-bold text-yasmina-600 uppercase tracking-widest text-[10px]">
                                 <span class="flex items-center justify-end gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 11h.01M7 15h.01M13 7h.01M13 11h.01M13 15h.01M17 7h.01M17 11h.01M17 15h.01" />
@@ -99,7 +103,7 @@
                         @endif
                         @if($order->promotional_discount_amount > 0)
                         <tr class="bg-amber-50/30">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-amber-600 uppercase tracking-widest text-[10px]">
+                            <td colspan="4" class="px-8 py-4 text-right font-bold text-amber-600 uppercase tracking-widest text-[10px]">
                                 {{ __('Promotional Discount') }}
                             </td>
                             <td class="px-8 py-4 text-right font-bold text-amber-600">
@@ -108,15 +112,15 @@
                         </tr>
                         @endif
                         <tr class="bg-gray-50/50">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Shipping') }}</td>
+                            <td colspan="4" class="px-8 py-4 text-right font-bold text-gray-500 uppercase tracking-widest text-[10px]">{{ __('Shipping') }}</td>
                             <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->shipping_amount, 2) }} {{ $currency }}</td>
                         </tr>
                         <tr class="border-y border-gray-100 bg-gray-50/80">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-gray-900 uppercase tracking-widest text-[10px]">{{ __('Total Amount') }}</td>
+                            <td colspan="4" class="px-8 py-4 text-right font-bold text-gray-900 uppercase tracking-widest text-[10px]">{{ __('Total Amount') }}</td>
                             <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($order->total, 2) }} {{ $currency }}</td>
                         </tr>
                         <tr class="bg-yasmina-50/30">
-                            <td colspan="3" class="px-8 py-4 text-right font-bold text-yasmina-600 uppercase tracking-widest text-[10px]">
+                            <td colspan="4" class="px-8 py-4 text-right font-bold text-yasmina-600 uppercase tracking-widest text-[10px]">
                                 {{ __('Yasmina Commission') }}
                             </td>
                             <td class="px-8 py-4 text-right font-bold text-yasmina-600">
@@ -124,7 +128,7 @@
                             </td>
                         </tr>
                         <tr class="bg-primary/5">
-                            <td colspan="3" class="px-8 py-6 text-right font-bold text-primary uppercase tracking-widest text-xs">{{ __('Vendor Net') }}</td>
+                            <td colspan="4" class="px-8 py-6 text-right font-bold text-primary uppercase tracking-widest text-xs">{{ __('Vendor Net') }}</td>
                             <td class="px-8 py-6 text-right font-black text-primary text-2xl">
                                 {{ number_format($order->vendor_net_amount, 2) }} {{ $currency }}
                             </td>

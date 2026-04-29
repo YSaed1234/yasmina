@@ -41,11 +41,12 @@
             <thead>
                 <tr class="bg-gray-50/50">
                     <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Order ID') }}</th>
-                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Date') }}</th>
-                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Amount') }}</th>
-                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Commission') }}</th>
-                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Vendor Payout') }}</th>
-                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Status') }}</th>
+                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">{{ __('Date') }}</th>
+                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">{{ __('Amount') }}</th>
+                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">{{ __('Commission Rule') }}</th>
+                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">{{ __('Commission') }}</th>
+                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">{{ __('Vendor Payout') }}</th>
+                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">{{ __('Status') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-50">
@@ -54,19 +55,30 @@
                     <td class="px-8 py-6 font-bold text-gray-900">
                         <a href="{{ route('admin.orders.show', $order) }}" class="hover:text-primary">#{{ $order->id }}</a>
                     </td>
-                    <td class="px-8 py-6 text-sm text-gray-500">
+                    <td class="px-8 py-6 text-center text-sm text-gray-500">
                         {{ $order->created_at->format('Y-m-d H:i') }}
                     </td>
-                    <td class="px-8 py-6 font-bold text-gray-900">
-                        {{ number_format($order->total, 2) }} LE
+                    <td class="px-8 py-6 text-center font-bold text-gray-900">
+                        {{ number_format($order->total, 2) }} {{ __('LE') }}
                     </td>
-                    <td class="px-8 py-6 text-indigo-600 font-bold">
-                        -{{ number_format($order->commission_amount, 2) }} LE
+                    <td class="px-8 py-6 text-center">
+                        @if($order->product_commission_value > 0)
+                            <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-lg uppercase">
+                                {{ __('Per Item') }}
+                            </span>
+                        @else
+                            <span class="px-3 py-1 bg-indigo-50 text-indigo-700 text-[10px] font-black rounded-lg uppercase">
+                                {{ __('Per Order') }}
+                            </span>
+                        @endif
                     </td>
-                    <td class="px-8 py-6 text-emerald-600 font-bold">
-                        {{ number_format($order->vendor_net_amount, 2) }} LE
+                    <td class="px-8 py-6 text-center text-indigo-600 font-bold">
+                        -{{ number_format($order->commission_amount, 2) }} {{ __('LE') }}
                     </td>
-                    <td class="px-8 py-6">
+                    <td class="px-8 py-6 text-center text-emerald-600 font-bold">
+                        {{ number_format($order->vendor_net_amount, 2) }} {{ __('LE') }}
+                    </td>
+                    <td class="px-8 py-6 text-center">
                         <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest {{ $order->status->color() }}">
                             {{ $order->status->label() }}
                         </span>
@@ -74,7 +86,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-8 py-10 text-center text-gray-400 italic">
+                    <td colspan="7" class="px-8 py-10 text-center text-gray-400 italic">
                         {{ __('No orders found for this institution.') }}
                     </td>
                 </tr>

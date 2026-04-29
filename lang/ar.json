@@ -1220,5 +1220,18 @@
     "Conversion Rate": "معدل التحويل",
     "Stable": "مستقر",
     "Detailed Traffic Analytics": "تحليلات الزيارات التفصيلية",
-    "We are currently integrating with advanced tracking services to provide you with heatmaps and deep visitor behavior insights.": "نعمل حالياً على التكامل مع خدمات تتبع متقدمة لتزويدك بخرائط حرارية ورؤى عميقة لسلوك الزوار."
+    "We are currently integrating with advanced tracking services to provide you with heatmaps and deep visitor behavior insights.": "نعمل حالياً على التكامل مع خدمات تتبع متقدمة لتزويدك بخرائط حرارية ورؤى عميقة لسلوك الزوار.",
+    "Global Commission": "عمولة ياسمينة الشاملة",
+    "Per-Item Commission": "عمولة ياسمينة لكل قطعة",
+    "Per Order": "علي الطلب كامل",
+    "Per Item": "علي المنتج",
+    "Commission Settings (Yasmina Share)": "إعدادات عمولة ياسمينة (الطلبات)",
+    "Product Commission Settings (Per Item)": "إعدادات عمولة ياسمينة (لكل قطعة)",
+    "If set, this will be applied per product unit. If zero, the general commission above will be used.": "إذا تم تحديدها، سيتم تطبيقها لكل قطعة. إذا كانت صفر، سيتم استخدام العمولة الشاملة أعلاه.",
+    "Product Commission Value": "قيمة عمولة القطعة",
+    "None": "بدون",
+    "Applied Commission Rule": "قاعدة العمولة المطبقة",
+    "Commission Rule": "نوع العمولة",
+    "Global": "شاملة",
+    "Per-Item": "لكل قطعة"
 }

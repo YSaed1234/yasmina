@@ -41,8 +41,8 @@ class CheckoutService
 
     public function placeOrder(array $data, $vendor)
     {
-        $address = Address::with(['governorate', 'region'])->findOrFail($data['address_id']);
 
+        $address = Address::with(['governorate', 'region'])->findOrFail($data['address_id']);
         $region = null;
         if ($vendor) {
             $region = Region::where('vendor_id', $vendor->id)
@@ -62,7 +62,6 @@ class CheckoutService
 
         $cartData = $this->cartService->getCartData($vendor->id ?? null);
 
-        // dd($cartData);
         if (empty($cartData['cart'])) {
             return ['success' => false, 'error' => __('Your cart is empty!')];
         }
@@ -76,13 +75,59 @@ class CheckoutService
 
         $finalTotal = $cartData['finalTotal'] + $shippingCost;
 
-        $commissionAmount = 0;
-        if ($vendor->commission_type === 'percentage') {
-            $commissionAmount = ($cartData['finalTotal'] * ($vendor->commission_value ?? 0)) / 100;
+        $totalCommission = 0;
+        $itemCommissions = [];
+
+        // Check if Vendor has product-level commission
+        $hasProductCommission = !empty($vendor->product_commission_type) && !empty($vendor->product_commission_value);
+        if ($hasProductCommission) {
+            // Calculate per item (Scales with quantity)
+            foreach ($cartData['cart'] as $key => $details) {
+                $itemTotal = $details['price'] * $details['quantity'];
+                $itemComm = 0;
+                if ($vendor->product_commission_type === 'percentage') {
+                    $itemComm = ($itemTotal * $vendor->product_commission_value) / 100;
+                } else {
+                    $itemComm = $vendor->product_commission_value * $details['quantity'];
+                }
+                $totalCommission += $itemComm;
+                $itemCommissions[$key] = $itemComm;
+            }
         } else {
-            $commissionAmount = $vendor->commission_value ?? 0;
+            // Global Order Commission (Fixed or Percentage of order total)
+            $totalCommission = 0;
+            if ($vendor->commission_type === 'percentage') {
+                $totalCommission = ($cartData['finalTotal'] * ($vendor->commission_value ?? 0)) / 100;
+            } else {
+                $totalCommission = $vendor->commission_value ?? 0;
+            }
+
+            // Distribute it proportionally to items for tracking in OrderItem
+            if ($cartData['total'] > 0) {
+                foreach ($cartData['cart'] as $key => $details) {
+                    $itemTotal = $details['price'] * $details['quantity'];
+                    $itemCommissions[$key] = ($itemTotal / $cartData['total']) * $totalCommission;
+                }
+            } else {
+                foreach ($cartData['cart'] as $key => $details) {
+                    $itemCommissions[$key] = 0;
+                }
+            }
         }
 
+
+
+        // Apply proportional global discounts (coupons, vendor-level discounts) to commission
+        // This ensures Yasmina share is calculated on net sales amount
+        // if ($cartData['total'] > 0) {
+        //     // $ratio = $cartData['finalTotal'] / $cartData['total'];
+        //     // $totalCommission = $totalCommission * $ratio;
+        //     // foreach ($itemCommissions as $key => $val) {
+        //     //     $itemCommissions[$key] = $val * $ratio;
+        //     // }
+        // }
+
+        $commissionAmount = $totalCommission;
         $vendorNetAmount = ($cartData['finalTotal'] - $commissionAmount) + $shippingCost;
 
         try {
@@ -156,6 +201,7 @@ class CheckoutService
                     'variant_id' => $variantId,
                     'quantity' => $details['quantity'],
                     'price' => $details['price'],
+                    'commission_amount' => $itemCommissions[$key] ?? 0,
                     'is_gift' => $details['is_gift'] ?? false,
                 ]);
 

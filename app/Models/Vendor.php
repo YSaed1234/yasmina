@@ -37,10 +37,21 @@ class Vendor extends Authenticatable
         'free_shipping_threshold',
         'commission_type',
         'commission_value',
+        'product_commission_type',
+        'product_commission_value',
         'primary_color',
         'secondary_color',
         'return_policy_ar',
         'return_policy_en',
+    ];
+    
+    protected $casts = [
+        'commission_value' => 'decimal:2',
+        'product_commission_value' => 'decimal:2',
+        'order_threshold' => 'decimal:2',
+        'order_threshold_discount' => 'decimal:2',
+        'items_discount_amount' => 'decimal:2',
+        'free_shipping_threshold' => 'decimal:2',
     ];
 
     protected $hidden = [

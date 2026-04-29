@@ -13,11 +13,13 @@ class OrderItem extends Model
         'variant_id',
         'quantity',
         'price',
+        'commission_amount',
         'is_gift',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'commission_amount' => 'decimal:2',
         'is_gift' => 'boolean',
     ];
 

@@ -35,10 +35,11 @@
             <thead>
                 <tr class="bg-gray-50/50">
                     <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Institution') }}</th>
-                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Orders') }}</th>
-                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Commission Structure') }}</th>
-                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Total Sales') }}</th>
-                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-indigo-600">{{ __('Yasmina Share') }}</th>
+                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">{{ __('Orders') }}</th>
+                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">{{ __('Global Commission') }}</th>
+                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">{{ __('Per-Item Commission') }}</th>
+                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">{{ __('Total Sales') }}</th>
+                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center text-indigo-600">{{ __('Yasmina Share') }}</th>
                     <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">{{ __('Actions') }}</th>
                 </tr>
             </thead>
@@ -58,27 +59,40 @@
                             @endif
                             <div>
                                 <span class="font-bold text-gray-900 block">{{ $vendor->name }}</span>
-                                <span class="text-[10px] text-gray-400 uppercase font-black tracking-widest">{{ $vendor->status }}</span>
+                                <span class="text-[10px] text-gray-400 uppercase font-black tracking-widest">{{ __($vendor->status) }}</span>
                             </div>
                         </div>
                     </td>
-                    <td class="px-8 py-6">
+                    <td class="px-8 py-6 text-center">
                         <span class="text-sm font-bold text-gray-600">{{ $vendor->orders_count }}</span>
                     </td>
-                    <td class="px-8 py-6">
-                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-[10px] font-black rounded-lg uppercase">
+                    <td class="px-8 py-6 text-center">
+                        <span class="px-3 py-1 bg-indigo-50 text-indigo-700 text-[10px] font-black rounded-lg uppercase">
                             @if($vendor->commission_type == 'percentage')
                                 {{ $vendor->commission_value }}%
                             @else
-                                {{ number_format($vendor->commission_value, 2) }} LE (Fixed)
+                                {{ number_format($vendor->commission_value, 2) }} {{ __('LE') }}
                             @endif
                         </span>
                     </td>
-                    <td class="px-8 py-6 font-bold text-gray-900">
-                        {{ number_format($vendor->total_sales, 2) }} LE
+                    <td class="px-8 py-6 text-center">
+                        @if(!empty($vendor->product_commission_value) && $vendor->product_commission_value > 0)
+                            <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-lg uppercase">
+                                @if($vendor->product_commission_type == 'percentage')
+                                    {{ $vendor->product_commission_value }}%
+                                @else
+                                    {{ number_format($vendor->product_commission_value, 2) }} {{ __('LE') }}
+                                @endif
+                            </span>
+                        @else
+                            <span class="text-gray-300 italic text-[10px] font-bold uppercase tracking-widest">{{ __('None') }}</span>
+                        @endif
                     </td>
-                    <td class="px-8 py-6 font-black text-indigo-600">
-                        {{ number_format($vendor->total_commission, 2) }} LE
+                    <td class="px-8 py-6 text-center font-bold text-gray-900">
+                        {{ number_format($vendor->total_sales, 2) }} {{ __('LE') }}
+                    </td>
+                    <td class="px-8 py-6 text-center font-black text-indigo-600">
+                        {{ number_format($vendor->total_commission, 2) }} {{ __('LE') }}
                     </td>
                     <td class="px-8 py-6 text-right">
                         <a href="{{ route('admin.finances.show', $vendor) }}" class="px-4 py-2 bg-primary/10 text-primary rounded-xl text-xs font-bold hover:bg-primary hover:text-white transition-all">

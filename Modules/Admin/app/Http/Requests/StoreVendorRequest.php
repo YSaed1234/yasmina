@@ -45,6 +45,8 @@ class StoreVendorRequest extends FormRequest
             'free_shipping_threshold' => 'nullable|numeric|min:0',
             'commission_type' => 'required|in:fixed,percentage',
             'commission_value' => 'nullable|numeric|min:0',
+            'product_commission_type' => 'nullable|in:fixed,percentage',
+            'product_commission_value' => 'nullable|numeric|min:0',
             'primary_color' => 'nullable|string|max:7',
             'secondary_color' => 'nullable|string|max:7',
         ];

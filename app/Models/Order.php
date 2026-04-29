@@ -25,6 +25,10 @@ class Order extends Model
         'vendor_discount_type',
         'promotional_discount_amount',
         'commission_amount',
+        'commission_type',
+        'commission_value',
+        'product_commission_type',
+        'product_commission_value',
         'vendor_net_amount',
     ];
 
@@ -32,6 +36,8 @@ class Order extends Model
         'shipping_details' => 'array',
         'total' => 'decimal:2',
         'commission_amount' => 'decimal:2',
+        'commission_value' => 'decimal:2',
+        'product_commission_value' => 'decimal:2',
         'vendor_net_amount' => 'decimal:2',
         'status' => \App\Enums\OrderStatus::class,
     ];
