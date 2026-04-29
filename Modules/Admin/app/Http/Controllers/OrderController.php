@@ -25,7 +25,17 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         $order = $this->orderService->getOrderDetails($order);
-        return view('admin::orders.show', compact('order'));
+        
+        $drivers = \App\Models\Driver::with('vendor')->where('is_active', true)
+            ->when($order->vendor_id, function($query) use ($order) {
+                return $query->where(function($q) use ($order) {
+                    $q->where('vendor_id', $order->vendor_id)
+                      ->orWhereNull('vendor_id');
+                });
+            })
+            ->get();
+
+        return view('admin::orders.show', compact('order', 'drivers'));
     }
 
     public function updateStatus(UpdateOrderStatusRequest $request, Order $order)
@@ -45,5 +55,20 @@ class OrderController extends Controller
     {
         $this->orderService->delete($order);
         return redirect()->route('admin.orders.index')->with('success', __('Order deleted successfully.'));
+    }
+
+    public function assignDriver(\Illuminate\Http\Request $request, Order $order)
+    {
+        $request->validate([
+            'driver_id' => 'required|exists:drivers,id'
+        ]);
+
+        $order->update(['driver_id' => $request->driver_id]);
+
+        if ($order->user) {
+            $order->user->notify(new \App\Notifications\DriverAssignedNotification($order));
+        }
+
+        return back()->with('success', __('Driver assigned successfully.'));
     }
 }

@@ -7,20 +7,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class OrderCancelledNotification extends Notification
+class DriverAssignedNotification extends Notification
 {
     use Queueable;
 
     protected $order;
-    protected $reason;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($order, $reason)
+    public function __construct($order)
     {
         $this->order = $order;
-        $this->reason = $reason;
     }
 
     /**
@@ -30,7 +28,7 @@ class OrderCancelledNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        return ['database'];
     }
 
     /**
@@ -39,11 +37,9 @@ class OrderCancelledNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject(__('Order Cancelled') . ' #' . $this->order->id)
-            ->line(__('Your order has been cancelled.'))
-            ->line(__('Reason: ') . $this->reason)
-            ->action(__('View Order'), url('/my-account/orders/' . $this->order->id))
-            ->line(__('Thank you for using our application!'));
+            ->line('The introduction to the notification.')
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our application!');
     }
 
     /**
@@ -55,12 +51,11 @@ class OrderCancelledNotification extends Notification
     {
         return [
             'order_id' => $this->order->id,
-            'message' => __('Your order #:id has been cancelled. Reason: :reason', [
+            'message' => __('A driver has been assigned to your order #:id: :driver (:phone)', [
                 'id' => $this->order->id,
-                'reason' => $this->reason
+                'driver' => $this->order->driver->name,
+                'phone' => $this->order->driver->phone,
             ]),
-            'status' => 'cancelled',
-            'reason' => $this->reason,
             'action_url' => route('web.profile.orders', ['order_id' => $this->order->id, 'vendor_id' => request('vendor_id')]),
         ];
     }

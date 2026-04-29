@@ -203,6 +203,44 @@
                         </select>
                     </form>
 
+                    @if(in_array($order->status->value, ['new', 'pending']))
+                    <form action="{{ route('admin.orders.assign-driver', $order) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Assign Driver') }}</label>
+                        <div class="flex gap-2">
+                            <select name="driver_id" class="flex-1 px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none font-bold text-gray-700 transition-all appearance-none text-sm">
+                                <option value="">{{ __('Select Driver') }}</option>
+                                @foreach($drivers as $driver)
+                                    <option value="{{ $driver->id }}" {{ $order->driver_id == $driver->id ? 'selected' : '' }}>
+                                        {{ $driver->name }} {{ $driver->vendor ? '('.$driver->vendor->name.')' : '('.__('Global').')' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <button type="submit" class="px-5 bg-primary text-white rounded-2xl hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                    @elseif($order->driver)
+                    <div class="p-5 bg-blue-50 border border-blue-100 rounded-2xl">
+                        <label class="block text-[10px] font-black text-blue-400 uppercase tracking-widest mb-3">{{ __('Assigned Driver') }}</label>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-blue-900">{{ $order->driver->name }}</p>
+                                <p class="text-[10px] text-blue-500 font-bold tracking-widest">{{ $order->driver->phone }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
 
                         </div>
                     </div>

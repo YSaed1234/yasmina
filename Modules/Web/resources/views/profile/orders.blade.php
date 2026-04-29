@@ -266,12 +266,29 @@
                         </div>
 
                         <!-- Shipping info -->
-                        <div>
-                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">{{ __('Shipping Address') }}</h4>
-                            <div class="p-6 bg-gray-50 rounded-3xl border border-gray-100">
-                                <p id="modal-shipping-name" class="font-bold text-gray-900 mb-1"></p>
-                                <p id="modal-shipping-address" class="text-sm text-gray-500 leading-relaxed"></p>
-                                <p id="modal-shipping-phone" class="text-sm text-gray-500 mt-2"></p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">{{ __('Shipping Address') }}</h4>
+                                <div class="p-6 bg-gray-50 rounded-3xl border border-gray-100">
+                                    <p id="modal-shipping-name" class="font-bold text-gray-900 mb-1"></p>
+                                    <p id="modal-shipping-address" class="text-sm text-gray-500 leading-relaxed"></p>
+                                    <p id="modal-shipping-phone" class="text-sm text-gray-500 mt-2"></p>
+                                </div>
+                            </div>
+                            <!-- Driver info -->
+                            <div id="modal-driver-info" class="hidden">
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">{{ __('Delivery Personnel') }}</h4>
+                                <div class="p-6 bg-blue-50 rounded-3xl border border-blue-100 flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600 shadow-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p id="modal-driver-name" class="font-bold text-blue-900"></p>
+                                        <p id="modal-driver-phone" class="text-sm text-blue-600 font-medium"></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -304,6 +321,7 @@
                 subtotalAmount += itemSubtotal;
                 
                 const div = document.createElement('div');
+                div.className = "flex items-center gap-4 p-2 hover:bg-gray-50 rounded-2xl transition-all";
                 div.innerHTML = `
                     <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-50 border border-gray-100 shrink-0 relative">
                         ${item.is_gift ? `
@@ -320,13 +338,16 @@
                         <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">${item.quantity} × ${parseFloat(item.price).toFixed(2)}</p>
                     </div>
                     <div class="text-sm font-bold text-gray-900">
-                        ${order.currency_symbol || '$'}${itemSubtotal.toFixed(2)}
+                        ${itemSubtotal.toFixed(2)}
                     </div>
                 `;
                 list.appendChild(div);
             });
 
-            const currency = order.currency_symbol || '$';
+            const currency = order.items.length > 0 && order.items[0].product && order.items[0].product.currency 
+                ? order.items[0].product.currency.symbol 
+                : '{{ __("LE") }}';
+
             const shippingAmount = parseFloat(order.shipping_amount || 0);
             const discountAmount = parseFloat(order.discount_amount || 0);
             const vendorDiscountAmount = parseFloat(order.vendor_discount_amount || 0);
@@ -393,6 +414,16 @@
             document.getElementById('modal-shipping-address').innerText = `${shipping.address}, ${shipping.city}, ${shipping.country}`;
             document.getElementById('modal-shipping-phone').innerText = shipping.phone;
 
+            // Driver Info
+            const driverBlock = document.getElementById('modal-driver-info');
+            if (order.driver) {
+                driverBlock.classList.remove('hidden');
+                document.getElementById('modal-driver-name').innerText = order.driver.name;
+                document.getElementById('modal-driver-phone').innerText = order.driver.phone;
+            } else {
+                driverBlock.classList.add('hidden');
+            }
+
             document.getElementById('orderDetailsModal').classList.remove('hidden');
             document.body.classList.add('overflow-hidden');
         }
@@ -401,6 +432,13 @@
             document.getElementById('orderDetailsModal').classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
         }
+
+        // Auto-open modal if targetOrder is passed from server
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(isset($targetOrder))
+                showOrderDetails(@json($targetOrder));
+            @endif
+        });
     </script>
     @endpush
 </x-web::layouts.master>

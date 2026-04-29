@@ -32,6 +32,7 @@ Route::prefix('admin-dashboard-2026')->group(function () {
         Route::get('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'show'])->name('orders.show')->middleware('permission:manage orders');
         Route::put('orders/{order}/status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.update-status')->middleware('permission:manage orders');
         Route::put('orders/{order}/payment-status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updatePaymentStatus'])->name('orders.update-payment-status')->middleware('permission:manage orders');
+        Route::put('orders/{order}/assign-driver', [\Modules\Admin\Http\Controllers\OrderController::class, 'assignDriver'])->name('orders.assign-driver')->middleware('permission:manage orders');
         Route::delete('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy')->middleware('permission:manage orders');
         
         // Returns
@@ -66,6 +67,7 @@ Route::prefix('admin-dashboard-2026')->group(function () {
         Route::delete('vendor-payments/{payment}', [\Modules\Admin\Http\Controllers\VendorPaymentController::class, 'destroy'])->name('vendor_payments.destroy')->middleware('permission:manage vendors');
 
         Route::resource('vendors', \Modules\Admin\Http\Controllers\VendorController::class)->names('vendors')->middleware('permission:manage vendors');
+        Route::resource('drivers', \Modules\Admin\Http\Controllers\DriverController::class)->names('drivers')->middleware('permission:manage orders');
 
         // Reports
         Route::get('inventory', [\Modules\Admin\Http\Controllers\ReportController::class, 'inventory'])->name('inventory.index');

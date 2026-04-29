@@ -26,10 +26,19 @@ class ProfileController extends Controller
     {
         $vendor = request()->attributes->get('current_vendor');
         $vendorId = $vendor ? $vendor->id : null;
+        $orderId = request('order_id');
+        
         $orders = $this->profileService->getOrders($vendorId);
         $totalPromotionalSavings = $this->profileService->getTotalPromotionalSavings($vendorId);
         
-        return view('web::profile.orders', compact('orders', 'totalPromotionalSavings'));
+        $targetOrder = null;
+        if ($orderId) {
+            $targetOrder = \App\Models\Order::with(['items.product', 'driver'])
+                ->where('user_id', auth()->id())
+                ->find($orderId);
+        }
+        
+        return view('web::profile.orders', compact('orders', 'totalPromotionalSavings', 'targetOrder'));
     }
 
     public function wallet()

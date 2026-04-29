@@ -30,6 +30,7 @@ class Order extends Model
         'product_commission_type',
         'product_commission_value',
         'vendor_net_amount',
+        'driver_id',
     ];
 
     protected $casts = [
@@ -50,6 +51,11 @@ class Order extends Model
     public function vendor(): BelongsTo
     {
         return $this->belongsTo(Vendor::class);
+    }
+
+    public function driver(): BelongsTo
+    {
+        return $this->belongsTo(Driver::class);
     }
 
     public function items(): HasMany

@@ -120,7 +120,22 @@
                 <div class="p-6 border-b border-yasmina-50 flex items-center justify-center h-28 overflow-hidden">
                     <img src="{{ asset('assets/logo.png') }}" alt="{{ __('Yasmina Admin') }}" class="h-12 w-auto shrink-0 transition-all" :class="sidebarOpen ? 'scale-100' : 'scale-75'">
                 </div>
-                <nav class="mt-6 px-4 space-y-2 flex-1">
+                <nav class="mt-6 px-4 space-y-2 flex-1 overflow-y-auto custom-scrollbar">
+                    <style>
+                        .custom-scrollbar::-webkit-scrollbar {
+                            width: 4px;
+                        }
+                        .custom-scrollbar::-webkit-scrollbar-track {
+                            background: transparent;
+                        }
+                        .custom-scrollbar::-webkit-scrollbar-thumb {
+                            background: var(--yasmina-100);
+                            border-radius: 10px;
+                        }
+                        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                            background: var(--yasmina-200);
+                        }
+                    </style>
                     <a href="{{ route('admin.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all {{ request()->routeIs('admin.index') ? 'bg-yasmina-50 text-yasmina-600 font-bold' : 'text-gray-600 hover:bg-yasmina-50/50' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -233,7 +248,7 @@
                     </div>
 
                     <!-- Shipping -->
-                    <div x-data="{ open: {{ request()->routeIs('admin.governorates.*') || request()->routeIs('admin.regions.*') || request()->routeIs('admin.shipping_zones.*') ? 'true' : 'false' }} }">
+                    <div x-data="{ open: {{ request()->routeIs('admin.governorates.*') || request()->routeIs('admin.regions.*') || request()->routeIs('admin.shipping_zones.*') || request()->routeIs('admin.drivers.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -253,6 +268,9 @@
                                 </a>
                                 <a href="{{ route('admin.regions.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.regions.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
                                     <span x-show="sidebarOpen">• {{ __('Regions') }}</span>
+                                </a>
+                                <a href="{{ route('admin.drivers.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.drivers.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                    <span x-show="sidebarOpen">• {{ __('Drivers') }}</span>
                                 </a>
                             @endcan
                         </div>
