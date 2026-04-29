@@ -12,11 +12,11 @@
 ])
 
 @if($slides && $slides->count() > 0)
-    <div class="relative min-h-[60vh] md:min-h-[90vh] pt-20 hidden lg:block">
+    <div class="relative min-h-[50vh] md:min-h-[90vh] pt-20">
         <div class="swiper hero-swiper h-[50vh] md:h-[80vh]">
             <div class="swiper-wrapper">
                 @foreach($slides as $slide)
-                    <div class="swiper-slide relative flex items-center overflow-hidden bg-gray-900 rounded-[2rem] sm:rounded-[3rem] mx-2 sm:mx-8">
+                    <div class="swiper-slide relative flex items-center overflow-hidden bg-gray-900 rounded-3xl md:rounded-[3rem] mx-2 md:mx-8">
                         <div class="absolute inset-0 z-0">
                             <div class="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent z-10"></div>
                             <img src="{{ asset('storage/' . $slide->image) }}" alt="{{ $slide->title }}" class="w-full h-full object-cover">
@@ -29,7 +29,7 @@
                                         {{ $slide->subtitle }}
                                     </span>
                                 @endif
-                                <h1 class="text-3xl md:text-7xl font-bold text-gray-900 leading-tight mb-4 md:mb-8">
+                                <h1 class="text-2xl md:text-7xl font-bold text-gray-900 leading-tight mb-4 md:mb-8">
                                     {!! $slide->title !!}
                                 </h1>
                                 @if($slide->description)
@@ -60,7 +60,7 @@
         </div>
     </div>
 @else
-    <header class="relative {{ $compact ? 'py-24' : 'min-h-[80vh]' }} flex items-center pt-20 overflow-hidden bg-gray-900 hidden lg:block">
+    <header class="relative {{ $compact ? 'py-12 md:py-24' : 'min-h-[50vh] md:min-h-[80vh]' }} flex items-center pt-20 overflow-hidden bg-gray-900">
         <div class="absolute inset-0 z-0">
             <div class="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent z-10"></div>
             <img src="{{ $image }}" alt="{{ $title }}" class="w-full h-full object-cover">

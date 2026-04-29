@@ -312,17 +312,67 @@
                             </div>
                         </div>
 
-                        <!-- Mobile Header Actions -->
-                        <div class="flex xl:hidden items-center gap-2">
-                            <a href="{{ route('web.cart', ['vendor_id' => request('vendor_id')]) }}" class="relative p-2 text-gray-700">
+                        <!-- Mobile Header Actions (Icons Only) -->
+                        <div class="flex xl:hidden items-center gap-0.5">
+                            <!-- Theme Toggle (Color Dot) -->
+                            <button onclick="let t = localStorage.getItem('yasmina-theme') === 'barbie' ? 'yasmina' : 'barbie'; setTheme(t); location.reload();" class="p-2 flex items-center justify-center">
+                                <div class="w-5 h-5 rounded-full border-2 border-white shadow-sm" 
+                                     style="background: {{ (isset($_COOKIE['yasmina-theme']) && $_COOKIE['yasmina-theme'] == 'barbie') ? 'var(--yasmina-primary)' : '#e0218a' }}">
+                                </div>
+                            </button>
+
+                            <!-- Language Toggle -->
+                            <a href="{{ route('lang.switch', app()->getLocale() == 'en' ? 'ar' : 'en') }}" class="p-2 text-gray-500 hover:text-primary transition-colors font-bold text-xs">
+                                {{ app()->getLocale() == 'en' ? 'AR' : 'EN' }}
+                            </a>
+
+                            @auth
+                                @php 
+                                    $vendorId = request()->vendor_id; 
+                                    $unreadCount = auth()->user()->vendorUnreadNotifications($vendorId)->count(); 
+                                @endphp
+                                <a href="{{ route('web.notifications', ['vendor_id' => request('vendor_id')]) }}" class="p-2 text-gray-500 hover:text-primary transition-colors relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                    </svg>
+                                    @if($unreadCount > 0)
+                                        <span class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full border border-white">
+                                            {{ $unreadCount }}
+                                        </span>
+                                    @endif
+                                </a>
+                            @endauth
+                            <!-- Shop -->
+                            <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="p-2 text-gray-500 hover:text-primary transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                 </svg>
+                            </a>
+                            
+                            @auth
+                                <!-- Wishlist -->
+                                <a href="{{ route('web.wishlist', ['vendor_id' => request('vendor_id')]) }}" class="p-2 text-gray-500 hover:text-primary transition-colors relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                    @if(isset($wishlistCount) && $wishlistCount > 0)
+                                        <span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full ring-2 ring-white"></span>
+                                    @endif
+                                </a>
+                            @endauth
+
+                            <!-- Cart -->
+                            <a href="{{ route('web.cart', ['vendor_id' => request('vendor_id')]) }}" class="p-2 text-gray-500 hover:text-primary transition-colors relative">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
                                 @if($cartCount > 0)
-                                    <span class="absolute top-1 right-1 w-4 h-4 bg-primary text-white text-[8px] font-bold flex items-center justify-center rounded-full border border-white">{{ $cartCount }}</span>
+                                    <span class="absolute top-2 right-2 w-4 h-4 bg-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">{{ $cartCount }}</span>
                                 @endif
                             </a>
-                            <button @click="mobileMenu = true" class="p-2 text-gray-700">
+
+                            <!-- Menu Toggle -->
+                            <button @click="mobileMenu = true" class="p-2 text-gray-900">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                                 </svg>
@@ -332,7 +382,7 @@
                 </div>
             </div>
 
-            <!-- Mobile Menu Drawer (App Style) -->
+            <!-- Mobile Menu Drawer (Auto Height) -->
             <div x-show="mobileMenu" 
                  x-transition:enter="transition ease-out duration-300"
                  x-transition:enter-start="{{ app()->getLocale() == 'ar' ? 'translate-x-full' : '-translate-x-full' }}"
@@ -340,102 +390,165 @@
                  x-transition:leave="transition ease-in duration-200"
                  x-transition:leave-start="translate-x-0"
                  x-transition:leave-end="{{ app()->getLocale() == 'ar' ? 'translate-x-full' : '-translate-x-full' }}"
-                 class="fixed inset-0 z-[100] xl:hidden" style="display: none;" x-cloak>
-                <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-md" @click="mobileMenu = false"></div>
-                <div class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'right-0' : 'left-0' }} w-[85%] sm:w-80 bg-white shadow-2xl flex flex-col border-{{ app()->getLocale() == 'ar' ? 'l' : 'r' }} border-yasmina-50/50">
-                    <div class="p-6 border-b border-yasmina-50 flex items-center justify-between bg-yasmina-50/20">
-                        <img src="{{ ($currentVendor && $currentVendor->logo) ? asset('storage/' . $currentVendor->logo) : asset('logo.png') }}" class="h-10 w-auto object-contain">
+                 class="fixed inset-0 z-[500] xl:hidden" style="display: none;" x-cloak>
+                 <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" @click="mobileMenu = false"></div>
+                <div class="absolute top-0 {{ app()->getLocale() == 'ar' ? 'right-0' : 'left-0' }} w-[85%] sm:w-80 bg-white shadow-2xl flex flex-col h-auto max-h-[90vh] rounded-b-3xl border-{{ app()->getLocale() == 'ar' ? 'l' : 'r' }} border-b border-yasmina-50 overflow-hidden">
+                    <!-- Drawer Header -->
+                    <div class="p-4 border-b border-yasmina-50 flex items-center justify-between bg-white">
+                        <img src="{{ ($currentVendor && $currentVendor->logo) ? asset('storage/' . $currentVendor->logo) : asset('logo.png') }}" class="h-8 w-auto object-contain">
                         <button @click="mobileMenu = false" class="p-2 text-gray-400 hover:text-primary transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
                     
-                    <div class="flex-1 overflow-y-auto py-8 px-6 space-y-8">
-                        <!-- Navigation -->
-                        <div class="flex flex-col gap-5">
-                            <a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}" class="text-xl font-bold {{ request()->routeIs('home') ? 'text-primary' : 'text-gray-900' }}">{{ __('Home') }}</a>
-                            
-                            <!-- Institutions (Always Visible) -->
-                            <div class="space-y-4">
-                                <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest">{{ __('Institutions') }}</h4>
-                                <div class="grid gap-2">
-                                    <a href="{{ route('home') }}" class="flex items-center justify-between py-2 text-sm font-bold text-gray-600">
-                                        {{ __('Main Store') }}
-                                        @if(!$currentVendor) <span class="w-1.5 h-1.5 bg-primary rounded-full"></span> @endif
-                                    </a>
+                    <div class="flex-1 overflow-y-auto py-4 px-4 bg-white">
+                        <div class="space-y-1">
+                            @auth
+                                <!-- Compact User Info -->
+                                <div class="px-3 py-4 mb-4 bg-yasmina-50/50 rounded-2xl flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">
+                                        {{ substr(auth()->user()->name, 0, 1) }}
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-xs font-bold text-gray-900 truncate">{{ auth()->user()->name }}</p>
+                                        <p class="text-[10px] text-gray-500 truncate">{{ auth()->user()->email }}</p>
+                                    </div>
+                                </div>
+                            @endauth
+
+                            <!-- Navigation Links -->
+                            <a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-yasmina-50 transition-colors {{ request()->routeIs('home') ? 'bg-yasmina-50 text-primary' : 'text-gray-700' }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                                <span class="text-sm font-bold">{{ __('Home') }}</span>
+                            </a>
+
+                            <!-- Institutions (Accordion) -->
+                            <div x-data="{ open: false }">
+                                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-3 rounded-xl hover:bg-yasmina-50 transition-colors text-gray-700">
+                                    <div class="flex items-center gap-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                                        <span class="text-sm font-bold">{{ __('Institutions') }}</span>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                                </button>
+                                <div x-show="open" x-collapse class="pl-11 pr-3 py-1 space-y-1">
+                                    <a href="{{ route('home') }}" class="block py-2 text-xs font-bold text-gray-500 hover:text-primary">{{ __('Main Store') }}</a>
                                     @foreach($globalVendors as $vendor)
-                                        <a href="{{ route('home', ['vendor_id' => $vendor->slug]) }}" class="flex items-center justify-between py-2">
-                                            <span class="text-sm font-bold text-gray-600">{{ $vendor->name }}</span>
-                                            @if($currentVendor && $currentVendor->id == $vendor->id) <span class="w-1.5 h-1.5 bg-primary rounded-full"></span> @endif
-                                        </a>
+                                        <a href="{{ route('home', ['vendor_id' => $vendor->slug]) }}" class="block py-2 text-xs font-bold text-gray-500 hover:text-primary">{{ $vendor->name }}</a>
                                     @endforeach
                                 </div>
                             </div>
 
-                            <!-- Categories (Always Visible) -->
-                            <div class="space-y-4 pt-4 border-t border-yasmina-50">
-                                <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest">{{ __('Categories') }}</h4>
-                                <div class="grid gap-2">
+                            <!-- Categories (Accordion) -->
+                            <div x-data="{ open: false }">
+                                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-3 rounded-xl hover:bg-yasmina-50 transition-colors text-gray-700">
+                                    <div class="flex items-center gap-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                                        <span class="text-sm font-bold">{{ __('Categories') }}</span>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                                </button>
+                                <div x-show="open" x-collapse class="pl-11 pr-3 py-1 space-y-1">
                                     @foreach($globalCategories as $category)
-                                        <a href="{{ route('web.shop', ['category_id' => $category->id, 'vendor_id' => request('vendor_id')]) }}" class="block py-2 text-sm font-bold text-gray-600">
-                                            {{ $category->name }}
-                                        </a>
+                                        <a href="{{ route('web.shop', ['category_id' => $category->id, 'vendor_id' => request('vendor_id')]) }}" class="block py-2 text-xs font-bold text-gray-500 hover:text-primary">{{ $category->name }}</a>
                                     @endforeach
                                 </div>
                             </div>
 
-                            <div class="space-y-4 pt-4 border-t border-yasmina-50">
-                                <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="block text-xl font-bold {{ request()->routeIs('web.shop') ? 'text-primary' : 'text-gray-900' }}">{{ __('Shop') }}</a>
-                                <a href="{{ route('web.promotions.index', ['vendor_id' => request('vendor_id')]) }}" class="block text-xl font-bold {{ request()->routeIs('web.promotions.index') ? 'text-primary' : 'text-gray-900' }}">{{ __('Promotions') }}</a>
-                                <a href="{{ route('web.about', ['vendor_id' => request('vendor_id')]) }}" class="block text-xl font-bold {{ request()->routeIs('web.about') ? 'text-primary' : 'text-gray-900' }}">{{ __('About Us') }}</a>
-                                <a href="{{ route('web.contact', ['vendor_id' => request('vendor_id')]) }}" class="block text-xl font-bold {{ request()->routeIs('web.contact') ? 'text-primary' : 'text-gray-900' }}">{{ __('Contact Us') }}</a>
-                                <a href="{{ route('web.returns', ['vendor_id' => request('vendor_id')]) }}" class="block text-xl font-bold {{ request()->routeIs('web.returns') ? 'text-primary' : 'text-gray-900' }}">{{ __('Return Policy') }}</a>
-                                <a href="{{ route('web.become-vendor', ['vendor_id' => request('vendor_id')]) }}" class="w-full py-4 bg-primary text-white rounded-2xl text-center font-bold block shadow-lg shadow-primary/20 mt-4">
-                                    {{ __('Join Us') }}
+                            <a href="{{ route('web.shop', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-yasmina-50 transition-colors {{ request()->routeIs('web.shop') ? 'bg-yasmina-50 text-primary' : 'text-gray-700' }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                                <span class="text-sm font-bold">{{ __('Shop') }}</span>
+                            </a>
+
+                            <a href="{{ route('web.promotions.index', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-yasmina-50 transition-colors {{ request()->routeIs('web.promotions.index') ? 'bg-yasmina-50 text-primary' : 'text-gray-700' }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" /></svg>
+                                <span class="text-sm font-bold">{{ __('Promotions') }}</span>
+                            </a>
+
+                            <!-- Moved Support Links -->
+                            <a href="{{ route('web.about', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-yasmina-50 transition-colors {{ request()->routeIs('web.about') ? 'bg-yasmina-50 text-primary' : 'text-gray-700' }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span class="text-sm font-bold">{{ __('About Us') }}</span>
+                            </a>
+
+                            <a href="{{ route('web.contact', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-yasmina-50 transition-colors {{ request()->routeIs('web.contact') ? 'bg-yasmina-50 text-primary' : 'text-gray-700' }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                                <span class="text-sm font-bold">{{ __('Contact Us') }}</span>
+                            </a>
+
+                            <a href="{{ route('web.returns', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-yasmina-50 transition-colors {{ request()->routeIs('web.returns') ? 'bg-yasmina-50 text-primary' : 'text-gray-700' }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z" /></svg>
+                                <span class="text-sm font-bold">{{ __('Return Policy') }}</span>
+                            </a>
+
+                            <div class="my-2 border-t border-yasmina-50"></div>
+
+                            @auth
+                                <!-- User Actions -->
+                                <a href="{{ route('web.profile.orders', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-yasmina-50 transition-colors text-gray-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                                    <span class="text-sm font-bold">{{ __('My Orders') }}</span>
+                                </a>
+
+                                <a href="{{ route('web.wishlist', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-yasmina-50 transition-colors text-gray-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                                    <span class="text-sm font-bold">{{ __('Wishlist') }}</span>
+                                </a>
+
+                                <a href="{{ route('web.profile', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-yasmina-50 transition-colors text-gray-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                                    <span class="text-sm font-bold">{{ __('My Account') }}</span>
+                                </a>
+
+                                <!-- Join as Provider inside Account section -->
+                                <a href="{{ route('web.become-vendor') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-primary/5 text-primary transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                                    <span class="text-sm font-bold">{{ __('Join as Provider') }}</span>
+                                </a>
+
+                                <form method="POST" action="{{ route('logout') }}" class="contents">
+                                    @csrf
+                                    <button type="submit" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-red-50 transition-colors text-red-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                                        <span class="text-sm font-bold">{{ __('Log Out') }}</span>
+                                    </button>
+                                </form>
+                            @else
+                                <a href="{{ route('login', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center gap-3 px-3 py-3 rounded-xl bg-primary text-white transition-opacity hover:opacity-90">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                                    <span class="text-sm font-bold">{{ __('Login') }}</span>
+                                </a>
+                            @endauth
+
+                            <div class="my-4 border-t border-yasmina-50"></div>
+
+                            <!-- Providers -->
+                            <div class="px-3">
+                                <a href="{{ route('web.become-vendor') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl bg-primary/5 text-primary hover:bg-primary/10 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                                    <span class="text-sm font-bold">{{ __('Join as Provider') }}</span>
                                 </a>
                             </div>
-                        </div>
 
-                        <!-- Settings on Mobile -->
-                        <div class="pt-8 border-t border-yasmina-50">
-                            <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">{{ __('Settings & Language') }}</h4>
-                            <div class="flex items-center gap-4 mb-6">
-                                <button onclick="setTheme('yasmina')" class="flex-1 py-3 rounded-2xl border-2 border-yasmina-50 flex items-center justify-center gap-2" style="background: linear-gradient(to right, {{ ($currentVendor && $currentVendor->primary_color) ? $currentVendor->primary_color : '#865d58' }}22, {{ ($currentVendor && $currentVendor->secondary_color) ? $currentVendor->secondary_color : '#d6a6a1' }}22)">
-                                    <div class="w-4 h-4 rounded-full" style="background: var(--yasmina-primary)"></div>
-                                    <span class="text-xs font-bold text-primary">{{ __('Theme') }}</span>
-                                </button>
-                                <button onclick="setTheme('barbie')" class="flex-1 py-3 rounded-2xl border-2 border-yasmina-50 flex items-center justify-center gap-2 bg-[#e0218a11]">
-                                    <div class="w-4 h-4 rounded-full bg-[#e0218a]"></div>
-                                    <span class="text-xs font-bold text-[#e0218a]">{{ __('Barbie') }}</span>
-                                </button>
-                            </div>
-                            <div class="flex bg-yasmina-50 rounded-2xl p-1">
-                                <a href="{{ route('lang.switch', 'en') }}" class="flex-1 py-3 rounded-xl text-center text-sm font-bold transition-all {{ app()->getLocale() == 'en' ? 'bg-white text-primary shadow-sm' : 'text-gray-500' }}">English</a>
-                                <a href="{{ route('lang.switch', 'ar') }}" class="flex-1 py-3 rounded-xl text-center text-sm font-bold transition-all {{ app()->getLocale() == 'ar' ? 'bg-white text-primary shadow-sm' : 'text-gray-500' }}">العربية</a>
-                            </div>
                         </div>
                     </div>
+                </div>
 
+                    <!-- Footer User Actions -->
                     <div class="p-8 border-t border-yasmina-50 bg-yasmina-50/10">
                         @guest
-                            <a href="{{ route('login', ['vendor_id' => request('vendor_id')]) }}" class="w-full py-4 bg-primary text-white rounded-2xl text-center font-bold block shadow-lg shadow-primary/20 mb-3">{{ __('Login') }}</a>
-                            <a href="{{ route('web.become-vendor') }}" class="w-full py-4 bg-white border border-yasmina-100 rounded-2xl text-center font-bold text-gray-700 block shadow-sm">{{ __('Register as Provider') }}</a>
+                            <a href="{{ route('login', ['vendor_id' => request('vendor_id')]) }}" class="w-full py-5 bg-primary text-white rounded-3xl text-center font-bold block shadow-xl shadow-primary/20 mb-4">{{ __('Login to Account') }}</a>
+                            <a href="{{ route('web.become-vendor') }}" class="w-full py-5 bg-white border border-yasmina-100 rounded-3xl text-center font-bold text-gray-700 block shadow-sm hover:bg-yasmina-50 transition-all">{{ __('Join as Provider') }}</a>
                         @else
-                            <div class="flex items-center gap-4 mb-6">
-                                <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg shadow-inner">
-                                    {{ substr(auth()->user()->name, 0, 1) }}
-                                </div>
-                                <div>
-                                    <p class="font-black text-gray-900">{{ auth()->user()->name }}</p>
-                                    <a href="{{ route('web.profile', ['vendor_id' => request('vendor_id')]) }}" class="text-[10px] font-bold text-primary uppercase tracking-widest">{{ __('View Profile') }}</a>
-                                </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <a href="{{ route('web.profile', ['vendor_id' => request('vendor_id')]) }}" class="py-4 bg-white border border-yasmina-50 rounded-2xl text-center font-bold text-gray-700 text-xs">{{ __('Account Settings') }}</a>
+                                <form method="POST" action="{{ route('logout') }}" class="contents">
+                                    @csrf
+                                    <button type="submit" class="py-4 bg-red-50 text-red-500 rounded-2xl text-center font-bold text-xs">{{ __('Log Out') }}</button>
+                                </form>
                             </div>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="w-full py-4 bg-red-50 text-red-500 rounded-2xl text-center font-bold">{{ __('Log Out') }}</button>
-                            </form>
                         @endguest
                     </div>
                 </div>
@@ -587,6 +700,7 @@
             function setTheme(theme) {
                 document.documentElement.setAttribute('data-theme', theme);
                 localStorage.setItem('yasmina-theme', theme);
+                document.cookie = "yasmina-theme=" + theme + "; path=/; max-age=" + (365 * 24 * 60 * 60);
                 
                 // If we select 'yasmina' in vendor context, it should actually reset to vendor colors
                 if (theme === 'yasmina' && {{ $currentVendor ? 'true' : 'false' }}) {
