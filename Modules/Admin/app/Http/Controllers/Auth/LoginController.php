@@ -33,7 +33,7 @@ class LoginController extends Controller
             // Check if the user is an admin (using the existing 'admin' middleware logic or role check)
             $user = Auth::guard('admin')->user();
 
-            if ($user->role !== 'admin') {
+            if (!$user->isAdmin()) {
                 Auth::guard('admin')->logout();
                 throw ValidationException::withMessages([
                     'email' => __('غير مسموح بالدخول. المشرفون فقط يمكنهم الوصول إلى لوحة التحكم.'),

@@ -155,7 +155,7 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->hasRole('admin') || $this->role === 'admin';
+        return $this->roles->count() > 0 || $this->role === 'admin';
     }
 
     public function addresses(): \Illuminate\Database\Eloquent\Relations\HasMany

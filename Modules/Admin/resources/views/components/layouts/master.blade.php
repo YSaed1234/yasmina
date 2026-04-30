@@ -143,6 +143,7 @@
                         <span x-show="sidebarOpen" x-transition class="truncate text-sm">{{ __('Dashboard') }}</span>
                     </a>
                     <!-- Catalog Management -->
+                    @if(auth('admin')->user()->canAny(['manage categories', 'manage products', 'manage vendors']))
                     <div x-data="{ open: {{ request()->routeIs('admin.categories.*') || request()->routeIs('admin.products.*') || request()->routeIs('admin.vendors.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
@@ -173,8 +174,10 @@
                             @endcan
                         </div>
                     </div>
+                    @endif
 
                     <!-- Sales Management -->
+                    @if(auth('admin')->user()->canAny(['manage orders', 'manage coupons', 'manage vendors']))
                     <div x-data="{ open: {{ request()->routeIs('admin.orders.*') || request()->routeIs('admin.coupons.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
@@ -214,8 +217,10 @@
                             @endcan
                         </div>
                     </div>
+                    @endif
 
                     <!-- Customers -->
+                    @if(auth('admin')->user()->canAny(['manage users', 'manage addresses', 'manage contact requests']))
                     <div x-data="{ open: {{ request()->routeIs('admin.users.*') || request()->routeIs('admin.addresses.*') || request()->routeIs('admin.contact_requests.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
@@ -246,8 +251,10 @@
                             @endcan
                         </div>
                     </div>
+                    @endif
 
                     <!-- Shipping -->
+                    @can('manage shipping')
                     <div x-data="{ open: {{ request()->routeIs('admin.governorates.*') || request()->routeIs('admin.regions.*') || request()->routeIs('admin.shipping_zones.*') || request()->routeIs('admin.drivers.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
@@ -262,21 +269,21 @@
                             </svg>
                         </button>
                         <div x-show="open && sidebarOpen" x-collapse class="mt-1 space-y-1 px-4">
-                            @can('manage shipping')
-                                <a href="{{ route('admin.governorates.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.governorates.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    <span x-show="sidebarOpen">• {{ __('Governorates') }}</span>
-                                </a>
-                                <a href="{{ route('admin.regions.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.regions.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    <span x-show="sidebarOpen">• {{ __('Regions') }}</span>
-                                </a>
-                                <a href="{{ route('admin.drivers.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.drivers.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    <span x-show="sidebarOpen">• {{ __('Drivers') }}</span>
-                                </a>
-                            @endcan
+                            <a href="{{ route('admin.governorates.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.governorates.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                <span x-show="sidebarOpen">• {{ __('Governorates') }}</span>
+                            </a>
+                            <a href="{{ route('admin.regions.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.regions.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                <span x-show="sidebarOpen">• {{ __('Regions') }}</span>
+                            </a>
+                            <a href="{{ route('admin.drivers.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.drivers.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                <span x-show="sidebarOpen">• {{ __('Drivers') }}</span>
+                            </a>
                         </div>
                     </div>
+                    @endcan
 
                     <!-- Appearance & Content -->
+                    @can('manage slides')
                     <div x-data="{ open: {{ request()->routeIs('admin.slides.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
@@ -290,15 +297,15 @@
                             </svg>
                         </button>
                         <div x-show="open && sidebarOpen" x-collapse class="mt-1 space-y-1 px-4">
-                            @can('manage slides')
-                                <a href="{{ route('admin.slides.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.slides.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
-                                    • {{ __('Slider Settings') }}
-                                </a>
-                            @endcan
+                            <a href="{{ route('admin.slides.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all {{ request()->routeIs('admin.slides.*') ? 'text-yasmina-600 font-bold' : 'text-gray-500 hover:text-yasmina-500' }}">
+                                • {{ __('Slider Settings') }}
+                            </a>
                         </div>
                     </div>
+                    @endcan
 
                     <!-- Reports -->
+                    @can('view reports')
                     <div x-data="{ open: {{ request()->routeIs('admin.inventory.*') || request()->routeIs('admin.traffic.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
@@ -333,8 +340,10 @@
                             </a>
                         </div>
                     </div>
+                    @endcan
 
                     <!-- System Settings -->
+                    @if(auth('admin')->user()->canAny(['manage currencies', 'manage permissions', 'manage points']))
                     <div x-data="{ open: {{ request()->routeIs('admin.currencies.*') || request()->routeIs('admin.roles.*') || request()->routeIs('admin.settings.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all text-gray-600 hover:bg-yasmina-50/50">
                             <div class="flex items-center gap-3">
@@ -366,6 +375,7 @@
                             @endcan
                         </div>
                     </div>
+                    @endif
                 </nav>
 
                 <div class="p-4 border-t border-yasmina-50">
@@ -406,7 +416,7 @@
                             <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 hover:bg-yasmina-50 p-2 rounded-2xl transition-all">
                                 <div class="flex flex-col items-end">
                                     <span class="text-sm font-bold text-gray-800">{{ auth('admin')->user()->name }}</span>
-                                    <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">{{ __('Administrator') }}</span>
+                                    <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">{{ auth('admin')->user()->roles->first()->name ?? __('User') }}</span>
                                 </div>
                                 <div class="w-10 h-10 rounded-xl bg-yasmina-500 flex items-center justify-center text-white font-bold shadow-lg shadow-yasmina-100">
                                     {{ substr(auth('admin')->user()->name, 0, 1) }}
