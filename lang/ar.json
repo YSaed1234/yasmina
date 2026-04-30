@@ -1332,5 +1332,16 @@
     "Subtotal": "المجموع الفرعي",
     "Coupon Discount": "خصم الكوبون",
     "Shipping": "الشحن",
-    "Total": "الإجمالي"
+    "Total": "الإجمالي",
+    "Showing": "عرض",
+    "to": "إلى",
+    "of": "من",
+    "results": "نتائج",
+    "Pagination Navigation": "التنقل بين الصفحات",
+    "Limited Time": "لفترة محدودة",
+    "Available Coupons": "الكوبونات المتاحة",
+    "Click code to copy": "اضغط على الكود للنسخ",
+    "Discount Coupon": "كوبون خصم",
+    "Min. Order": "الحد الأدنى للطلب",
+    "No Minimum Order": "بدون حد أدنى للطلب"
 }

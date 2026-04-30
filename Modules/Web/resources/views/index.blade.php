@@ -7,6 +7,80 @@
             :logo="$currentVendor ? $currentVendor->logo : null"
         />
 
+        @if($coupons->count() > 0)
+        <!-- Coupons Section -->
+        <section class="py-6 lg:py-16 bg-white relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="flex items-center justify-between mb-6 lg:mb-10">
+                    <div>
+                        <span class="text-primary font-black text-[8px] lg:text-xs uppercase tracking-[0.3em] mb-1 lg:mb-2 block">{{ __('Limited Time') }}</span>
+                        <h2 class="text-lg lg:text-3xl font-bold text-gray-900">{{ __('Available Coupons') }}</h2>
+                    </div>
+                    <div class="hidden sm:block">
+                        <div class="flex items-center gap-2 text-gray-400 text-[10px] lg:text-xs font-medium bg-yasmina-50 px-4 py-2 rounded-full border border-yasmina-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 lg:h-4 lg:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {{ __('Click code to copy') }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
+                    @foreach($coupons as $coupon)
+                        <div class="group relative bg-gradient-to-br from-yasmina-50 to-white rounded-2xl lg:rounded-3xl p-3.5 lg:p-6 border border-yasmina-100/50 hover:border-primary/30 transition-all duration-300 flex items-center gap-3 lg:gap-6 overflow-hidden">
+                            <!-- Ticket Notch -->
+                            <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-white rounded-full border border-yasmina-100/50 z-10"></div>
+                            <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-white rounded-full border border-yasmina-100/50 z-10"></div>
+                            
+                            <div class="w-12 h-12 lg:w-20 lg:h-20 bg-primary/10 rounded-xl lg:rounded-2xl flex flex-col items-center justify-center text-primary shrink-0 border border-primary/5">
+                                <span class="text-xs lg:text-xl font-black leading-none">
+                                    {{ $coupon->type === 'percentage' ? number_format($coupon->value, 0) : number_format($coupon->value, 0) }}
+                                </span>
+                                <span class="text-[6px] lg:text-[10px] font-bold uppercase tracking-widest mt-0.5 lg:mt-1">
+                                    {{ $coupon->type === 'percentage' ? '%' : ($currentVendor->currency?->symbol ?? '$') }}
+                                </span>
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <div class="flex flex-col">
+                                    <h3 class="text-[10px] lg:text-base font-bold text-gray-900 uppercase tracking-tight">{{ __('Discount Coupon') }}</h3>
+                                    <p class="text-[8px] lg:text-xs text-gray-500 mt-0.5 truncate">
+                                        @if($coupon->min_order_amount > 0)
+                                            {{ __('Min. Order') }}: {{ number_format($coupon->min_order_amount, 2) }} {{ $currentVendor->currency?->symbol ?? '$' }}
+                                        @else
+                                            {{ __('No Minimum Order') }}
+                                        @endif
+                                    </p>
+                                </div>
+                                <div class="mt-2 lg:mt-4 flex items-center gap-1.5 lg:gap-3">
+                                    <button 
+                                        onclick="copyCouponCode('{{ $coupon->code }}', this)"
+                                        class="flex-1 bg-white border-2 border-dashed border-yasmina-200 rounded-lg lg:rounded-xl py-1.5 lg:py-2.5 px-3 lg:px-4 text-center group/code relative hover:border-primary/50 transition-all"
+                                    >
+                                        <span class="text-[10px] lg:text-sm font-black text-gray-700 tracking-widest">{{ $coupon->code }}</span>
+                                        <div class="absolute inset-0 bg-primary text-white text-[8px] lg:text-[10px] font-black uppercase tracking-widest flex items-center justify-center opacity-0 group-active/code:opacity-100 transition-opacity rounded-lg lg:rounded-xl">
+                                            {{ __('Copied!') }}
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+        <script>
+            function copyCouponCode(code, btn) {
+                navigator.clipboard.writeText(code).then(() => {
+                    // Feedback handled by CSS active state for immediate response
+                    // Additional persistent feedback could be added here if needed
+                });
+            }
+        </script>
+        @endif
+
         @if($promotions->count() > 0)
         <!-- Promotions Section -->
         <section class="py-12 lg:py-24 bg-yasmina-50/50 relative overflow-hidden">

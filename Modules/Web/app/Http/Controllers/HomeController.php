@@ -60,8 +60,21 @@ class HomeController extends Controller
         }
 
         $promotions = $promotionsQuery->latest()->get();
+        
+        $coupons = \App\Models\Coupon::where('is_active', true)
+            ->where(function($q) {
+                $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
+            })
+            ->where(function($q) {
+                $q->whereNull('usage_limit')->orWhereRaw('used_count < usage_limit');
+            })
+            ->latest()
+            ->get();
 
-        return view('web::index', compact('categories', 'featuredProducts', 'slides', 'vendor', 'promotions'));
+        return view('web::index', compact('categories', 'featuredProducts', 'slides', 'vendor', 'promotions', 'coupons'));
     }
 
     public function about()

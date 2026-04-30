@@ -105,7 +105,7 @@
 
                             @if($walletTransactions->hasPages())
                                 <div class="mt-6 lg:mt-10">
-                                    {{ $walletTransactions->appends(['points_page' => $pointTransactions->currentPage()])->links() }}
+                                    {{ $walletTransactions->appends(['points_page' => $pointTransactions->currentPage()])->links('web::pagination.custom') }}
                                 </div>
                             @endif
                         </div>
@@ -144,7 +144,7 @@
 
                             @if($pointTransactions->hasPages())
                                 <div class="mt-6 lg:mt-10">
-                                    {{ $pointTransactions->appends(['wallet_page' => $walletTransactions->currentPage()])->links() }}
+                                    {{ $pointTransactions->appends(['wallet_page' => $walletTransactions->currentPage()])->links('web::pagination.custom') }}
                                 </div>
                             @endif
                         </div>

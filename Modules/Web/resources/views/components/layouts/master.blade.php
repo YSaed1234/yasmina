@@ -310,8 +310,8 @@
 
                             <!-- Theme & Lang -->
                             <div class="flex items-center gap-2 pl-4 border-l border-yasmina-100">
-                                <button onclick="setTheme('yasmina')" class="w-5 h-5 rounded-full border border-gray-200" style="background: var(--yasmina-primary)"></button>
-                                <button onclick="setTheme('barbie')" class="w-5 h-5 rounded-full border border-gray-200 bg-[#e0218a]"></button>
+                                <button onclick="setTheme('yasmina')" class="w-5 h-5 rounded-full border border-gray-200 shadow-sm hover:scale-110 transition-transform" style="background: {{ ($currentVendor && $currentVendor->primary_color) ? $currentVendor->primary_color : '#865d58' }}"></button>
+                                <button onclick="setTheme('barbie')" class="w-5 h-5 rounded-full border border-gray-200 bg-[#e0218a] shadow-sm hover:scale-110 transition-transform"></button>
                             </div>
                             <div class="flex items-center bg-yasmina-50 rounded-xl p-1 text-[10px] font-bold">
                                 <a href="{{ route('lang.switch', 'en') }}" class="px-2 py-1 rounded-lg {{ app()->getLocale() == 'en' ? 'bg-white text-primary' : 'text-gray-400' }}">EN</a>

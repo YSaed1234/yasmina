@@ -67,7 +67,7 @@
                         </div>
 
                         <div class="mt-8 lg:mt-12">
-                            {{ $notifications->links() }}
+                            {{ $notifications->links('web::pagination.custom') }}
                         </div>
                     </div>
                 </div>

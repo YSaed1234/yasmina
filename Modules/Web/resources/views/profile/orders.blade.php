@@ -164,7 +164,7 @@
                                 @endforeach
                             </div>
                             <div class="mt-8 lg:mt-10">
-                                {{ $orders->links() }}
+                                {{ $orders->links('web::pagination.custom') }}
                             </div>
                         @else
                             <div class="py-10 lg:py-20 text-center bg-gray-50 rounded-2xl lg:rounded-[3rem] border-2 border-dashed border-gray-200">

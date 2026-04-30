@@ -209,7 +209,7 @@
 
                     <!-- Pagination -->
                     <div class="mt-10 lg:mt-16">
-                        {{ $products->links() }}
+                        {{ $products->links('web::pagination.custom') }}
                     </div>
                 </div>
             </div>

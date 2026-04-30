@@ -156,7 +156,7 @@
 
                 <!-- Pagination -->
                 <div class="mt-6 lg:mt-16">
-                    {{ $promotions->links() }}
+                    {{ $promotions->links('web::pagination.custom') }}
                 </div>
             @endif
         </div>
