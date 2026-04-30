@@ -36,7 +36,7 @@ class LoginController extends Controller
             if ($user->role !== 'admin') {
                 Auth::guard('admin')->logout();
                 throw ValidationException::withMessages([
-                    'email' => __('Access denied. Only administrators can access the dashboard.'),
+                    'email' => __('غير مسموح بالدخول. المشرفون فقط يمكنهم الوصول إلى لوحة التحكم.'),
                 ]);
             }
 

@@ -37,7 +37,7 @@ class UserService
             'password' => Hash::make($data['password']),
         ]);
 
-        // $user->syncRoles([$data['role']]);
+        $user->syncRoles([$data['role']]);
         return $user;
     }
 
@@ -62,7 +62,7 @@ class UserService
         }
 
         $user->update($updateData);
-        // $user->syncRoles([$data['role']]);
+        $user->syncRoles([$data['role']]);
         return $user;
     }
 
