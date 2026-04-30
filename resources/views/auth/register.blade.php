@@ -1,6 +1,9 @@
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf
+        @if(request('vendor_id'))
+            <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}">
+        @endif
 
         <!-- Name -->
         <div>

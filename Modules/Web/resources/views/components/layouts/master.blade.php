@@ -137,11 +137,11 @@
                         
                         @if($currentVendor && $currentVendor->logo)
           
-                        <a href="{{ route('home') }}" class="flex items-center shrink-0">
+                        <a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center shrink-0">
                             <img src="{{ asset('storage/' . $currentVendor->logo) }}" alt="{{ $currentVendor->name }}" class="h-12 max-w-[180px] w-auto object-contain">
                         </a>
                         @else
-                            <a href="{{ route('home') }}" class="flex items-center shrink-0">
+                            <a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center shrink-0">
                             <img src="{{ asset('logo.png') }}" alt="Yasmina Logo" class="h-12 max-w-[180px] w-auto object-contain">
                         </a>
                         @endif
@@ -161,7 +161,7 @@
                                 </button>
                                 <div class="absolute left-0 top-full w-64 bg-white rounded-2xl shadow-2xl border border-yasmina-50 p-4 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
                                     <div class="grid gap-2">
-                                        <a href="{{ route('home') }}" class="px-4 py-3 hover:bg-yasmina-50 rounded-xl transition-all flex items-center justify-between group/item">
+                                        <a href="{{ route('home', ['vendor_id' => 'main']) }}" class="px-4 py-3 hover:bg-yasmina-50 rounded-xl transition-all flex items-center justify-between group/item">
                                             <span class="font-bold text-gray-700 group-hover/item:text-primary">{{ __('Main Store') }}</span>
                                             @if(!$currentVendor)
                                                 <span class="w-2 h-2 bg-primary rounded-full"></span>
@@ -301,9 +301,38 @@
                                             {{ substr(auth()->user()->name, 0, 2) }}
                                         </div>
                                     </button>
-                                    <div class="absolute right-0 top-full w-56 bg-white rounded-2xl shadow-2xl border border-yasmina-50 p-2 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
-                                        <a href="{{ route('web.profile', ['vendor_id' => request('vendor_id')]) }}" class="block px-4 py-2 hover:bg-yasmina-50 rounded-xl text-xs font-bold text-gray-700">{{ __('My Profile') }}</a>
-                                        <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="w-full text-left px-4 py-2 hover:bg-red-50 rounded-xl text-xs font-bold text-red-500">{{ __('Logout') }}</button></form>
+                                    <div class="absolute right-0 top-full w-64 bg-white rounded-2xl shadow-2xl border border-yasmina-50 p-2 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
+                                        <!-- User Header Info -->
+                                        <div class="px-4 py-3 border-b border-yasmina-50 mb-2">
+                                            <p class="text-xs font-bold text-gray-900 truncate">{{ auth()->user()->name }}</p>
+                                            <p class="text-[10px] text-gray-500 truncate">{{ auth()->user()->email }}</p>
+                                        </div>
+
+                                        <a href="{{ route('web.profile', ['vendor_id' => request('vendor_id')]) }}" class="flex items-center gap-3 px-4 py-3 hover:bg-yasmina-50 rounded-xl text-xs font-bold text-gray-700 transition-all group/link">
+                                            <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover/link:bg-primary group-hover/link:text-white transition-all">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                </svg>
+                                            </div>
+                                            {{ __('My Profile') }}
+                                        </a>
+
+                                        <div class="my-1 border-t border-yasmina-50/50"></div>
+
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf 
+                                            @if(request('vendor_id')) 
+                                                <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}"> 
+                                            @endif 
+                                            <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 rounded-xl text-xs font-bold text-red-500 transition-all group/logout">
+                                                <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-500 group-hover/logout:bg-red-500 group-hover/logout:text-white transition-all">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                    </svg>
+                                                </div>
+                                                {{ __('Logout') }}
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             @endguest
@@ -314,8 +343,8 @@
                                 <button onclick="setTheme('barbie')" class="w-5 h-5 rounded-full border border-gray-200 bg-[#e0218a] shadow-sm hover:scale-110 transition-transform"></button>
                             </div>
                             <div class="flex items-center bg-yasmina-50 rounded-xl p-1 text-[10px] font-bold">
-                                <a href="{{ route('lang.switch', 'en') }}" class="px-2 py-1 rounded-lg {{ app()->getLocale() == 'en' ? 'bg-white text-primary' : 'text-gray-400' }}">EN</a>
-                                <a href="{{ route('lang.switch', 'ar') }}" class="px-2 py-1 rounded-lg {{ app()->getLocale() == 'ar' ? 'bg-white text-primary' : 'text-gray-400' }}">AR</a>
+                                <a href="{{ route('lang.switch', 'en') }}" class="px-3 py-1 rounded-lg {{ app()->getLocale() == 'en' ? 'bg-white text-primary shadow-sm' : 'text-gray-400 hover:text-gray-600' }} transition-all">{{ __('English') }}</a>
+                                <a href="{{ route('lang.switch', 'ar') }}" class="px-3 py-1 rounded-lg {{ app()->getLocale() == 'ar' ? 'bg-white text-primary shadow-sm' : 'text-gray-400 hover:text-gray-600' }} transition-all">{{ __('عربي') }}</a>
                             </div>
                         </div>
 
@@ -324,7 +353,7 @@
 
                             <!-- Language Toggle -->
                             <a href="{{ route('lang.switch', app()->getLocale() == 'en' ? 'ar' : 'en') }}" class="p-2 text-gray-500 hover:text-primary transition-colors font-bold text-xs">
-                                {{ app()->getLocale() == 'en' ? 'AR' : 'EN' }}
+                                {{ app()->getLocale() == 'en' ? 'عربي' : 'English' }}
                             </a>
 
                             @auth
@@ -502,7 +531,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                                 </button>
                                 <div x-show="open" x-collapse class="pl-11 pr-3 py-1 space-y-1">
-                                    <a href="{{ route('home') }}" class="block py-2 text-xs font-bold text-gray-500 hover:text-primary">{{ __('Main Store') }}</a>
+                                    <a href="{{ route('home', ['vendor_id' => 'main']) }}" class="block py-2 text-xs font-bold text-gray-500 hover:text-primary">{{ __('Main Store') }}</a>
                                     @foreach($globalVendors as $vendor)
                                         <a href="{{ route('home', ['vendor_id' => $vendor->slug]) }}" class="block py-2 text-xs font-bold text-gray-500 hover:text-primary">{{ $vendor->name }}</a>
                                     @endforeach
@@ -578,6 +607,9 @@
 
                                 <form method="POST" action="{{ route('logout') }}" class="contents">
                                     @csrf
+                                    @if(request('vendor_id'))
+                                        <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}">
+                                    @endif
                                     <button type="submit" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-red-50 transition-colors text-red-500">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
                                         <span class="text-sm font-bold">{{ __('Log Out') }}</span>
@@ -614,6 +646,9 @@
                                 <a href="{{ route('web.profile', ['vendor_id' => request('vendor_id')]) }}" class="py-4 bg-white border border-yasmina-50 rounded-2xl text-center font-bold text-gray-700 text-xs">{{ __('Account Settings') }}</a>
                                 <form method="POST" action="{{ route('logout') }}" class="contents">
                                     @csrf
+                                    @if(request('vendor_id'))
+                                        <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}">
+                                    @endif
                                     <button type="submit" class="py-4 bg-red-50 text-red-500 rounded-2xl text-center font-bold text-xs">{{ __('Log Out') }}</button>
                                 </form>
                             </div>

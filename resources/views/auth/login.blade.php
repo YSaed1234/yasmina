@@ -4,6 +4,9 @@
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
+        @if(request('vendor_id'))
+            <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}">
+        @endif
 
         <!-- Email Address -->
         <div>
@@ -34,7 +37,7 @@
 
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-500 hover:text-[var(--yasmina-primary)] rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--yasmina-primary)] transition-colors" href="{{ route('password.request') }}">
+                <a class="underline text-sm text-gray-500 hover:text-[var(--yasmina-primary)] rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--yasmina-primary)] transition-colors" href="{{ route('password.request', ['vendor_id' => request('vendor_id')]) }}">
                     {{ __('Forgot your password?') }}
                 </a>
             @endif

@@ -4,19 +4,26 @@
 <x-web::layouts.master>
     <div class="bg-bg-soft min-h-screen pb-6 lg:pb-20">
         <!-- Hero Section -->
-        <div class="relative bg-primary py-6 lg:py-24 overflow-hidden">
-            <div class="absolute inset-0 opacity-10">
-                <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <path d="M0 100 C 20 0 50 0 100 100 Z" fill="white"></path>
-                </svg>
+        @if(isset($slides) && $slides->count() > 0)
+            <x-web::sections.hero 
+                :slides="$slides" 
+                :logo="$currentVendor ? $currentVendor->logo : null"
+            />
+        @else
+            <div class="relative bg-primary py-6 lg:py-24 overflow-hidden">
+                <div class="absolute inset-0 opacity-10">
+                    <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <path d="M0 100 C 20 0 50 0 100 100 Z" fill="white"></path>
+                    </svg>
+                </div>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                    <h1 class="text-lg md:text-6xl font-bold text-white mb-2 lg:mb-6 uppercase tracking-widest">{{ __('Exclusive Promotions') }}</h1>
+                    <p class="text-white/80 text-[10px] lg:text-lg max-w-2xl mx-auto font-medium leading-relaxed">
+                        {{ __('Discover our best deals and buy-one-get-one offers curated just for you.') }}
+                    </p>
+                </div>
             </div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-                <h1 class="text-lg md:text-6xl font-bold text-white mb-2 lg:mb-6 uppercase tracking-widest">{{ __('Exclusive Promotions') }}</h1>
-                <p class="text-white/80 text-[10px] lg:text-lg max-w-2xl mx-auto font-medium leading-relaxed">
-                    {{ __('Discover our best deals and buy-one-get-one offers curated just for you.') }}
-                </p>
-            </div>
-        </div>
+        @endif
 
         <!-- Filters Section -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-3 lg:-mt-10 relative z-20">

@@ -1343,5 +1343,13 @@
     "Click code to copy": "اضغط على الكود للنسخ",
     "Discount Coupon": "كوبون خصم",
     "Min. Order": "الحد الأدنى للطلب",
-    "No Minimum Order": "بدون حد أدنى للطلب"
+    "No Minimum Order": "بدون حد أدنى للطلب",
+    "My Profile": "ملفي الشخصي",
+    "English": "English",
+    "عربي": "عربي",
+    "Vendor (Optional)": "المؤسسة (اختياري)",
+    "No Vendor (Global / Main Store)": "بدون مؤسسة (عام / المتجر الرئيسي)",
+    "Assign this slide to a specific vendor or leave empty for the main store.": "قم بتعيين هذا السلايد لمؤسسة محددة أو اتركه فارغاً للمتجر الرئيسي.",
+    "Button & Links": "الأزرار والروابط",
+    "PNG, JPG, GIF up to 2MB": "PNG, JPG, GIF بحد أقصى 2 ميجابايت"
 }

@@ -37,10 +37,10 @@ class WebServiceProvider extends ModuleServiceProvider
     public function boot(): void
     {
         parent::boot();
-        
+
         \Illuminate\Support\Facades\View::composer(['web::*', 'layouts.guest', 'auth.*'], function ($view) {
             $currentVendor = request()->attributes->get('current_vendor');
-            
+
             if (!$currentVendor) {
                 $vendorIdentifier = request()->get('vendor_id') ?: session('current_vendor_id');
                 if ($vendorIdentifier) {
@@ -59,6 +59,15 @@ class WebServiceProvider extends ModuleServiceProvider
 
             $view->with('globalCategories', $categoriesQuery->get());
             $view->with('currentVendor', $currentVendor);
+
+            $slidesQuery = \App\Models\Slide::where('active', true);
+            if ($currentVendor) {
+                $slidesQuery->where('vendor_id', $currentVendor->id);
+            } else {
+                $slidesQuery->whereNull('vendor_id');
+            }
+            $view->with('slides', $slidesQuery->orderBy('order')->get());
+
             $view->with('globalVendors', \App\Models\Vendor::where('status', 'active')->orderBy('name')->get());
         });
     }

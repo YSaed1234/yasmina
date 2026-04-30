@@ -66,7 +66,7 @@
             <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 gradient-bg rounded-full opacity-10 blur-3xl"></div>
             
             <div class="z-10">
-                <a href="/">
+                <a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}">
                     <span class="text-4xl font-bold text-primary-gradient">Yasmina</span>
                 </a>
             </div>

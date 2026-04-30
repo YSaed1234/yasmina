@@ -17,7 +17,8 @@ class SlideController extends Controller
 
     public function create()
     {
-        return view('admin::slides.create');
+        $vendors = \App\Models\Vendor::where('status', 'active')->orderBy('name')->get();
+        return view('admin::slides.create', compact('vendors'));
     }
 
     public function store(Request $request)
@@ -27,6 +28,7 @@ class SlideController extends Controller
             'title_ar' => 'required',
             'title_en' => 'required',
             'order' => 'integer',
+            'vendor_id' => 'nullable|exists:vendors,id',
         ]);
 
         $data = $request->all();
@@ -41,7 +43,8 @@ class SlideController extends Controller
 
     public function edit(Slide $slide)
     {
-        return view('admin::slides.edit', compact('slide'));
+        $vendors = \App\Models\Vendor::where('status', 'active')->orderBy('name')->get();
+        return view('admin::slides.edit', compact('slide', 'vendors'));
     }
 
     public function update(Request $request, Slide $slide)
@@ -51,6 +54,7 @@ class SlideController extends Controller
             'title_ar' => 'required',
             'title_en' => 'required',
             'order' => 'integer',
+            'vendor_id' => 'nullable|exists:vendors,id',
         ]);
 
         $data = $request->all();

@@ -106,6 +106,16 @@
                         <option value="0" {{ !$slide->active ? 'selected' : '' }}>{{ __('Inactive') }}</option>
                     </select>
                 </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Vendor (Optional)') }}</label>
+                    <select name="vendor_id" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium appearance-none">
+                        <option value="">{{ __('No Vendor (Global / Main Store)') }}</option>
+                        @foreach($vendors as $vendor)
+                            <option value="{{ $vendor->id }}" {{ $slide->vendor_id == $vendor->id ? 'selected' : '' }}>{{ $vendor->name }}</option>
+                        @endforeach
+                    </select>
+                    <p class="text-[10px] text-gray-400 mt-2 italic">{{ __('Assign this slide to a specific vendor or leave empty for the main store.') }}</p>
+                </div>
             </div>
         </div>
 

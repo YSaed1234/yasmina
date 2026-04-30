@@ -22,9 +22,11 @@ class HomeController extends Controller
             'vendor_id' => $vendor_id
         ]);
 
-        $categoriesQuery = \App\Models\Category::with(['products' => function($q) {
-            $q->withValidPrice();
-        }])->orderBy('rank');
+        $categoriesQuery = \App\Models\Category::with([
+            'products' => function ($q) {
+                $q->withValidPrice();
+            }
+        ])->orderBy('rank');
         $featuredProductsQuery = \App\Models\Product::withValidPrice()->orderBy('rank');
         if ($vendor_id) {
             $categoriesQuery->where('vendor_id', $vendor_id);
@@ -46,10 +48,10 @@ class HomeController extends Controller
 
         $promotionsQuery = \App\Models\Promotion::with(['buyProduct', 'getProduct'])
             ->where('is_active', true)
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
             })
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
             });
 
@@ -60,21 +62,21 @@ class HomeController extends Controller
         }
 
         $promotions = $promotionsQuery->latest()->get();
-        
+
         $coupons = \App\Models\Coupon::where('is_active', true)
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
             })
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
             })
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->whereNull('usage_limit')->orWhereRaw('used_count < usage_limit');
             })
             ->latest()
             ->get();
 
-        return view('web::index', compact('categories', 'featuredProducts', 'slides', 'vendor', 'promotions', 'coupons'));
+        return view('web::index', compact('categories', 'featuredProducts', 'vendor', 'promotions', 'coupons'));
     }
 
     public function about()
@@ -82,15 +84,9 @@ class HomeController extends Controller
         $vendor = request()->attributes->get('current_vendor');
         $vendor_id = $vendor ? $vendor->id : null;
 
-        $slidesQuery = \App\Models\Slide::where('active', true);
-        if ($vendor_id) {
-            $slidesQuery->where('vendor_id', $vendor_id);
-        } else {
-            $slidesQuery->whereNull('vendor_id');
-        }
-        $slides = $slidesQuery->orderBy('order')->get();
 
-        return view('web::about', compact('slides', 'vendor'));
+
+        return view('web::about', compact('vendor'));
     }
 
     public function contact()
@@ -98,15 +94,9 @@ class HomeController extends Controller
         $vendor = request()->attributes->get('current_vendor');
         $vendor_id = $vendor ? $vendor->id : null;
 
-        $slidesQuery = \App\Models\Slide::where('active', true);
-        if ($vendor_id) {
-            $slidesQuery->where('vendor_id', $vendor_id);
-        } else {
-            $slidesQuery->whereNull('vendor_id');
-        }
-        $slides = $slidesQuery->orderBy('order')->get();
 
-        return view('web::contact', compact('slides', 'vendor'));
+
+        return view('web::contact', compact('vendor'));
     }
 
     public function submitContact(Request $request)
@@ -183,15 +173,9 @@ class HomeController extends Controller
         $vendor = request()->attributes->get('current_vendor');
         $vendor_id = $vendor ? $vendor->id : null;
 
-        $slidesQuery = \App\Models\Slide::where('active', true);
-        if ($vendor_id) {
-            $slidesQuery->where('vendor_id', $vendor_id);
-        } else {
-            $slidesQuery->whereNull('vendor_id');
-        }
-        $slides = $slidesQuery->orderBy('order')->get();
 
-        return view('web::returns', compact('slides', 'vendor'));
+
+        return view('web::returns', compact('vendor'));
     }
 
     /**

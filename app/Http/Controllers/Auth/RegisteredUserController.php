@@ -76,6 +76,11 @@ class RegisteredUserController extends Controller
         
         $user->notify(new \App\Notifications\WelcomeNotification($user));
 
-        return redirect(route('home', absolute: false));
+        $params = [];
+        if ($request->filled('vendor_id')) {
+            $params['vendor_id'] = $request->vendor_id;
+        }
+
+        return redirect(route('home', $params));
     }
 }

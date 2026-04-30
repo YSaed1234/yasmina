@@ -28,7 +28,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $params = [];
+        if ($request->filled('vendor_id')) {
+            $params['vendor_id'] = $request->vendor_id;
+        }
+
+        return redirect()->intended(route('home', $params));
     }
 
     /**
@@ -38,6 +43,11 @@ class AuthenticatedSessionController extends Controller
     {
         Auth::guard('web')->logout();
 
-        return redirect('/');
+        $params = [];
+        if ($request->filled('vendor_id')) {
+            $params['vendor_id'] = $request->vendor_id;
+        }
+
+        return redirect()->route('home', $params);
     }
 }
