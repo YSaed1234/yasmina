@@ -2,48 +2,48 @@
     $currentVendor = request()->attributes->get('current_vendor');
 @endphp
 <x-web::layouts.master>
-    <div class="bg-bg-soft min-h-screen pb-20">
+    <div class="bg-bg-soft min-h-screen pb-6 lg:pb-20">
         <!-- Hero Section -->
-        <div class="relative bg-primary py-24 overflow-hidden">
+        <div class="relative bg-primary py-6 lg:py-24 overflow-hidden">
             <div class="absolute inset-0 opacity-10">
                 <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
                     <path d="M0 100 C 20 0 50 0 100 100 Z" fill="white"></path>
                 </svg>
             </div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 uppercase tracking-widest">{{ __('Exclusive Promotions') }}</h1>
-                <p class="text-white/80 text-lg max-w-2xl mx-auto font-medium">
+                <h1 class="text-lg md:text-6xl font-bold text-white mb-2 lg:mb-6 uppercase tracking-widest">{{ __('Exclusive Promotions') }}</h1>
+                <p class="text-white/80 text-[10px] lg:text-lg max-w-2xl mx-auto font-medium leading-relaxed">
                     {{ __('Discover our best deals and buy-one-get-one offers curated just for you.') }}
                 </p>
             </div>
         </div>
 
         <!-- Filters Section -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
-            <div class="bg-white rounded-3xl shadow-2xl shadow-primary/10 p-8 border border-yasmina-50">
-                <form action="{{ route('web.promotions.index', ['vendor_id' => request('vendor_id')]) }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-3 lg:-mt-10 relative z-20">
+            <div class="bg-white rounded-2xl lg:rounded-3xl shadow-2xl shadow-primary/10 p-3.5 lg:p-8 border border-yasmina-50">
+                <form action="{{ route('web.promotions.index', ['vendor_id' => request('vendor_id')]) }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-3 lg:gap-6 items-end">
                     @if(request('vendor_id'))
                         <input type="hidden" name="vendor_id" value="{{ request('vendor_id') }}">
                     @endif
                     
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">{{ __('Search Deals') }}</label>
+                    <div class="space-y-1">
+                        <label class="text-[8px] font-bold text-gray-400 uppercase tracking-wider px-1">{{ __('Search Deals') }}</label>
                         <div class="relative">
                             <input type="text" name="search" value="{{ request('search') }}" 
                                    placeholder="{{ __('Search by name...') }}" 
-                                   class="w-full bg-yasmina-50/50 border-2 border-transparent focus:border-primary/20 rounded-2xl px-6 py-4 outline-none transition-all font-medium text-gray-700">
-                            <button type="submit" class="absolute right-4 top-1/2 -translate-y-1/2 text-primary hover:scale-110 transition-transform">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                   class="w-full bg-yasmina-50/50 border-2 border-transparent focus:border-primary/20 rounded-xl lg:rounded-2xl px-4 lg:px-6 py-2.5 lg:py-4 outline-none transition-all font-medium text-[11px] lg:text-base text-gray-700">
+                            <button type="submit" class="absolute right-3 lg:right-4 top-1/2 -translate-y-1/2 text-primary hover:scale-110 transition-transform">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 lg:h-6 lg:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </button>
                         </div>
                     </div>
 
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">{{ __('Offer Type') }}</label>
+                    <div class="space-y-1">
+                        <label class="text-[8px] font-bold text-gray-400 uppercase tracking-wider px-1">{{ __('Offer Type') }}</label>
                         <select name="type" onchange="this.form.submit()" 
-                                class="w-full bg-yasmina-50/50 border-2 border-transparent focus:border-primary/20 rounded-2xl px-6 py-4 outline-none transition-all font-medium text-gray-700 appearance-none cursor-pointer">
+                                class="w-full bg-yasmina-50/50 border-2 border-transparent focus:border-primary/20 rounded-xl lg:rounded-2xl px-4 lg:px-6 py-2.5 lg:py-4 outline-none transition-all font-medium text-[11px] lg:text-base text-gray-700 appearance-none cursor-pointer">
                             <option value="">{{ __('All Offers') }}</option>
                             <option value="bogo" {{ request('type') == 'bogo' ? 'selected' : '' }}>{{ __('BOGO (Buy 1 Get 1)') }}</option>
                             <option value="bundle" {{ request('type') == 'bundle' ? 'selected' : '' }}>{{ __('Bundle Deals') }}</option>
@@ -51,8 +51,8 @@
                     </div>
 
                     <div>
-                        <button type="submit" class="w-full bg-primary text-white rounded-2xl px-8 py-4 font-bold hover:bg-primary-hover transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <button type="submit" class="w-full bg-primary text-white rounded-xl lg:rounded-2xl px-6 lg:px-8 py-2.5 lg:py-4 font-bold hover:bg-primary-hover transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 lg:gap-3 text-[11px] lg:text-base">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 lg:h-5 lg:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                             </svg>
                             {{ __('Apply Filters') }}
@@ -63,79 +63,79 @@
         </div>
 
         <!-- Promotions Grid -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 lg:mt-16">
             @if($promotions->isEmpty())
-                <div class="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
-                    <div class="w-20 h-20 bg-yasmina-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-primary/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="text-center py-10 lg:py-20 bg-white rounded-2xl lg:rounded-3xl border border-dashed border-gray-200">
+                    <div class="w-10 h-10 lg:w-20 lg:h-20 bg-yasmina-50 rounded-full flex items-center justify-center mx-auto mb-4 lg:mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lg:h-10 lg:w-10 text-primary/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ __('No Promotions Found') }}</h3>
-                    <p class="text-gray-500">{{ __('Try adjusting your search or filters to find what you\'re looking for.') }}</p>
-                    <a href="{{ route('web.promotions.index', ['vendor_id' => request('vendor_id')]) }}" class="inline-block mt-8 text-primary font-bold hover:underline">
+                    <h3 class="text-sm lg:text-2xl font-bold text-gray-800 mb-1 lg:mb-2">{{ __('No Promotions Found') }}</h3>
+                    <p class="text-[9px] lg:text-sm text-gray-500">{{ __('Try adjusting your search or filters to find what you\'re looking for.') }}</p>
+                    <a href="{{ route('web.promotions.index', ['vendor_id' => request('vendor_id')]) }}" class="inline-block mt-4 lg:mt-8 text-primary font-bold hover:underline text-[10px] lg:text-base">
                         {{ __('Clear all filters') }}
                     </a>
                 </div>
             @else
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
                     @foreach($promotions as $promotion)
                         <a href="{{ route('web.promotions.show', ['id' => $promotion->id, 'vendor_id' => request('vendor_id')]) }}" 
-                           class="group bg-white rounded-[2.5rem] overflow-hidden border border-yasmina-50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 hover:-translate-y-2">
+                           class="group bg-white rounded-2xl lg:rounded-[2.5rem] overflow-hidden border border-yasmina-50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 hover:-translate-y-2">
                             <div class="relative aspect-[4/3] overflow-hidden">
                                 @if($promotion->buyProduct && $promotion->buyProduct->image)
                                     <img src="{{ asset('storage/' . $promotion->buyProduct->image) }}" alt="{{ $promotion->name }}" 
                                          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                 @else
                                     <div class="w-full h-full bg-yasmina-50 flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-primary/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 012-2V6a2 2 0 01-2-2H6a2 2 0 01-2 2v12a2 2 0 01-2 2z" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 lg:h-16 lg:w-16 text-primary/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
                                     </div>
                                 @endif
                                 
                                 <!-- Badge -->
-                                <div class="absolute top-6 left-6">
-                                    <span class="bg-primary text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg">
+                                <div class="absolute top-2.5 left-2.5 lg:top-6 lg:left-6">
+                                    <span class="bg-primary text-white text-[7px] lg:text-[10px] font-black uppercase tracking-widest px-2 py-1 lg:px-4 lg:py-2 rounded-full shadow-lg">
                                         {{ $promotion->type == 'bogo' ? __('BOGO') : __('Bundle') }}
                                     </span>
                                 </div>
 
                                 @if($promotion->expires_at)
-                                    <div class="absolute bottom-6 left-6 right-6">
-                                        <div class="bg-white/90 backdrop-blur-md rounded-2xl p-3 flex items-center justify-center gap-4 text-primary font-bold shadow-xl" 
+                                    <div class="absolute bottom-2.5 left-2.5 right-2.5 lg:bottom-6 lg:left-6 lg:right-6">
+                                        <div class="bg-white/90 backdrop-blur-md rounded-xl lg:rounded-2xl p-1 lg:p-3 flex items-center justify-center gap-2 lg:gap-4 text-primary font-bold shadow-xl" 
                                              data-countdown="{{ $promotion->expires_at }}">
                                             <div class="text-center">
-                                                <span class="days block text-lg leading-none">00</span>
-                                                <span class="text-[8px] uppercase opacity-60">{{ __('Days') }}</span>
+                                                <span class="days block text-[11px] lg:text-lg leading-none">00</span>
+                                                <span class="text-[5px] lg:text-[8px] uppercase opacity-60">{{ __('Days') }}</span>
                                             </div>
-                                            <div class="w-px h-6 bg-primary/20"></div>
+                                            <div class="w-px h-3 lg:h-6 bg-primary/20"></div>
                                             <div class="text-center">
-                                                <span class="hours block text-lg leading-none">00</span>
-                                                <span class="text-[8px] uppercase opacity-60">{{ __('Hrs') }}</span>
+                                                <span class="hours block text-[11px] lg:text-lg leading-none">00</span>
+                                                <span class="text-[5px] lg:text-[8px] uppercase opacity-60">{{ __('Hrs') }}</span>
                                             </div>
-                                            <div class="w-px h-6 bg-primary/20"></div>
+                                            <div class="w-px h-3 lg:h-6 bg-primary/20"></div>
                                             <div class="text-center">
-                                                <span class="minutes block text-lg leading-none">00</span>
-                                                <span class="text-[8px] uppercase opacity-60">{{ __('Min') }}</span>
+                                                <span class="minutes block text-[11px] lg:text-lg leading-none">00</span>
+                                                <span class="text-[5px] lg:text-[8px] uppercase opacity-60">{{ __('Min') }}</span>
                                             </div>
                                         </div>
                                     </div>
                                 @endif
                             </div>
 
-                            <div class="p-8">
-                                <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors line-clamp-1 uppercase tracking-tight">
+                            <div class="p-3.5 lg:p-8">
+                                <h3 class="text-[13px] lg:text-xl font-bold text-gray-900 mb-1 lg:mb-2 group-hover:text-primary transition-colors line-clamp-1 uppercase tracking-tight">
                                     {{ $promotion->name }}
                                 </h3>
-                                <p class="text-gray-500 text-sm mb-6 line-clamp-2 leading-relaxed">
+                                <p class="text-[10px] lg:text-sm text-gray-500 mb-3 lg:mb-6 line-clamp-2 leading-relaxed">
                                     {{ $promotion->description }}
                                 </p>
                                 
                                 <div class="flex items-center justify-between">
                                     <div class="flex flex-col">
-                                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ __('Deal Type') }}</span>
-                                        <span class="text-primary font-bold">
+                                        <span class="text-[7px] lg:text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ __('Deal Type') }}</span>
+                                        <span class="text-primary font-bold text-[10px] lg:text-base">
                                             @if($promotion->type == 'bogo')
                                                 {{ __('Buy 1 Get 1 Free') }}
                                             @else
@@ -143,8 +143,8 @@
                                             @endif
                                         </span>
                                     </div>
-                                    <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <div class="w-7 h-7 lg:w-12 lg:h-12 rounded-lg lg:rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 lg:h-6 lg:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                         </svg>
                                     </div>
@@ -155,7 +155,7 @@
                 </div>
 
                 <!-- Pagination -->
-                <div class="mt-16">
+                <div class="mt-6 lg:mt-16">
                     {{ $promotions->links() }}
                 </div>
             @endif

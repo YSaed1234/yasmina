@@ -1,7 +1,7 @@
 <x-web::layouts.master>
-    <div class="py-20 bg-gray-50 min-h-screen">
+    <div class="py-4 lg:py-12 bg-gray-50 min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-12">
                 <!-- Sidebar -->
                 <div class="lg:col-span-1">
                     <x-web::profile-sidebar />
@@ -9,104 +9,94 @@
 
                 <!-- Main Content -->
                 <div class="lg:col-span-3">
-                    <div class="bg-white rounded-3xl p-10 shadow-sm border border-yasmina-50">
-                        <div class="flex justify-between items-center mb-10">
-                            <h1 class="text-3xl font-bold text-gray-900">{{ __('My Addresses') }}</h1>
-                            <button onclick="toggleAddressForm()" class="px-6 py-3 bg-primary text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary/20 hover:opacity-90 transition-all">
-                                {{ __('Add New Address') }}
+                    <div class="bg-white rounded-2xl lg:rounded-3xl p-3.5 lg:p-10 shadow-sm border border-yasmina-50">
+                        <div class="flex justify-between items-center mb-4 lg:mb-10">
+                            <h1 class="text-base lg:text-3xl font-bold text-gray-900 leading-tight">{{ __('My Addresses') }}</h1>
+                            <button onclick="toggleAddressForm()" class="px-3 py-1.5 lg:px-6 lg:py-3 bg-primary text-white rounded-xl lg:rounded-2xl font-bold text-[10px] lg:text-sm shadow-lg shadow-primary/20 hover:opacity-90 transition-all">
+                                {{ __('Add New') }}
                             </button>
                         </div>
                         <!-- Address Form (Hidden by default) -->
-                        <div id="addressForm" class="hidden mb-12 bg-yasmina-50/30 p-8 rounded-[2.5rem] border border-yasmina-100">
-                            <h3 class="text-xl font-bold text-gray-900 mb-6">{{ __('Add a New Address') }}</h3>
-                            <form action="{{ route('web.profile.addresses.store', ['vendor_id' => request('vendor_id')]) }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div id="addressForm" class="hidden mb-6 lg:mb-12 bg-yasmina-50/30 p-3.5 lg:p-8 rounded-xl lg:rounded-[2.5rem] border border-yasmina-100">
+                            <h3 class="text-sm lg:text-xl font-bold text-gray-900 mb-3 lg:mb-6 leading-tight">{{ __('Add New Address') }}</h3>
+                            <form action="{{ route('web.profile.addresses.store', ['vendor_id' => request('vendor_id')]) }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-6">
                                 @csrf
-                        <input type="hidden" name="vendor_id" id="vendor_id" value="{{ $currentVendor->id ?? '' }}">
+                                <input type="hidden" name="vendor_id" id="vendor_id" value="{{ $currentVendor->id ?? '' }}">
                                 <div class="md:col-span-2">
-                                    <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Address Name (e.g. Home, Office)') }}</label>
-                                    <input type="text" name="name" required class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm">
+                                    <label class="block text-[8px] lg:text-[10px] font-bold text-primary uppercase tracking-widest mb-1 lg:mb-2">{{ __('Address Name') }}</label>
+                                    <input type="text" name="name" required class="w-full px-4 py-2 lg:px-5 lg:py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-[11px] lg:text-sm" placeholder="{{ __('e.g. Home, Office') }}">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Phone Number') }}</label>
-                                    <input type="text" name="phone" required class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm">
+                                    <label class="block text-[8px] lg:text-[10px] font-bold text-primary uppercase tracking-widest mb-1 lg:mb-2">{{ __('Phone Number') }}</label>
+                                    <input type="text" name="phone" required class="w-full px-4 py-2 lg:px-5 lg:py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-[11px] lg:text-sm">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Country') }}</label>
-                                    <input type="text" name="country" value="Egypt" required class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm">
+                                    <label class="block text-[8px] lg:text-[10px] font-bold text-primary uppercase tracking-widest mb-1 lg:mb-2">{{ __('Country') }}</label>
+                                    <input type="text" name="country" value="Egypt" required class="w-full px-4 py-2 lg:px-5 lg:py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-[11px] lg:text-sm">
                                 </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-6 md:col-span-2">
                                     <div>
-                                        <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Governorate') }}</label>
-                                        <select name="governorate_id" id="governorate_select" required onchange="loadRegions(this.value)" class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm bg-white">
-                                            <option value="">{{ __('Select Governorate') }}</option>
+                                        <label class="block text-[8px] lg:text-[10px] font-bold text-primary uppercase tracking-widest mb-1 lg:mb-2">{{ __('Governorate') }}</label>
+                                        <select name="governorate_id" id="governorate_select" required onchange="loadRegions(this.value)" class="w-full px-4 py-2 lg:px-5 lg:py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-[11px] lg:text-sm bg-white">
+                                            <option value="">{{ __('Select') }}</option>
                                             @foreach($governorates as $gov)
                                                 <option value="{{ $gov->id }}">{{ $gov->name }}</option>
                                             @endforeach
                                         </select>
-                                        @error('governorate_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Area / Region') }}</label>
-                                        <select name="region_id" id="region_select" required class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm bg-white disabled:opacity-50" disabled>
+                                        <label class="block text-[8px] lg:text-[10px] font-bold text-primary uppercase tracking-widest mb-1 lg:mb-2">{{ __('Area') }}</label>
+                                        <select name="region_id" id="region_select" required class="w-full px-4 py-2 lg:px-5 lg:py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-[11px] lg:text-sm bg-white disabled:opacity-50" disabled>
                                             <option value="">{{ __('Select area') }}</option>
                                         </select>
-                                        @error('region_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                     </div>
                                 </div>
                                 <div class="md:col-span-2">
-                                    <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Street Address') }}</label>
-                                    <input type="text" name="address_line1" required class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm">
+                                    <label class="block text-[8px] lg:text-[10px] font-bold text-primary uppercase tracking-widest mb-1 lg:mb-2">{{ __('Street Address') }}</label>
+                                    <input type="text" name="address_line1" required class="w-full px-4 py-2 lg:px-5 lg:py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-[11px] lg:text-sm">
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('City') }}</label>
-                                    <input type="text" name="city" required class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-2">{{ __('Postal Code') }}</label>
-                                    <input type="text" name="postal_code" class="w-full px-5 py-3 rounded-xl border border-yasmina-100 focus:ring-2 focus:ring-primary outline-none text-sm">
-                                </div>
-                                <div class="md:col-span-2 flex justify-end gap-4">
-                                    <button type="button" onclick="toggleAddressForm()" class="px-6 py-3 text-gray-500 font-bold text-sm">{{ __('Cancel') }}</button>
-                                    <button type="submit" class="px-8 py-3 bg-primary text-white rounded-xl font-bold text-sm shadow-lg shadow-primary/20">{{ __('Save Address') }}</button>
+                                <div class="md:col-span-2 flex justify-end gap-2 pt-2">
+                                    <button type="button" onclick="toggleAddressForm()" class="px-4 py-2 text-gray-500 font-bold text-[10px] lg:text-sm">{{ __('Cancel') }}</button>
+                                    <button type="submit" class="px-6 py-2 bg-primary text-white rounded-xl font-bold text-[10px] lg:text-sm shadow-lg shadow-primary/20">{{ __('Save Address') }}</button>
                                 </div>
                             </form>
                         </div>
                         
                         @if($addresses->count() > 0)
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-6">
                                 @foreach($addresses as $address)
-                                    <div class="p-8 border border-gray-100 rounded-3xl bg-white hover:border-primary transition-all group relative">
-                                        <div class="flex justify-between items-start mb-4">
-                                            <div class="flex items-center gap-3">
-                                                <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <div class="p-3.5 lg:p-8 border border-gray-100 rounded-2xl lg:rounded-3xl bg-white hover:border-primary transition-all group relative">
+                                        <div class="flex justify-between items-start mb-2.5 lg:mb-4">
+                                            <div class="flex items-center gap-2 lg:gap-3">
+                                                <div class="w-7 h-7 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 lg:h-5 lg:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                                     </svg>
                                                 </div>
-                                                <h4 class="font-bold text-gray-900">{{ $address->name }}</h4>
+                                                <h4 class="font-bold text-[11px] lg:text-base text-gray-900 leading-tight">{{ $address->name }}</h4>
                                             </div>
                                             <form action="{{ route('web.profile.addresses.delete', ['address' => $address->id, 'vendor_id' => request('vendor_id')]) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure?') }}')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="text-gray-300 hover:text-red-500 transition-colors">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <button type="submit" class="text-gray-300 hover:text-red-500 transition-colors p-1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 lg:h-5 lg:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16" />
                                                     </svg>
                                                 </button>
                                             </form>
                                         </div>
-                                        <p class="text-sm text-gray-600 leading-relaxed">
+                                        <p class="text-[10px] lg:text-sm text-gray-600 leading-relaxed">
                                             {{ $address->address_line1 }}<br>
-                                            {{ $address->region?->name ?? $address->city }}@if($address->governorate), {{ $address->governorate->name }}@endif, {{ $address->country }}<br>
+                                            {{ $address->region?->name ?? $address->city }}<br>
                                             {{ $address->phone }}
                                         </p>
                                     </div>
                                 @endforeach
                             </div>
                         @else
-                            <div class="p-20 text-center bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-200">
-                                <p class="text-gray-400 mb-6">{{ __('You haven\'t saved any addresses yet.') }}</p>
-                                <button onclick="toggleAddressForm()" class="text-primary font-bold hover:underline">{{ __('Add your first address') }}</button>
+                            <div class="p-10 lg:p-20 text-center bg-gray-50 rounded-2xl lg:rounded-[3rem] border-2 border-dashed border-gray-200">
+                                <p class="text-[10px] lg:text-sm text-gray-400 mb-4 lg:mb-6 leading-relaxed">{{ __('You haven\'t saved any addresses yet.') }}</p>
+                                <button onclick="toggleAddressForm()" class="text-[10px] lg:text-sm text-primary font-bold hover:underline">{{ __('Add your first address') }}</button>
                             </div>
                         @endif
                     </div>
