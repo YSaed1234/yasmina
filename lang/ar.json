@@ -1415,11 +1415,12 @@
     "Manager Name": "اسم المدير",
     "Manager National ID": "الرقم القومي للمدير",
     "Manager Phone": "هاتف المدير",
-    "View Store": "عرض المتجر",
-    "Products": "المنتجات",
-    "Shipping Rates": "أسعار الشحن",
-    "Edit": "تعديل",
-    "Delete": "حذف",
+    "View Store": "زيارة صفحة المتجر العامة",
+    "Products": "إدارة منتجات المؤسسة",
+    "Shipping Rates": "تعديل أسعار الشحن للمناطق",
+    "Legal Contract": "عرض وطباعة العقد القانوني",
+    "Edit": "تعديل بيانات المؤسسة",
+    "Delete": "حذف المؤسسة نهائياً",
     "Contracts Expiration Report": "تقرير انتهاء العقود",
     "Monitor vendor contracts and their expiration status.": "مراقبة عقود المؤسسات وحالة انتهائها.",
     "Expiration Date": "تاريخ الانتهاء",
@@ -1434,5 +1435,6 @@
     "System Purchase/Setup Fee": "رسوم شراء/إعداد النظام",
     "One Time": "لمرة واحدة",
     "0 for Free": "0 للمجاني",
-    "LE": "ج.م"
+    "LE": "ج.م",
+    "View QR Code": "عرض وتحميل رمز QR للمتجر"
 }

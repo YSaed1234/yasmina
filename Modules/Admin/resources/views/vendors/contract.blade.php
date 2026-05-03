@@ -14,8 +14,8 @@
 
     <div class="print-container bg-white shadow-2xl rounded-[3rem] p-16 md:p-24 border border-gray-100 relative overflow-hidden mx-auto max-w-5xl rtl" dir="rtl">
         <!-- Stamp Watermark -->
-        <div class="absolute top-10 left-10 opacity-[0.03] pointer-events-none select-none">
-            <img src="{{ asset('images/logo.png') }}" alt="" class="w-96 grayscale">
+        <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none -rotate-45">
+            <h1 class="text-[12rem] font-black text-gray-900 whitespace-nowrap">ياسمينة ستور</h1>
         </div>
 
         <!-- Header -->
@@ -62,6 +62,27 @@
             <section>
                 <div class="flex items-center gap-4 mb-4">
                     <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">١</span>
+                    <h4 class="text-xl font-black text-gray-900">الخدمات التقنية والفنية المقدمة</h4>
+                </div>
+                <div class="pr-14 space-y-3 text-gray-600 leading-relaxed font-bold">
+                    <p>
+                        تلتزم المنصة (الطرف الأول) بتقديم الخدمات التالية للطرف الثاني لضمان سير العمل بكفاءة:
+                    </p>
+                    <ul class="list-disc pr-5 text-gray-500 font-medium space-y-1 text-sm">
+                        <li>توفير استضافة سحابية (Server) مؤمنة وعالية السرعة لضمان استقرار الموقع.</li>
+                        <li>منح المؤسسة رابطاً خاصاً (Sub-domain) لعرض منتجاتها واستقبال الطلبات من خلاله.</li>
+                        <li>توفير لوحة تحكم إدارية (Admin Panel) تمكن المؤسسة من إدارة المنتجات، الأسعار، المخزون، والطلبات.</li>
+                        <li>إتاحة إدارة نظام "الكوبونات والخصومات" ونقاط الولاء بشكل مستقل تماماً من قِبل المؤسسة.</li>
+                        <li>توفير خاصية "الدفع الجزئي" وإمكانية رفع إيصالات التحويل (مثل InstaPay) لتوثيق السداد يدوياً.</li>
+                        <li>توفير تقارير دورية شاملة للطلبات، مدفوعات العملاء، وكشف حساب تفصيلي للمعاملات المالية مع الإدارة.</li>
+                        <li>توفير الدعم الفني اللازم لمعالجة أي أعطال تقنية قد تعيق عمل النظام.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٢</span>
                     <h4 class="text-xl font-black text-gray-900">طبيعة التعاون المادي</h4>
                 </div>
                 <div class="pr-14 space-y-3">
@@ -95,7 +116,7 @@
 
             <section>
                 <div class="flex items-center gap-4 mb-4">
-                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٢</span>
+                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٣</span>
                     <h4 class="text-xl font-black text-gray-900">المسؤولية القانونية والتشغيلية</h4>
                 </div>
                 <div class="pr-14">
@@ -107,7 +128,7 @@
 
             <section>
                 <div class="flex items-center gap-4 mb-4">
-                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٣</span>
+                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٤</span>
                     <h4 class="text-xl font-black text-gray-900">سياسة المرتجعات والاسترداد</h4>
                 </div>
                 <div class="pr-14 space-y-3">
@@ -124,15 +145,48 @@
 
             <section>
                 <div class="flex items-center gap-4 mb-4">
-                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٤</span>
+                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٥</span>
+                    <h4 class="text-xl font-black text-gray-900">استقلالية العلامة التجارية وفصل البيانات</h4>
+                </div>
+                <div class="pr-14 space-y-3 text-gray-600 leading-relaxed font-bold">
+                    <p>
+                        تلتزم المنصة بتوفير بيئة عرض مستقلة للطرف الثاني ({{ $vendor->name }})، بحيث لا تظهر منتجات المؤسسات الأخرى لمستخدمي الرابط الخاص به، وذلك لتعزيز خصوصية العلامة التجارية.
+                    </p>
+                    <ul class="list-disc pr-5 text-gray-500 font-medium space-y-1 text-sm">
+                        <li>يحق للمنصة إضافة مؤسسات أخرى أو زيادة عدد المشتركين في النظام العام بموافقة كتابية وتحديد رسوم اشتراك شهرية إضافية.</li>
+                        <li>يمنع منعاً باتاً استغلال بيئة العمل الخاصة بالمؤسسة لعرض منتجات لمؤسسات منافسة دون الرجوع للمنصة (الطرف الأول).</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٦</span>
+                    <h4 class="text-xl font-black text-gray-900">الملكية الفكرية وحقوق الاستخدام</h4>
+                </div>
+                <div class="pr-14 space-y-3 text-gray-600 leading-relaxed font-bold">
+                    <p>
+                        يقر الطرف الثاني ({{ $vendor->name }}) بأن كافة الحقوق الفكرية، الكود المصدري (Source Code)، التصاميم، وقواعد البيانات هي ملكية حصرية للمنصة (الطرف الأول).
+                    </p>
+                    <ul class="list-disc pr-5 text-gray-500 font-medium space-y-1 text-sm">
+                        <li>رسوم الشراء أو الإعداد لا تعطي الحق للمؤسسة في المطالبة بالكود المصدري أو نقل النظام لسيرفر خارجي.</li>
+                        <li>لا يحق للمؤسسة التنازل عن الرابط (Domain/Slug) أو تأجيره من الباطن لأي جهة أخرى دون موافقة كتابية.</li>
+                        <li>في حال إنهاء العقد، تلتزم المنصة بتسليم المؤسسة بيانات منتجاتها وطلباتها فقط، دون أي ملفات برمجية.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٧</span>
                     <h4 class="text-xl font-black text-gray-900">مدة العقد والإنهاء</h4>
                 </div>
                 <div class="pr-14 space-y-3">
                     <p class="text-gray-600 leading-relaxed font-bold">
-                        يسري هذا العقد لمدة عام ميلادي واحد يبدأ من تاريخ التوقيع عليه، ويجدد تلقائياً ما لم يخطر أحد الطرفين الآخر برغبته في الإنهاء قبل موعد التجديد بشهر على الأقل.
+                        مدة هذا العقد (سنة ميلادية واحدة) تبدأ من تاريخ التوقيع، وتجدد تلقائياً ما لم يخطر أحد الطرفين الآخر برغبته في الإنهاء قبل موعد التجديد بـ (30 يوماً).
                     </p>
                     <p class="text-gray-600 leading-relaxed font-bold">
-                        في حال رغبة الطرف الثاني ({{ $vendor->name }}) في فسخ العقد قبل انتهاء مدته، يلتزم بدفع شرط جزائي يعادل قيمة (شهرين) من الرسوم الدورية المتفق عليها ({{ number_format($vendor->subscription_fees * 2, 2) }} ج.م).
+                        في حال رغب الطرف الثاني في فسخ العقد قبل انتهاء مدته، يلتزم بسداد شرط جزائي يعادل قيمة اشتراك (٣ أشهر) بإجمالي قدره ({{ number_format($vendor->subscription_fees * 3, 2) }} ج.م).
                     </p>
                     <p class="text-gray-600 leading-relaxed font-bold">
                         كما يحق للمنصة إيقاف الخدمة فوراً في حال إخلال ({{ $vendor->name }}) ببنود العقد أو التأخر في سداد الالتزامات المالية.
@@ -163,8 +217,12 @@
 
     <style>
         @media print {
-            body { background: white !important; }
-            .no-print { display: none !important; }
+            body { 
+                background: white !important; 
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .no-print, aside, header { display: none !important; }
             .print-container { 
                 box-shadow: none !important; 
                 border: none !important; 
@@ -172,6 +230,15 @@
                 margin: 0 !important;
                 width: 100% !important;
                 max-width: 100% !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+            }
+            main { 
+                padding: 0 !important; 
+                margin: 0 !important;
+                overflow: visible !important;
             }
             .x-admin-layouts-master { padding: 0 !important; }
         }
