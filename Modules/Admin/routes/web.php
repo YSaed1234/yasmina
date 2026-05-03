@@ -29,6 +29,9 @@ Route::prefix('admin-dashboard-2026')->group(function () {
         Route::resource('users', \Modules\Admin\Http\Controllers\UserController::class)->middleware('permission:manage users');
 
         Route::get('orders', [\Modules\Admin\Http\Controllers\OrderController::class, 'index'])->name('orders.index')->middleware('permission:manage orders');
+        Route::get('orders/create', [\Modules\Admin\Http\Controllers\OrderController::class, 'create'])->name('orders.create')->middleware('permission:manage orders');
+        Route::post('orders', [\Modules\Admin\Http\Controllers\OrderController::class, 'store'])->name('orders.store')->middleware('permission:manage orders');
+        Route::get('orders/search-products', [\Modules\Admin\Http\Controllers\OrderController::class, 'searchProducts'])->name('orders.search-products')->middleware('permission:manage orders');
         Route::get('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'show'])->name('orders.show')->middleware('permission:manage orders');
         Route::put('orders/{order}/status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.update-status')->middleware('permission:manage orders');
         Route::put('orders/{order}/payment-status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updatePaymentStatus'])->name('orders.update-payment-status')->middleware('permission:manage orders');

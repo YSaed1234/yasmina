@@ -1,7 +1,16 @@
 <x-vendor::layouts.master>
-    <div class="mb-10">
-        <h1 class="text-3xl font-bold text-gray-800">{{ __('Orders') }}</h1>
-        <p class="text-gray-500 mt-2">{{ __('Track and manage orders containing your products.') }}</p>
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">{{ __('Orders') }}</h1>
+                <p class="text-gray-500 mt-2">{{ __('Track and manage orders containing your products.') }}</p>
+            </div>
+            <a href="{{ route('vendor.orders.create') }}" class="px-6 py-3 bg-primary text-white rounded-2xl font-bold text-sm hover:shadow-lg hover:shadow-primary/30 transition-all flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                {{ __('Add Manual Order') }}
+            </a>
+        </div>
     </div>
 
     <div class="bg-white/70 backdrop-blur-md rounded-[2.5rem] border border-gray-100 shadow-2xl shadow-gray-200/30 overflow-hidden">

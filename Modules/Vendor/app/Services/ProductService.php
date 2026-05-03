@@ -58,6 +58,7 @@ class ProductService
             }
         }
 
+        $product->syncStockWithVariants();
         return $product;
     }
 
@@ -123,6 +124,7 @@ class ProductService
             $product->variants()->delete();
         }
 
+        $product->syncStockWithVariants();
         return $product;
     }
 

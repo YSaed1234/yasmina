@@ -12,10 +12,12 @@ use Modules\Vendor\Http\Requests\UpdateOrderPaymentStatusRequest;
 class OrderController extends Controller
 {
     protected $orderService;
+    protected $manualOrderService;
 
-    public function __construct(OrderService $orderService)
+    public function __construct(OrderService $orderService, ManualOrderService $manualOrderService)
     {
         $this->orderService = $orderService;
+        $this->manualOrderService = $manualOrderService;
     }
 
     /**
@@ -72,5 +74,107 @@ class OrderController extends Controller
     {
         $this->orderService->deletePayment($order, Auth::guard('vendor')->id(), $paymentId);
         return back()->with('success', __('Payment deleted successfully.'));
+    }
+
+    public function create()
+    {
+        return view('vendor::orders.create');
+    }
+
+    public function store(StoreManualOrderRequest $request)
+    {
+        try {
+            $order = $this->manualOrderService->create($request->validated());
+            return redirect()->route('vendor.orders.show', $order->id)->with('success', __('Manual order created successfully.'));
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage())->withInput();
+        }
+    }
+
+    public function searchProducts(\Illuminate\Http\Request $request)
+    {
+        $search = $request->get('q');
+        $vendorId = Auth::guard('vendor')->id();
+        
+        $products = \App\Models\Product::with(['variants' => function($q) {
+                $q->where('stock', '>', 0);
+            }, 'currency'])
+            ->where('vendor_id', $vendorId)
+            ->where('is_enabled', true)
+            ->whereNull('vendor_deactivated_at')
+            ->where(function($q) use ($search) {
+                $q->whereTranslationLike('name', "%$search%")
+                  ->orWhereHas('variants', function($sq) use ($search) {
+                      $sq->where('sku', 'like', "%$search%");
+                  });
+            })
+            ->where(function($q) {
+                $q->whereHas('variants', function($sq) {
+                    $sq->where('stock', '>', 0);
+                })
+                ->orWhere(function($sq) {
+                    $sq->doesntHave('variants')->where('stock', '>', 0);
+                });
+            })
+            ->limit(20)
+            ->get();
+
+        $results = [];
+        foreach ($products as $product) {
+            if ($product->variants->isEmpty()) {
+                $results[] = $this->formatProductItem($product);
+            } else {
+                foreach ($product->variants as $variant) {
+                    $results[] = $this->formatVariantItem($product, $variant);
+                }
+            }
+        }
+
+        return response()->json(['results' => $results]);
+    }
+
+    private function formatProductItem($product) {
+        $effectivePrice = $product->effective_price;
+        $originalPrice = $product->price;
+        $priceText = $effectivePrice . ' ' . ($product->currency->symbol ?? __('LE'));
+        if ($effectivePrice < $originalPrice) {
+            $priceText .= ' <span class="line-through text-gray-400 ml-2">' . $originalPrice . '</span>';
+        }
+
+        return [
+            'id' => $product->id . '_0',
+            'product_id' => $product->id,
+            'variant_id' => null,
+            'text' => $product->name,
+            'price' => $effectivePrice,
+            'price_html' => $priceText,
+            'image' => $product->image ? asset('storage/' . $product->image) : asset('assets/placeholder.png'),
+            'currency' => $product->currency->symbol ?? __('LE')
+        ];
+    }
+
+    private function formatVariantItem($product, $variant) {
+        $price = $variant->price ?: $product->effective_price;
+        $priceText = $price . ' ' . ($product->currency->symbol ?? __('LE'));
+        
+        $text = $product->name;
+        $attrs = [];
+        if ($variant->color) $attrs[] = $variant->color;
+        if ($variant->size) $attrs[] = $variant->size;
+        
+        if (!empty($attrs)) {
+            $text .= ' [' . implode(' / ', $attrs) . ']';
+        }
+        
+        return [
+            'id' => $product->id . '_' . $variant->id,
+            'product_id' => $product->id,
+            'variant_id' => $variant->id,
+            'text' => $text,
+            'price' => $price,
+            'price_html' => $priceText,
+            'image' => $variant->image ? asset('storage/' . $variant->image) : ($product->image ? asset('storage/' . $product->image) : asset('assets/placeholder.png')),
+            'currency' => $product->currency->symbol ?? __('LE')
+        ];
     }
 }

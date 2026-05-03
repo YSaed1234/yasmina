@@ -4,6 +4,11 @@
             <div class="flex items-center gap-4">
                 <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Order Details') }} #{{ $order->id }}</h1>
                 <span class="px-4 py-1.5 {{ $order->status->color() }} rounded-full text-[10px] font-bold uppercase tracking-widest">{{ $order->status->label() }}</span>
+                @if($order->is_manual)
+                    <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-lg text-[10px] font-black uppercase tracking-tighter border border-amber-200">
+                        {{ __('Manual') }}: {{ strtoupper($order->source) }}
+                    </span>
+                @endif
             </div>
             <p class="text-gray-500 mt-2">{{ __('Placed on') }} {{ $order->created_at->format('M d, Y \a\t H:i') }}</p>
         </div>
@@ -146,12 +151,20 @@
                     <div class="space-y-4">
                         <div class="flex flex-col">
                             <span class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">{{ __('Full Name') }}</span>
-                            <span class="font-bold text-gray-900">{{ $order->user->name . "( ".$order->shipping_details['name']. " ) " }}</span>
+                            <span class="font-bold text-gray-900">
+                                @if($order->user)
+                                    {{ $order->user->name . "( ".$order->shipping_details['name']. " ) " }}
+                                @else
+                                    {{ $order->customer_name }}
+                                @endif
+                            </span>
                         </div>
                         <div class="flex flex-col">
                             <span class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">{{ __('Contact') }}</span>
-                            <span class="font-bold text-gray-900">{{ $order->shipping_details['email'] ?? '' }}</span>
-                            <span class="text-sm text-gray-500">{{ $order->shipping_details['phone'] ?? '' }}</span>
+                            @if($order->user)
+                                <span class="font-bold text-gray-900">{{ $order->shipping_details['email'] ?? $order->user->email }}</span>
+                            @endif
+                            <span class="text-sm text-gray-500">{{ $order->shipping_details['phone'] ?? $order->customer_phone }}</span>
                         </div>
                         <div class="flex flex-col">
                             <span class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">{{ __('Address') }}</span>

@@ -28,6 +28,9 @@ Route::prefix('vendor-panel')->group(function () {
 
         // Orders
         Route::get('orders', [OrderController::class, 'index'])->name('vendor.orders.index');
+        Route::get('orders/create', [OrderController::class, 'create'])->name('vendor.orders.create');
+        Route::post('orders', [OrderController::class, 'store'])->name('vendor.orders.store');
+        Route::get('orders/search-products', [OrderController::class, 'searchProducts'])->name('vendor.orders.search-products');
         Route::get('orders/{order}', [OrderController::class, 'show'])->name('vendor.orders.show');
         Route::put('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('vendor.orders.update-status');
         Route::put('orders/{order}/payment-status', [OrderController::class, 'updatePaymentStatus'])->name('vendor.orders.update-payment-status');

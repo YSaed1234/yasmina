@@ -156,7 +156,7 @@
                         <div class="hidden xl:flex items-center gap-6 text-[11px] font-bold uppercase tracking-widest text-gray-600">
                             <a href="{{ route('home', ['vendor_id' => request('vendor_id')]) }}" class="hover:text-primary transition-colors {{ request()->routeIs('home') ? 'text-primary' : '' }}">{{ __('Home') }}</a>
                             
-                            <div class="relative group">
+                            {{-- <div class="relative group">
                                 <button class="flex items-center gap-1 hover:text-primary transition-colors py-8">
                                     {{ __('Institutions') }}
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -186,7 +186,7 @@
                                         @endforeach
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             
                             <div class="relative group">
                                 <button class="flex items-center gap-1 hover:text-primary transition-colors py-8">
@@ -526,7 +526,7 @@
                             </a>
 
                             <!-- Institutions (Accordion) -->
-                            <div x-data="{ open: false }">
+                            {{-- <div x-data="{ open: false }">
                                 <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-3 rounded-xl hover:bg-yasmina-50 transition-colors text-gray-700">
                                     <div class="flex items-center gap-3">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
@@ -540,7 +540,7 @@
                                         <a href="{{ route('home', ['vendor_id' => $vendor->slug]) }}" class="block py-2 text-xs font-bold text-gray-500 hover:text-primary">{{ $vendor->name }}</a>
                                     @endforeach
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <!-- Categories (Accordion) -->
                             <div x-data="{ open: false }">
@@ -672,7 +672,17 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 text-center md:text-left">
                     <div class="col-span-2 lg:col-span-1">
-                        <p class="mt-4 text-gray-400 text-xs lg:text-sm leading-relaxed mb-6 hidden lg:block">{{ ($currentVendor && $currentVendor->description) ? $currentVendor->description : __('Defining elegance and quality since 2026.') }}</p>
+                        @php
+                            $desc = ($currentVendor && $currentVendor->description) ? $currentVendor->description : __('Defining elegance and quality since 2026.');
+                            $hasHtml = strip_tags($desc) !== $desc;
+                        @endphp
+                        <div class="mt-4 text-gray-400 text-xs lg:text-sm leading-relaxed mb-6 hidden lg:block">
+                            @if($hasHtml)
+                                {!! $desc !!}
+                            @else
+                                {{ $desc }}
+                            @endif
+                        </div>
                         
                         @if($currentVendor)
                             <div class="flex items-center justify-center md:justify-start gap-3">

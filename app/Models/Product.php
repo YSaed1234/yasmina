@@ -248,4 +248,15 @@ class Product extends Model implements TranslatableContract
         return $query->where('is_enabled', true)
             ->whereNull('vendor_deactivated_at');
     }
+
+    /**
+     * Synchronize base stock with variants sum if variants exist.
+     */
+    public function syncStockWithVariants()
+    {
+        if ($this->variants()->exists()) {
+            $totalStock = (int) $this->variants()->sum('stock');
+            $this->updateQuietly(['stock' => $totalStock]);
+        }
+    }
 }

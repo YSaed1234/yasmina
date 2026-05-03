@@ -32,8 +32,12 @@ class Order extends Model
         'vendor_net_amount',
         'driver_id',
         'paid_amount',
+        'source',
+        'is_manual',
+        'customer_name',
+        'customer_phone',
     ];
-
+ 
     protected $casts = [
         'shipping_details' => 'array',
         'total' => 'decimal:2',
@@ -43,6 +47,7 @@ class Order extends Model
         'vendor_net_amount' => 'decimal:2',
         'status' => \App\Enums\OrderStatus::class,
         'paid_amount' => 'decimal:2',
+        'is_manual' => 'boolean',
     ];
 
     public function user(): BelongsTo

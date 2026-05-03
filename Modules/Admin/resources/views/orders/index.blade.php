@@ -10,6 +10,14 @@
                 @endif
             </p>
         </div>
+        <div class="flex items-center gap-4">
+            <a href="{{ route('admin.orders.create') }}" class="px-6 py-3 bg-primary text-white rounded-2xl font-bold text-sm hover:shadow-lg hover:shadow-primary/30 transition-all flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                {{ __('Add Manual Order') }}
+            </a>
+        </div>
     </div>
 
     <div class="mb-10 flex flex-wrap gap-4">
@@ -55,6 +63,11 @@
                                 <div class="flex flex-col items-center gap-1">
                                     <span class="text-base font-black text-gray-900 group-hover:text-primary transition-colors">#{{ $order->id }}</span>
                                     <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{{ $order->created_at->format('d M Y, H:i') }}</span>
+                                    @if($order->is_manual)
+                                        <span class="mt-1 px-2 py-0.5 bg-amber-50 text-amber-600 text-[8px] font-black uppercase tracking-tighter border border-amber-100/50 rounded-md">
+                                            {{ $order->source }}
+                                        </span>
+                                    @endif
                                     <div class="flex flex-wrap justify-center gap-1 mt-2">
                                         @php
                                             $vendors = $order->items->map(fn($i) => $i->product->vendor)->filter()->unique('id');
@@ -69,12 +82,18 @@
                             </td>
                             <td class="px-8 py-8 text-center">
                                 <div class="flex flex-col items-center gap-1">
-                                    <p class="font-black text-gray-800 text-sm">{{ $order->user->name }}</p>
+                                    <p class="font-black text-gray-800 text-sm">
+                                        @if($order->user)
+                                            {{ $order->user->name }}
+                                        @else
+                                            {{ $order->customer_name }}
+                                        @endif
+                                    </p>
                                     <div class="flex items-center justify-center gap-2 text-gray-400">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                         </svg>
-                                        <span class="text-xs font-bold">{{ $order->shipping_details['phone'] ?? $order->user->phone }}</span>
+                                        <span class="text-xs font-bold">{{ $order->shipping_details['phone'] ?? ($order->user ? $order->user->phone : $order->customer_phone) }}</span>
                                     </div>
                                     <p class="text-[10px] text-gray-400 font-medium truncate max-w-[150px] mx-auto">{{ $order->shipping_details['address'] ?? '' }}</p>
                                 </div>

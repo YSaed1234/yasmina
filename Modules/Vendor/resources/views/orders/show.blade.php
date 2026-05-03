@@ -1,7 +1,14 @@
 <x-vendor::layouts.master>
     <div class="mb-10 flex items-center justify-between">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">{{ __('Order Details') }} #{{ $order->id }}</h1>
+            <div class="flex items-center gap-4">
+                <h1 class="text-3xl font-bold text-gray-800">{{ __('Order Details') }} #{{ $order->id }}</h1>
+                @if($order->is_manual)
+                    <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-lg text-[10px] font-black uppercase tracking-tighter border border-amber-200">
+                        {{ __('Manual') }}: {{ strtoupper($order->source) }}
+                    </span>
+                @endif
+            </div>
             <p class="text-gray-500 mt-2">{{ __('Detailed view of items from your institution in this order.') }}</p>
         </div>
         <a href="{{ route('vendor.orders.index') }}" class="px-6 py-3 bg-gray-100 text-gray-600 rounded-2xl font-bold hover:bg-gray-200 transition-all flex items-center gap-2">
@@ -211,11 +218,17 @@
                 <div class="space-y-4">
                     <div>
                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{{ __('Name') }}</p>
-                            <span class="font-bold text-gray-900">{{ $order->user->name . "( ".$order->shipping_details['name']. " ) " }}</span>
+                            <span class="font-bold text-gray-900">
+                                @if($order->user)
+                                    {{ $order->user->name . "( ".$order->shipping_details['name']. " ) " }}
+                                @else
+                                    {{ $order->customer_name }}
+                                @endif
+                            </span>
                     </div>
                     <div>
                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{{ __('Phone') }}</p>
-                        <p class="font-bold text-gray-800">{{ $order->shipping_details['phone'] ?? 'N/A' }}</p>
+                        <p class="font-bold text-gray-800">{{ $order->shipping_details['phone'] ?? $order->customer_phone ?? 'N/A' }}</p>
                     </div>
                     <div>
                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{{ __('Address') }}</p>

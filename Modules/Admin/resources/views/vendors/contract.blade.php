@@ -117,35 +117,24 @@
             <section>
                 <div class="flex items-center gap-4 mb-4">
                     <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٣</span>
-                    <h4 class="text-xl font-black text-gray-900">المسؤولية القانونية والتشغيلية</h4>
+                    <h4 class="text-xl font-black text-gray-900">طبيعة المنصة وإخلاء المسؤولية عن المبيعات</h4>
                 </div>
-                <div class="pr-14">
-                    <p class="text-gray-600 leading-relaxed font-bold">
-                        يقر الطرف الثاني ({{ $vendor->name }}) بمسؤوليته الكاملة والحصرية عن كافة المنتجات المعروضة من حيث الجودة، المطابقة للمواصفات، عمليات التعبئة والتغليف، والشحن للعميل النهائي.
+                <div class="pr-14 space-y-3 text-gray-600 leading-relaxed font-bold">
+                    <p>
+                        يقر الطرفان بأن المنصة (الطرف الأول) هي **"منصة تقنية ووسيط إلكتروني فقط"**، وتخلي مسؤوليتها تماماً ونهائياً عن عملية البيع بكافة مراحلها.
                     </p>
-                </div>
-            </section>
-
-            <section>
-                <div class="flex items-center gap-4 mb-4">
-                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٤</span>
-                    <h4 class="text-xl font-black text-gray-900">سياسة المرتجعات والاسترداد</h4>
-                </div>
-                <div class="pr-14 space-y-3">
-                    <p class="text-gray-600 leading-relaxed font-bold">
-                        تطبق ({{ $vendor->name }}) سياسة الاسترجاع الخاصة بها والمعلنة للمستخدمين، وتخلي المنصة مسؤوليتها عن أي نزاعات تتعلق باسترداد المبالغ.
-                    </p>
-                    <ul class="list-disc pr-5 text-gray-500 font-medium space-y-1">
-                        <li>لـ ({{ $vendor->name }}) الحق المطلق في قبول أو رفض المرتجع وفق سياستها.</li>
-                        <li>لـ ({{ $vendor->name }}) الحق في خصم مبالغ معينة (مثل مصاريف الشحن أو الاستهلاك) عند رد المبلغ للمستخدم.</li>
-                        <li>لا تلتزم المنصة برد العمولة الخاصة بها في حال تم الاسترجاع بسبب خطأ من ({{ $vendor->name }}).</li>
+                    <ul class="list-disc pr-5 text-gray-500 font-medium space-y-2 text-sm">
+                        <li>تتحمل المؤسسة المسؤولية الكاملة والمنفردة عن صحة المنتجات، أسعارها، وعمليات التوصيل.</li>
+                        <li>**إدارة المنصة غير مسؤولة أبداً** عن أي معاملات مالية أو قانونية تتم بين المؤسسة والعميل النهائي.</li>
+                        <li>تقع مسؤولية **المرتجعات والاستبدال والاسترداد** على عاتق المؤسسة "بشكل بحت"، ولا يحق للعميل أو المؤسسة مطالبة المنصة بأي تعويضات ناتجة عن ذلك.</li>
+                        <li>لا تلتزم المنصة برد العمولة الخاصة بها في حال تم الاسترجاع، حيث أن دور المنصة التقني قد تم بمجرد إتمام الطلب برمجياً.</li>
                     </ul>
                 </div>
             </section>
 
             <section>
                 <div class="flex items-center gap-4 mb-4">
-                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٥</span>
+                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٤</span>
                     <h4 class="text-xl font-black text-gray-900">استقلالية العلامة التجارية وفصل البيانات</h4>
                 </div>
                 <div class="pr-14 space-y-3 text-gray-600 leading-relaxed font-bold">
@@ -161,7 +150,7 @@
 
             <section>
                 <div class="flex items-center gap-4 mb-4">
-                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٦</span>
+                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٥</span>
                     <h4 class="text-xl font-black text-gray-900">الملكية الفكرية وحقوق الاستخدام</h4>
                 </div>
                 <div class="pr-14 space-y-3 text-gray-600 leading-relaxed font-bold">
@@ -178,7 +167,7 @@
 
             <section>
                 <div class="flex items-center gap-4 mb-4">
-                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٧</span>
+                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٦</span>
                     <h4 class="text-xl font-black text-gray-900">مدة العقد والإنهاء</h4>
                 </div>
                 <div class="pr-14 space-y-3">

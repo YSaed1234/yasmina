@@ -69,7 +69,8 @@ class ProductService
                 }
             }
         }
-
+        
+        $product->syncStockWithVariants();
         return $product;
     }
 
@@ -136,7 +137,8 @@ class ProductService
         } else if (array_key_exists('variants', $data)) {
             $product->variants()->delete();
         }
-
+        
+        $product->syncStockWithVariants();
         return $product;
     }
 
