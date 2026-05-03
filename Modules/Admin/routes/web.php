@@ -68,6 +68,7 @@ Route::prefix('admin-dashboard-2026')->group(function () {
         Route::post('vendor-payments', [\Modules\Admin\Http\Controllers\VendorPaymentController::class, 'store'])->name('vendor_payments.store')->middleware('permission:manage vendors');
         Route::delete('vendor-payments/{payment}', [\Modules\Admin\Http\Controllers\VendorPaymentController::class, 'destroy'])->name('vendor_payments.destroy')->middleware('permission:manage vendors');
 
+        Route::get('vendors/{vendor}/contract', [\Modules\Admin\Http\Controllers\VendorController::class, 'contract'])->name('vendors.contract')->middleware('permission:manage vendors');
         Route::resource('vendors', \Modules\Admin\Http\Controllers\VendorController::class)->names('vendors')->middleware('permission:manage vendors');
         Route::resource('drivers', \Modules\Admin\Http\Controllers\DriverController::class)->names('drivers')->middleware('permission:manage orders');
 

@@ -168,6 +168,32 @@
                     </div>
                 </div>
 
+                <div class="md:col-span-2 p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
+                    <label class="block text-xs font-bold text-gray-900 uppercase tracking-widest">{{ __('System Subscription Fees') }} ({{ __('Monthly/Periodic') }})</label>
+                    <div class="relative">
+                        <input type="number" step="0.01" name="subscription_fees" value="{{ old('subscription_fees', 0) }}" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-bold text-gray-900" placeholder="0.00">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-6 pointer-events-none font-bold text-gray-400">
+                            {{ __('LE') }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-gray-50 pt-8">
+                    <h3 class="md:col-span-3 text-sm font-bold text-gray-900 uppercase tracking-widest">{{ __('Manager Details') }}</h3>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Manager Name') }}</label>
+                        <input type="text" name="manager_name" value="{{ old('manager_name') }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Manager National ID') }}</label>
+                        <input type="text" name="manager_id_number" value="{{ old('manager_id_number') }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Manager Phone') }}</label>
+                        <input type="text" name="manager_phone" value="{{ old('manager_phone') }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
+                    </div>
+                </div>
+
                 <div class="md:col-span-2">
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Address') }}</label>
                     <textarea name="address" rows="3" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">{{ old('address') }}</textarea>

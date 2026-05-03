@@ -1,0 +1,168 @@
+<x-admin::layouts.master>
+    <div class="mb-10 flex justify-between items-center no-print">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ __('Vendor Contract') }}</h1>
+            <p class="text-gray-500 mt-2">{{ __('Review and print the formal agreement with') }} {{ $vendor->name }}</p>
+        </div>
+        <button onclick="window.print()" class="px-8 py-4 bg-primary text-white rounded-2xl font-bold shadow-xl shadow-primary/20 hover:opacity-90 transition-all flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            {{ __('Print Contract') }}
+        </button>
+    </div>
+
+    <div class="print-container bg-white shadow-2xl rounded-[3rem] p-16 md:p-24 border border-gray-100 relative overflow-hidden mx-auto max-w-5xl rtl" dir="rtl">
+        <!-- Stamp Watermark -->
+        <div class="absolute top-10 left-10 opacity-[0.03] pointer-events-none select-none">
+            <img src="{{ asset('images/logo.png') }}" alt="" class="w-96 grayscale">
+        </div>
+
+        <!-- Header -->
+        <div class="flex justify-between items-start border-b-4 border-primary pb-12 mb-12">
+            <div>
+                <h2 class="text-4xl font-black text-gray-900 mb-2">عقد تقديم خدمات تقنية</h2>
+                <p class="text-gray-500 font-bold tracking-widest uppercase">{{ __('TECHNICAL SERVICE AGREEMENT') }}</p>
+            </div>
+            <div class="text-left">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">تاريخ العقد</p>
+                <p class="text-xl font-black text-gray-900">{{ now()->format('Y/m/d') }}</p>
+            </div>
+        </div>
+
+        <!-- Parties -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12 bg-gray-50 rounded-[2rem] p-10 border border-gray-100">
+            <div>
+                <h3 class="text-xs font-black text-primary uppercase tracking-[0.2em] mb-4">الطرف الأول (المنصة)</h3>
+                <div class="space-y-2">
+                    <p class="text-xl font-black text-gray-900">{{ config('app.name') }}</p>
+                    <p class="text-sm text-gray-500 font-bold leading-relaxed">المسؤولة عن توفير البنية التحتية التقنية (السيرفر، الدومين، لوحة التحكم).</p>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-black text-primary uppercase tracking-[0.2em] mb-4">الطرف الثاني (المؤسسة)</h3>
+                <div class="space-y-4">
+                    <p class="text-xl font-black text-gray-900">{{ $vendor->name }}</p>
+                    <div class="grid grid-cols-1 gap-1 text-sm text-gray-500 font-bold">
+                        <p>بتمثيل السيد / السيدة: {{ $vendor->manager_name ?? '................' }}</p>
+                        <p>بصفتـه (المدير المسؤول) - رقم قومي: {{ $vendor->manager_id_number ?? '................' }}</p>
+                        <p>رقم الهاتف: {{ $vendor->manager_phone ?? '................' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clauses -->
+        <div class="space-y-10 mb-16">
+            <section>
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">١</span>
+                    <h4 class="text-xl font-black text-gray-900">طبيعة التعاون المادي</h4>
+                </div>
+                <div class="pr-14 space-y-3">
+                    <p class="text-gray-600 leading-relaxed font-bold">
+                        تلتزم المنصة بتوفير الاستضافة (Server) واسم النطاق (Domain) ولوحة التحكم الخاصة بالمؤسسة، مقابل رسوم دورية قدرها ({{ number_format($vendor->subscription_fees, 2) }} ج.م) بالإضافة إلى عمولة مبيعات.
+                    </p>
+                    <ul class="list-disc pr-5 text-gray-500 font-medium space-y-1">
+                        <li>
+                            تستحق المنصة عمولة مبيعات عامة قدرها 
+                            ({{ $vendor->commission_value }}{{ $vendor->commission_type == 'percentage' ? '%' : ' ج.م' }}) 
+                            عن كل طلبية ناجحة.
+                        </li>
+                        @if($vendor->product_commission_value > 0)
+                        <li>
+                            تطبق عمولة خاصة على المنتجات قدرها 
+                            ({{ $vendor->product_commission_value }}{{ $vendor->product_commission_type == 'percentage' ? '%' : ' ج.م' }}) 
+                            لكل قطعة يتم بيعها (كبديل للعمولة العامة أو مضافة إليها حسب الاتفاق التقني).
+                        </li>
+                        @endif
+                        <li>المؤسسة مسؤولة عن سداد اشتراك السيرفر والدومين في المواعيد المحددة لضمان استمرار الخدمة.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٢</span>
+                    <h4 class="text-xl font-black text-gray-900">المسؤولية القانونية والتشغيلية</h4>
+                </div>
+                <div class="pr-14">
+                    <p class="text-gray-600 leading-relaxed font-bold">
+                        يقر الطرف الثاني ({{ $vendor->name }}) بمسؤوليته الكاملة والحصرية عن كافة المنتجات المعروضة من حيث الجودة، المطابقة للمواصفات، عمليات التعبئة والتغليف، والشحن للعميل النهائي.
+                    </p>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٣</span>
+                    <h4 class="text-xl font-black text-gray-900">سياسة المرتجعات والاسترداد</h4>
+                </div>
+                <div class="pr-14 space-y-3">
+                    <p class="text-gray-600 leading-relaxed font-bold">
+                        تطبق ({{ $vendor->name }}) سياسة الاسترجاع الخاصة بها والمعلنة للمستخدمين، وتخلي المنصة مسؤوليتها عن أي نزاعات تتعلق باسترداد المبالغ.
+                    </p>
+                    <ul class="list-disc pr-5 text-gray-500 font-medium space-y-1">
+                        <li>لـ ({{ $vendor->name }}) الحق المطلق في قبول أو رفض المرتجع وفق سياستها.</li>
+                        <li>لـ ({{ $vendor->name }}) الحق في خصم مبالغ معينة (مثل مصاريف الشحن أو الاستهلاك) عند رد المبلغ للمستخدم.</li>
+                        <li>لا تلتزم المنصة برد العمولة الخاصة بها في حال تم الاسترجاع بسبب خطأ من ({{ $vendor->name }}).</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-black">٤</span>
+                    <h4 class="text-xl font-black text-gray-900">مدة العقد والإنهاء</h4>
+                </div>
+                <div class="pr-14 space-y-3">
+                    <p class="text-gray-600 leading-relaxed font-bold">
+                        يسري هذا العقد لمدة عام ميلادي واحد يبدأ من تاريخ التوقيع عليه، ويجدد تلقائياً ما لم يخطر أحد الطرفين الآخر برغبته في الإنهاء قبل موعد التجديد بشهر على الأقل.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed font-bold">
+                        في حال رغبة الطرف الثاني ({{ $vendor->name }}) في فسخ العقد قبل انتهاء مدته، يلتزم بدفع شرط جزائي يعادل قيمة (شهرين) من الرسوم الدورية المتفق عليها ({{ number_format($vendor->subscription_fees * 2, 2) }} ج.م).
+                    </p>
+                    <p class="text-gray-600 leading-relaxed font-bold">
+                        كما يحق للمنصة إيقاف الخدمة فوراً في حال إخلال ({{ $vendor->name }}) ببنود العقد أو التأخر في سداد الالتزامات المالية.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Signatures -->
+        <div class="grid grid-cols-2 gap-16 mt-20 pt-16 border-t border-gray-100">
+            <div class="text-center">
+                <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-12">توقيع الطرف الأول (المنصة)</p>
+                <div class="h-24 border-b-2 border-dashed border-gray-200 mb-4"></div>
+                <p class="text-sm font-bold text-gray-400 italic">الختم الرسمي للمنصة</p>
+            </div>
+            <div class="text-center">
+                <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-12">توقيع الطرف الثاني (المؤسسة)</p>
+                <div class="h-24 border-b-2 border-dashed border-gray-200 mb-4"></div>
+                <p class="text-sm font-bold text-gray-400 italic">الختم الرسمي للمؤسسة</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-20 text-center opacity-30 no-print">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.5em]">This document is generated electronically via {{ config('app.name') }} Admin Portal</p>
+        </div>
+    </div>
+
+    <style>
+        @media print {
+            body { background: white !important; }
+            .no-print { display: none !important; }
+            .print-container { 
+                box-shadow: none !important; 
+                border: none !important; 
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            .x-admin-layouts-master { padding: 0 !important; }
+        }
+        .rtl { direction: rtl; text-align: right; }
+    </style>
+</x-admin::layouts.master>

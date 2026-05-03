@@ -52,4 +52,9 @@ class VendorController extends Controller
         $this->vendorService->deleteVendor($vendor);
         return redirect()->route('admin.vendors.index')->with('success', __('Vendor deleted successfully.'));
     }
+
+    public function contract(Vendor $vendor)
+    {
+        return view('admin::vendors.contract', compact('vendor'));
+    }
 }

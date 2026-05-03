@@ -49,6 +49,10 @@ class StoreVendorRequest extends FormRequest
             'product_commission_value' => 'nullable|numeric|min:0',
             'primary_color' => 'nullable|string|max:7',
             'secondary_color' => 'nullable|string|max:7',
+            'subscription_fees' => 'nullable|numeric|min:0',
+            'manager_name' => 'nullable|string|max:255',
+            'manager_id_number' => 'nullable|string|max:255',
+            'manager_phone' => 'nullable|string|max:255',
         ];
     }
 

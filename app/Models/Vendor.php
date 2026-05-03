@@ -43,6 +43,10 @@ class Vendor extends Authenticatable
         'secondary_color',
         'return_policy_ar',
         'return_policy_en',
+        'subscription_fees',
+        'manager_name',
+        'manager_id_number',
+        'manager_phone',
     ];
     
     protected $casts = [
@@ -52,6 +56,7 @@ class Vendor extends Authenticatable
         'order_threshold_discount' => 'decimal:2',
         'items_discount_amount' => 'decimal:2',
         'free_shipping_threshold' => 'decimal:2',
+        'subscription_fees' => 'decimal:2',
     ];
 
     protected $hidden = [

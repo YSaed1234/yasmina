@@ -53,6 +53,10 @@ class UpdateVendorRequest extends FormRequest
             'secondary_color' => 'nullable|string|max:7',
             'return_policy_ar' => 'nullable|string',
             'return_policy_en' => 'nullable|string',
+            'subscription_fees' => 'nullable|numeric|min:0',
+            'manager_name' => 'nullable|string|max:255',
+            'manager_id_number' => 'nullable|string|max:255',
+            'manager_phone' => 'nullable|string|max:255',
         ];
     }
 
