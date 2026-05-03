@@ -47,9 +47,12 @@ class Vendor extends Authenticatable
         'manager_name',
         'manager_id_number',
         'manager_phone',
+        'contract_signed_at',
+        'setup_fee',
     ];
     
     protected $casts = [
+        'contract_signed_at' => 'date',
         'commission_value' => 'decimal:2',
         'product_commission_value' => 'decimal:2',
         'order_threshold' => 'decimal:2',
@@ -57,6 +60,7 @@ class Vendor extends Authenticatable
         'items_discount_amount' => 'decimal:2',
         'free_shipping_threshold' => 'decimal:2',
         'subscription_fees' => 'decimal:2',
+        'setup_fee' => 'decimal:2',
     ];
 
     protected $hidden = [

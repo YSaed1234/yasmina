@@ -57,4 +57,10 @@ class VendorController extends Controller
     {
         return view('admin::vendors.contract', compact('vendor'));
     }
+
+    public function contractsReport()
+    {
+        $vendors = $this->vendorService->getPaginatedVendors(20);
+        return view('admin::vendors.contracts_report', compact('vendors'));
+    }
 }

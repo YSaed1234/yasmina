@@ -53,6 +53,8 @@ class StoreVendorRequest extends FormRequest
             'manager_name' => 'nullable|string|max:255',
             'manager_id_number' => 'nullable|string|max:255',
             'manager_phone' => 'nullable|string|max:255',
+            'contract_signed_at' => 'nullable|date',
+            'setup_fee' => 'nullable|numeric|min:0',
         ];
     }
 

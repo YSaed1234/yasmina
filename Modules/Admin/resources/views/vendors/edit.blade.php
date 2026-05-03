@@ -198,12 +198,23 @@
                     </div>
                 </div>
 
-                <div class="md:col-span-2 p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
-                    <label class="block text-xs font-bold text-gray-900 uppercase tracking-widest">{{ __('System Subscription Fees') }} ({{ __('Monthly/Periodic') }})</label>
-                    <div class="relative">
-                        <input type="number" step="0.01" name="subscription_fees" value="{{ old('subscription_fees', $vendor->subscription_fees) }}" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-bold text-gray-900" placeholder="0.00">
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-6 pointer-events-none font-bold text-gray-400">
-                            {{ __('LE') }}
+                <div class="md:col-span-2 p-6 bg-slate-50 rounded-2xl border border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <label class="block text-xs font-bold text-gray-900 uppercase tracking-widest">{{ __('System Subscription Fees') }} ({{ __('Monthly/Periodic') }})</label>
+                        <div class="relative">
+                            <input type="number" step="0.01" name="subscription_fees" value="{{ old('subscription_fees', $vendor->subscription_fees) }}" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-bold text-gray-900" placeholder="0.00">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-6 pointer-events-none font-bold text-gray-400">
+                                {{ __('LE') }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <label class="block text-xs font-bold text-gray-900 uppercase tracking-widest">{{ __('System Purchase/Setup Fee') }} ({{ __('One Time') }})</label>
+                        <div class="relative">
+                            <input type="number" step="0.01" name="setup_fee" value="{{ old('setup_fee', $vendor->setup_fee) }}" class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-bold text-gray-900" placeholder="0.00">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-6 pointer-events-none font-bold text-gray-400 text-xs">
+                                {{ __('LE') }} ({{ __('0 for Free') }})
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -221,6 +232,10 @@
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Manager Phone') }}</label>
                         <input type="text" name="manager_phone" value="{{ old('manager_phone', $vendor->manager_phone) }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Contract Signed At') }}</label>
+                        <input type="date" name="contract_signed_at" value="{{ old('contract_signed_at', $vendor->contract_signed_at ? $vendor->contract_signed_at->format('Y-m-d') : '') }}" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium">
                     </div>
                 </div>
 

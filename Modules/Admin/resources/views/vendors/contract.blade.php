@@ -20,9 +20,14 @@
 
         <!-- Header -->
         <div class="flex justify-between items-start border-b-4 border-primary pb-12 mb-12">
-            <div>
-                <h2 class="text-4xl font-black text-gray-900 mb-2">عقد تقديم خدمات تقنية</h2>
-                <p class="text-gray-500 font-bold tracking-widest uppercase">{{ __('TECHNICAL SERVICE AGREEMENT') }}</p>
+            <div class="flex items-center gap-6">
+                @if($vendor->logo)
+                    <img src="{{ asset('storage/' . $vendor->logo) }}" class="w-20 h-20 rounded-2xl object-cover shadow-sm">
+                @endif
+                <div>
+                    <h2 class="text-4xl font-black text-gray-900 mb-2">عقد تقديم خدمات تقنية</h2>
+                    <p class="text-gray-500 font-bold tracking-widest uppercase">{{ __('TECHNICAL SERVICE AGREEMENT') }}</p>
+                </div>
             </div>
             <div class="text-left">
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">تاريخ العقد</p>
@@ -62,6 +67,13 @@
                 <div class="pr-14 space-y-3">
                     <p class="text-gray-600 leading-relaxed font-bold">
                         تلتزم المنصة بتوفير الاستضافة (Server) واسم النطاق (Domain) ولوحة التحكم الخاصة بالمؤسسة، مقابل رسوم دورية قدرها ({{ number_format($vendor->subscription_fees, 2) }} ج.م) بالإضافة إلى عمولة مبيعات.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed font-bold">
+                        @if($vendor->setup_fee > 0)
+                            تلتزم ({{ $vendor->name }}) بسداد رسوم إعداد وشراء النظام لمرة واحدة قدرها ({{ number_format($vendor->setup_fee, 2) }} ج.م).
+                        @else
+                            يُعفى الطرف الثاني ({{ $vendor->name }}) من رسوم شراء النظام كونه "شريك نجاح" في فترة الإطلاق التجريبي.
+                        @endif
                     </p>
                     <ul class="list-disc pr-5 text-gray-500 font-medium space-y-1">
                         <li>

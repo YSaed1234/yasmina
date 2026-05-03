@@ -1419,5 +1419,20 @@
     "Products": "المنتجات",
     "Shipping Rates": "أسعار الشحن",
     "Edit": "تعديل",
-    "Delete": "حذف"
+    "Delete": "حذف",
+    "Contracts Expiration Report": "تقرير انتهاء العقود",
+    "Monitor vendor contracts and their expiration status.": "مراقبة عقود المؤسسات وحالة انتهائها.",
+    "Expiration Date": "تاريخ الانتهاء",
+    "Remaining Days": "الأيام المتبقية",
+    "Not Signed": "لم يوقع",
+    "Expired": "منتهي",
+    "Expiring Soon": "ينتهي قريباً",
+    "Valid": "ساري",
+    "Expired since": "منتهي منذ",
+    "Days": "يوم",
+    "Contract Signed At": "تاريخ توقيع العقد",
+    "System Purchase/Setup Fee": "رسوم شراء/إعداد النظام",
+    "One Time": "لمرة واحدة",
+    "0 for Free": "0 للمجاني",
+    "LE": "ج.م"
 }
