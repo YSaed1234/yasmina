@@ -47,17 +47,29 @@ class ProductService
             $product->image = $data['image']->store('products', 'public');
         }
 
-        foreach (['ar', 'en'] as $locale) {
-            if (isset($data[$locale])) {
-                foreach (['name', 'description'] as $attr) {
-                    if (isset($data[$locale][$attr])) {
-                        $product->translateOrNew($locale)->$attr = $data[$locale][$attr];
+        $product->save();
+
+        // Handle Variants
+        if (isset($data['variants']) && is_array($data['variants'])) {
+            foreach ($data['variants'] as $index => $variantData) {
+                if (!empty($variantData['color']) || !empty($variantData['size'])) {
+                    $imagePath = null;
+                    if (isset($variantData['image']) && $variantData['image'] instanceof \Illuminate\Http\UploadedFile) {
+                        $imagePath = $variantData['image']->store('products/variants', 'public');
                     }
+
+                    $product->variants()->create([
+                        'color' => $variantData['color'],
+                        'size' => $variantData['size'],
+                        'price' => $variantData['price'],
+                        'stock' => $variantData['stock'] ?? 0,
+                        'sku' => $variantData['sku'] ?? null,
+                        'image' => $imagePath,
+                    ]);
                 }
             }
         }
 
-        $product->save();
         return $product;
     }
 
@@ -94,6 +106,37 @@ class ProductService
         }
 
         $product->save();
+
+        // Handle Variants Sync
+        if (isset($data['variants']) && is_array($data['variants'])) {
+            $variantIds = [];
+            foreach ($data['variants'] as $index => $variantData) {
+                if (!empty($variantData['color']) || !empty($variantData['size'])) {
+                    $vData = [
+                        'color' => $variantData['color'],
+                        'size' => $variantData['size'],
+                        'price' => $variantData['price'],
+                        'stock' => $variantData['stock'] ?? 0,
+                        'sku' => $variantData['sku'] ?? null,
+                    ];
+
+                    if (isset($variantData['image']) && $variantData['image'] instanceof \Illuminate\Http\UploadedFile) {
+                        $vData['image'] = $variantData['image']->store('products/variants', 'public');
+                    }
+
+                    $variant = $product->variants()->updateOrCreate(
+                        ['id' => $variantData['id'] ?? null],
+                        $vData
+                    );
+                    $variantIds[] = $variant->id;
+                }
+            }
+            // Delete variants not in the request
+            $product->variants()->whereNotIn('id', $variantIds)->delete();
+        } else if (array_key_exists('variants', $data)) {
+            $product->variants()->delete();
+        }
+
         return $product;
     }
 

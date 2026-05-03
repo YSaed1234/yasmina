@@ -5,6 +5,8 @@ namespace Modules\Web\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Address;
+use Modules\Web\Http\Requests\UpdateAddressRequest;
+use Modules\Web\Http\Requests\StoreReviewRequest;
 use Modules\Web\Services\ProfileService;
 
 class ProfileController extends Controller
@@ -63,43 +65,15 @@ class ProfileController extends Controller
         return view('web::profile.addresses', compact('addresses', 'governorates'));
     }
 
-    public function storeAddress(Request $request)
+    public function storeAddress(UpdateAddressRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => ['required', 'string', 'regex:/^(\+20|0)?1[0125][0-9]{8}$|^(\+966|0)?5[0-9]{8}$/'],
-            'address_line1' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'governorate_id' => 'required|exists:governorates,id',
-            'region_id' => 'required|exists:regions,id',
-        ], [
-            'phone.regex' => __('Please enter a valid Egyptian or Saudi phone number.'),
-            'governorate_id.required' => __('Please select a governorate.'),
-            'region_id.required' => __('Please select an area.')
-        ]);
-        
         $this->profileService->storeAddress($request->all());
 
         return back()->with('success', __('Address added successfully.'));
     }
 
-    public function updateAddress(Request $request, Address $address)
+    public function updateAddress(UpdateAddressRequest $request, Address $address)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => ['required', 'string', 'regex:/^(\+20|0)?1[0125][0-9]{8}$|^(\+966|0)?5[0-9]{8}$/'],
-            'address_line1' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'governorate_id' => 'required|exists:governorates,id',
-            'region_id' => 'required|exists:regions,id',
-        ], [
-            'phone.regex' => __('Please enter a valid Egyptian or Saudi phone number.'),
-            'governorate_id.required' => __('Please select a governorate.'),
-            'region_id.required' => __('Please select an area.')
-        ]);
-
         $success = $this->profileService->updateAddress($address, $request->all());
 
         if (!$success) {
@@ -109,18 +83,12 @@ class ProfileController extends Controller
         return back()->with('success', __('Address updated successfully.'));
     }
 
-    public function storeReview(Request $request)
+    public function storeReview(StoreReviewRequest $request)
     {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string|max:500',
-        ]);
-
         $vendor = request()->attributes->get('current_vendor');
         $vendorId = $vendor ? $vendor->id : null;
 
-        $result = $this->profileService->storeReview($request->all(), $vendorId);
+        $result = $this->profileService->storeReview($request->validated(), $vendorId);
 
         if (!$result['success']) {
             return back()->with('error', $result['error']);

@@ -172,6 +172,69 @@
                     </p>
                 </div>
             </div>
+
+            <!-- Payment History -->
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-8 py-6 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-gray-900">{{ __('Payment History') }}</h2>
+                        <p class="text-xs text-gray-400 mt-1">{{ __('Paid') }}: {{ number_format($order->paid_amount, 2) }} {{ $currency }} | {{ __('Remaining') }}: {{ number_format($order->remaining_amount, 2) }} {{ $currency }}</p>
+                    </div>
+                    @if($order->remaining_amount > 0)
+                        <button onclick="togglePaymentModal()" class="px-4 py-2 bg-primary text-white rounded-xl text-xs font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+                            {{ __('Record Payment') }}
+                        </button>
+                    @endif
+                </div>
+                @if($order->payments->count() > 0)
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50/50 border-b border-gray-100">
+                                <th class="px-8 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Date') }}</th>
+                                <th class="px-8 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">{{ __('Amount') }}</th>
+                                <th class="px-8 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('Note') }}</th>
+                                <th class="px-8 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-center">{{ __('Receipt') }}</th>
+                                <th class="px-8 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-right"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            @foreach($order->payments as $payment)
+                                <tr>
+                                    <td class="px-8 py-4 text-sm text-gray-600">{{ $payment->created_at->format('M d, Y H:i') }}</td>
+                                    <td class="px-8 py-4 text-right font-bold text-gray-900">{{ number_format($payment->amount, 2) }} {{ $currency }}</td>
+                                    <td class="px-8 py-4 text-sm text-gray-500">{{ $payment->note }}</td>
+                                    <td class="px-8 py-4 text-center">
+                                        @if($payment->receipt_image)
+                                            <a href="{{ asset('storage/' . $payment->receipt_image) }}" target="_blank" class="text-primary hover:underline text-xs font-bold">
+                                                {{ __('View Receipt') }}
+                                            </a>
+                                        @else
+                                            <span class="text-gray-300 text-xs">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-8 py-4 text-right">
+                                        @if($order->status->value !== 'delivered')
+                                            <form action="{{ route('admin.orders.delete-payment', [$order, $payment->id]) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to delete this payment record?') }}')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-400 hover:text-red-600 transition-all p-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <div class="p-8 text-center text-gray-400 text-sm italic">
+                        {{ __('No payments recorded yet.') }}
+                    </div>
+                @endif
+            </div>
         </div>
 
         <!-- Order Management Sidebar -->
@@ -197,7 +260,7 @@
                         @method('PUT')
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Payment Status') }}</label>
                         <select name="payment_status" onchange="this.form.submit()" class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none font-bold text-gray-700 transition-all appearance-none">
-                            @foreach(['pending', 'paid', 'failed'] as $p_status)
+                            @foreach(['pending', 'paid', 'partially_paid', 'failed'] as $p_status)
                                 <option value="{{ $p_status }}" {{ $order->payment_status === $p_status ? 'selected' : '' }}>{{ __($p_status) }}</option>
                             @endforeach
                         </select>
@@ -279,19 +342,65 @@
                     @endif
                 </div>
 
-                <div class="mt-8 pt-8 border-t border-gray-50">
-                    <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to delete this order? This action cannot be undone.') }}')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full py-4 bg-red-50 text-red-600 rounded-2xl font-bold text-sm hover:bg-red-100 transition-all">
-                            {{ __('Delete Order Record') }}
-                        </button>
-                    </form>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="fixed inset-0 z-[100] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end lg:items-center justify-center min-h-screen pt-4 px-4 pb-0 lg:pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500/75 backdrop-blur-sm transition-opacity" aria-hidden="true" onclick="togglePaymentModal()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-t-2xl lg:rounded-[3rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-yasmina-50 w-full">
+                <form action="{{ route('admin.orders.record-payment', $order) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="bg-white px-8 pt-8 pb-4">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-2xl font-bold text-gray-900 leading-tight">{{ __('Record Partial Payment') }}</h3>
+                            <button type="button" onclick="togglePaymentModal()" class="text-gray-400 hover:text-gray-500 p-2">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l18 18" />
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Amount to Pay') }} ({{ $currency }})</label>
+                                <input type="number" name="amount" step="0.01" max="{{ $order->remaining_amount }}" min="0.01" value="{{ $order->remaining_amount }}" required class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none font-bold text-gray-700 transition-all">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Receipt Image') }}</label>
+                                <input type="file" name="receipt_image" accept="image/*" class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none font-bold text-gray-700 transition-all">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{{ __('Note / Reference') }}</label>
+                                <textarea name="note" rows="3" placeholder="{{ __('Payment method, reference number, etc.') }}" class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none font-bold text-gray-700 transition-all resize-none"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-8 py-6 flex flex-col sm:flex-row-reverse gap-3">
+                        <button type="submit" class="w-full sm:w-auto px-10 py-4 bg-primary text-white rounded-2xl font-bold text-sm shadow-xl shadow-primary/20 hover:opacity-90 transition-all">
+                            {{ __('Save Payment') }}
+                        </button>
+                        <button type="button" onclick="togglePaymentModal()" class="w-full sm:w-auto px-10 py-4 bg-white border border-gray-200 text-gray-700 rounded-2xl font-bold text-sm hover:bg-gray-50 transition-all shadow-sm">
+                            {{ __('Cancel') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
+        function togglePaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            modal.classList.toggle('hidden');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
         function handleStatusChange(select) {
             if (select.value === 'cancelled') {
                 const reason = prompt("{{ __('Please enter the reason for cancellation:') }}");

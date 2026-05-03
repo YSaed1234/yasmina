@@ -64,7 +64,7 @@
                                                         {{ $refundedCount }} {{ __('Refunded') }}
                                                     </span>
                                                 @endif
-                                                <button onclick="showOrderDetails({{ json_encode($order->load('items.product')) }})" class="px-2.5 py-1 lg:px-6 lg:py-2 bg-white text-gray-700 rounded-lg lg:rounded-xl text-[9px] lg:text-xs font-bold hover:bg-primary hover:text-white transition-all border border-primary/10 shadow-sm">
+                                                <button onclick="showOrderDetails({{ json_encode($order->load(['items.product', 'items.variant'])) }})" class="px-2.5 py-1 lg:px-6 lg:py-2 bg-white text-gray-700 rounded-lg lg:rounded-xl text-[9px] lg:text-xs font-bold hover:bg-primary hover:text-white transition-all border border-primary/10 shadow-sm">
                                                     {{ __('View') }}
                                                 </button>
                                                 <span class="px-2 py-1 lg:px-4 lg:py-1.5 rounded-full text-[7px] lg:text-[10px] font-black uppercase tracking-widest {{ $order->status->color() }} shadow-sm">
@@ -84,8 +84,11 @@
                                                                     </span>
                                                                 </div>
                                                             @endif
-                                                            @if($item->product && $item->product->image)
-                                                                <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}" class="w-full h-full object-cover">
+                                                            @php 
+                                                                $itemImage = ($item->variant && $item->variant->image) ? $item->variant->image : ($item->product->image ?? null);
+                                                            @endphp
+                                                            @if($itemImage)
+                                                                <img src="{{ asset('storage/' . $itemImage) }}" alt="{{ $item->product->name }}" class="w-full h-full object-cover">
                                                             @else
                                                                 <div class="w-full h-full flex items-center justify-center text-gray-300 text-[10px] lg:text-xl font-bold">?</div>
                                                             @endif
@@ -331,7 +334,7 @@
                                 </span>
                             </div>
                         ` : ''}
-                        <img src="/storage/${item.product ? item.product.image : ''}" class="w-full h-full object-cover" onerror="this.src='/placeholder.png'">
+                        <img src="/storage/${(item.variant && item.variant.image) ? item.variant.image : (item.product ? item.product.image : '')}" class="w-full h-full object-cover" onerror="this.src='/placeholder.png'">
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-xs lg:text-sm font-bold text-gray-900 truncate">${item.product ? item.product.name : '{{ __("Product Not Found") }}'}</p>

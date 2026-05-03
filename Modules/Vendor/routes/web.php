@@ -31,6 +31,8 @@ Route::prefix('vendor-panel')->group(function () {
         Route::get('orders/{order}', [OrderController::class, 'show'])->name('vendor.orders.show');
         Route::put('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('vendor.orders.update-status');
         Route::put('orders/{order}/payment-status', [OrderController::class, 'updatePaymentStatus'])->name('vendor.orders.update-payment-status');
+        Route::post('orders/{order}/record-payment', [OrderController::class, 'recordPayment'])->name('vendor.orders.record-payment');
+        Route::delete('orders/{order}/payments/{paymentId}', [OrderController::class, 'deletePayment'])->name('vendor.orders.delete-payment');
         
         // Returns
         Route::get('returns', [\Modules\Vendor\Http\Controllers\ReturnRequestController::class, 'index'])->name('vendor.returns.index');

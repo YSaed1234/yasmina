@@ -31,6 +31,7 @@ class Order extends Model
         'product_commission_value',
         'vendor_net_amount',
         'driver_id',
+        'paid_amount',
     ];
 
     protected $casts = [
@@ -41,6 +42,7 @@ class Order extends Model
         'product_commission_value' => 'decimal:2',
         'vendor_net_amount' => 'decimal:2',
         'status' => \App\Enums\OrderStatus::class,
+        'paid_amount' => 'decimal:2',
     ];
 
     public function user(): BelongsTo
@@ -66,5 +68,15 @@ class Order extends Model
     public function returnRequests(): HasMany
     {
         return $this->hasMany(ReturnRequest::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(OrderPayment::class);
+    }
+
+    public function getRemainingAmountAttribute()
+    {
+        return max(0, $this->total - $this->paid_amount);
     }
 }

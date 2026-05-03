@@ -50,7 +50,27 @@ class OrderController extends Controller
      */
     public function updatePaymentStatus(UpdateOrderPaymentStatusRequest $request, Order $order)
     {
-        $this->orderService->updateOrderPaymentStatus($order, Auth::guard('vendor')->id(), $request->payment_status);
+        $this->orderService->updatePaymentStatus($order, Auth::guard('vendor')->id(), $request->payment_status);
         return back()->with('success', __('Payment status updated successfully.'));
+    }
+
+    public function recordPayment(\Illuminate\Http\Request $request, Order $order)
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:0.01',
+            'receipt_image' => 'nullable|image|max:2048',
+            'note' => 'nullable|string|max:1000',
+            'payment_method' => 'nullable|string|max:255',
+        ]);
+
+        $this->orderService->recordPayment($order, Auth::guard('vendor')->id(), $request->all());
+
+        return back()->with('success', __('Payment recorded successfully.'));
+    }
+
+    public function deletePayment(Order $order, $paymentId)
+    {
+        $this->orderService->deletePayment($order, Auth::guard('vendor')->id(), $paymentId);
+        return back()->with('success', __('Payment deleted successfully.'));
     }
 }

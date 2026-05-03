@@ -70,6 +70,7 @@ class ReturnRequestController extends Controller
             abort(403);
         }
 
+        $returnRequest->load(['items.orderItem.product', 'items.orderItem.variant', 'order.vendor']);
         return view('web::profile.returns.show', compact('returnRequest'));
     }
 }

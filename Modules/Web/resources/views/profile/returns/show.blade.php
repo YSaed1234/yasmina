@@ -38,7 +38,15 @@
                                     @foreach($returnRequest->items as $item)
                                         <div class="flex items-center p-4 bg-gray-50 rounded-2xl border border-gray-100">
                                             <div class="w-14 h-14 rounded-xl overflow-hidden border border-white shadow-sm shrink-0">
-                                                <img src="{{ $item->orderItem->product->image_url }}" alt="{{ $item->orderItem->product->name }}" class="w-full h-full object-cover">
+                                                @php 
+                                                    $orderItem = $item->orderItem;
+                                                    $itemImage = ($orderItem->variant && $orderItem->variant->image) ? $orderItem->variant->image : ($orderItem->product->image ?? null);
+                                                @endphp
+                                                @if($itemImage)
+                                                    <img src="{{ asset('storage/' . $itemImage) }}" alt="{{ $orderItem->product->name }}" class="w-full h-full object-cover">
+                                                @else
+                                                    <div class="w-full h-full flex items-center justify-center text-gray-300 font-bold">?</div>
+                                                @endif
                                             </div>
                                             <div class="ms-4 flex-1">
                                                 <p class="font-bold text-gray-900 text-sm">{{ $item->orderItem->product->name }}</p>

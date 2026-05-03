@@ -143,6 +143,7 @@
                                     <tr class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                         <th class="px-4 py-2">{{ __('Color') }}</th>
                                         <th class="px-4 py-2">{{ __('Size') }}</th>
+                                        <th class="px-4 py-2">{{ __('Image') }}</th>
                                         <th class="px-4 py-2">{{ __('Price') }}</th>
                                         <th class="px-4 py-2">{{ __('Stock') }}</th>
                                         <th class="px-4 py-2">{{ __('SKU') }}</th>
@@ -158,6 +159,14 @@
                                         </td>
                                         <td class="px-4 py-3">
                                             <input type="text" name="variants[{{ $index }}][size]" value="{{ $variant->size }}" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="{{ __('XL, 42...') }}">
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            @if($variant->image)
+                                                <div class="mb-1">
+                                                    <img src="{{ asset('storage/' . $variant->image) }}" class="h-8 w-8 object-cover rounded border">
+                                                </div>
+                                            @endif
+                                            <input type="file" name="variants[{{ $index }}][image]" class="w-full text-[10px] file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-gray-50 file:text-primary hover:file:bg-gray-100">
                                         </td>
                                         <td class="px-4 py-3">
                                             <input type="number" step="0.01" name="variants[{{ $index }}][price]" value="{{ $variant->price }}" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="0.00">
@@ -209,6 +218,9 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     <input type="text" name="variants[${variantIndex}][size]" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="{{ __('XL, 42...') }}">
+                                </td>
+                                <td class="px-4 py-3">
+                                    <input type="file" name="variants[${variantIndex}][image]" class="w-full text-[10px] file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-gray-50 file:text-primary hover:file:bg-gray-100">
                                 </td>
                                 <td class="px-4 py-3">
                                     <input type="number" step="0.01" name="variants[${variantIndex}][price]" class="w-full px-3 py-2 bg-gray-50/50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 outline-none text-xs font-bold transition-all" placeholder="0.00">

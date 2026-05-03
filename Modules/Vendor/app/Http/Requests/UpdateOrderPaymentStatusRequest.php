@@ -12,7 +12,7 @@ class UpdateOrderPaymentStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'payment_status' => ['required', 'string', 'in:pending,paid,failed'],
+            'payment_status' => ['required', 'string', 'in:pending,paid,partially_paid,failed'],
         ];
     }
 

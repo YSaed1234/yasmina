@@ -102,6 +102,10 @@
                 --yasmina-50: var(--yasmina-bg-soft);
                 --yasmina-500: var(--yasmina-primary-base);
                 --yasmina-600: var(--yasmina-primary-hover);
+
+                --yasmina-footer-bg: color-mix(in srgb, var(--yasmina-primary-base), black 92%);
+                --yasmina-footer-item: color-mix(in srgb, var(--yasmina-primary-base), black 85%);
+                --yasmina-footer-border: color-mix(in srgb, var(--yasmina-primary-base), black 80%);
             }
 
             body {
@@ -663,7 +667,7 @@
         </main>
 
         <!-- Footer -->
-        <footer class="text-white py-10 lg:py-20 relative overflow-hidden" style="background-color: var(--yasmina-footer-bg)">
+        <footer class="text-white py-10 lg:py-20 relative overflow-hidden transition-colors duration-500" style="background-color: var(--yasmina-footer-bg)">
             <div class="absolute top-0 right-0 w-64 h-64 bg-primary rounded-full opacity-10 blur-3xl -mr-32 -mt-32"></div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 text-center md:text-left">

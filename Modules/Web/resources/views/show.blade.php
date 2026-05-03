@@ -6,11 +6,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 items-start">
                 <!-- Product Image -->
                 <div class="relative">
-                    <div class="aspect-square rounded-2xl lg:rounded-[3rem] overflow-hidden bg-white soft-shadow border border-yasmina-50 p-3 lg:p-4">
+                    <div id="product-image-container" class="aspect-square rounded-2xl lg:rounded-[3rem] overflow-hidden bg-white soft-shadow border border-yasmina-50 p-3 lg:p-4">
                         @if($product->image)
-                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover rounded-xl lg:rounded-[2.5rem]">
+                            <img id="main-product-image" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover rounded-xl lg:rounded-[2.5rem]">
                         @else
-                            <div class="w-full h-full flex items-center justify-center text-primary opacity-20 text-4xl lg:text-6xl">?</div>
+                            <img id="main-product-image" src="" class="hidden w-full h-full object-cover rounded-xl lg:rounded-[2.5rem]">
+                            <div id="image-placeholder" class="w-full h-full flex items-center justify-center text-primary opacity-20 text-4xl lg:text-6xl">?</div>
                         @endif
                     </div>
                     @if($badge = $product->getBadge())
@@ -219,6 +220,8 @@
                         let selections = { color: null, size: null };
                         const hasFlashSale = {{ ($product->flash_sale_price && $product->flash_sale_expires_at && $product->flash_sale_expires_at->isFuture()) ? 'true' : 'false' }};
                         const basePrice = {{ $product->discount_price ?? $product->price }};
+                        const defaultImageUrl = "{{ $product->image ? asset('storage/' . $product->image) : '' }}";
+                        const storagePath = "{{ asset('storage/') }}/";
 
                         function adjustQty(amount) {
                             const input = document.getElementById('quantity-input');
@@ -308,6 +311,8 @@
                             const variantIdInput = document.getElementById('selected-variant-id');
                             const addToCartBtn = document.getElementById('add-to-cart-btn');
                             const qtyInput = document.getElementById('quantity-input');
+                            const mainImageDisplay = document.getElementById('main-product-image');
+                            const imagePlaceholder = document.getElementById('image-placeholder');
 
                             if (isFullySelected && variant) {
                                 let finalPrice = hasFlashSale ? {{ $product->flash_sale_price ?? 0 }} : (variant.price || basePrice);
@@ -315,6 +320,24 @@
                                 
                                 if (mainPriceDisplay) mainPriceDisplay.textContent = parseFloat(finalPrice).toLocaleString(undefined, {minimumFractionDigits: 2});
                                 if (comparePriceDisplay) comparePriceDisplay.textContent = parseFloat(originalPrice).toLocaleString(undefined, {minimumFractionDigits: 2});
+
+                                // Update Image
+                                if (mainImageDisplay) {
+                                    if (variant.image) {
+                                        mainImageDisplay.src = storagePath + variant.image;
+                                        mainImageDisplay.classList.remove('hidden');
+                                        if (imagePlaceholder) imagePlaceholder.classList.add('hidden');
+                                    } else {
+                                        if (defaultImageUrl) {
+                                            mainImageDisplay.src = defaultImageUrl;
+                                            mainImageDisplay.classList.remove('hidden');
+                                            if (imagePlaceholder) imagePlaceholder.classList.add('hidden');
+                                        } else {
+                                            mainImageDisplay.classList.add('hidden');
+                                            if (imagePlaceholder) imagePlaceholder.classList.remove('hidden');
+                                        }
+                                    }
+                                }
 
                                 variantIdInput.value = variant.id;
                                 qtyInput.max = variant.stock;
@@ -335,6 +358,18 @@
                                 if (mainPriceDisplay) mainPriceDisplay.textContent = parseFloat(basePrice).toLocaleString(undefined, {minimumFractionDigits: 2});
                                 if (comparePriceDisplay) comparePriceDisplay.textContent = parseFloat({{ $product->price }}).toLocaleString(undefined, {minimumFractionDigits: 2});
                                 
+                                // Reset Image
+                                if (mainImageDisplay) {
+                                    if (defaultImageUrl) {
+                                        mainImageDisplay.src = defaultImageUrl;
+                                        mainImageDisplay.classList.remove('hidden');
+                                        if (imagePlaceholder) imagePlaceholder.classList.add('hidden');
+                                    } else {
+                                        mainImageDisplay.classList.add('hidden');
+                                        if (imagePlaceholder) imagePlaceholder.classList.remove('hidden');
+                                    }
+                                }
+
                                 variantIdInput.value = '';
                                 qtyInput.max = {{ $product->stock }};
                                 

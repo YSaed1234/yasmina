@@ -55,22 +55,7 @@ class ProductController extends Controller implements HasMiddleware
 
     public function store(StoreProductRequest $request)
     {
-        $product = $this->productService->storeProduct($request->validated());
-
-        // Handle Variants
-        if ($request->has('variants')) {
-            foreach ($request->variants as $variantData) {
-                if (!empty($variantData['color']) || !empty($variantData['size'])) {
-                    $product->variants()->create([
-                        'color' => $variantData['color'],
-                        'size' => $variantData['size'],
-                        'price' => $variantData['price'],
-                        'stock' => $variantData['stock'] ?? 0,
-                        'sku' => $variantData['sku'] ?? null,
-                    ]);
-                }
-            }
-        }
+        $this->productService->storeProduct($request->validated());
 
         return redirect()->route('admin.products.index')->with('success', __('Product created successfully.'));
     }
@@ -94,30 +79,6 @@ class ProductController extends Controller implements HasMiddleware
     {
         $product = $this->productService->findProduct($id);
         $this->productService->updateProduct($product, $request->validated());
-
-        // Handle Variants
-        if ($request->has('variants')) {
-            $variantIds = [];
-            foreach ($request->variants as $variantData) {
-                if (!empty($variantData['color']) || !empty($variantData['size'])) {
-                    $variant = $product->variants()->updateOrCreate(
-                        ['id' => $variantData['id'] ?? null],
-                        [
-                            'color' => $variantData['color'],
-                            'size' => $variantData['size'],
-                            'price' => $variantData['price'],
-                            'stock' => $variantData['stock'] ?? 0,
-                            'sku' => $variantData['sku'] ?? null,
-                        ]
-                    );
-                    $variantIds[] = $variant->id;
-                }
-            }
-            // Delete variants not in the request
-            $product->variants()->whereNotIn('id', $variantIds)->delete();
-        } else {
-            $product->variants()->delete();
-        }
 
         return redirect()->route('admin.products.index')->with('success', __('Product updated successfully.'));
     }

@@ -12,14 +12,14 @@ class HomeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $vendor = $request->attributes->get('current_vendor');
-        $vendor_id = $vendor ? $vendor->id : null;
+        $currentVendor = request()->attributes->get('current_vendor');
+        $vendorId = $currentVendor ? $currentVendor->id : null;
 
         // Record Visit
         \App\Models\Visit::record([
-            'vendor_id' => $vendor_id
+            'vendor_id' => $vendorId
         ]);
 
         $categoriesQuery = \App\Models\Category::with([
@@ -27,10 +27,12 @@ class HomeController extends Controller
                 $q->withValidPrice();
             }
         ])->orderBy('rank');
+
         $featuredProductsQuery = \App\Models\Product::withValidPrice()->orderBy('rank');
-        if ($vendor_id) {
-            $categoriesQuery->where('vendor_id', $vendor_id);
-            $featuredProductsQuery->where('vendor_id', $vendor_id);
+
+        if ($vendorId) {
+            $categoriesQuery->where('vendor_id', $vendorId);
+            $featuredProductsQuery->where('vendor_id', $vendorId);
         } else {
             $categoriesQuery->whereNull('vendor_id');
             $featuredProductsQuery->whereNull('vendor_id');
@@ -38,13 +40,6 @@ class HomeController extends Controller
 
         $categories = $categoriesQuery->get();
         $featuredProducts = $featuredProductsQuery->take(8)->get();
-        $slidesQuery = \App\Models\Slide::where('active', true);
-        if ($vendor_id) {
-            $slidesQuery->where('vendor_id', $vendor_id);
-        } else {
-            $slidesQuery->whereNull('vendor_id');
-        }
-        $slides = $slidesQuery->orderBy('order')->get();
 
         $promotionsQuery = \App\Models\Promotion::with(['buyProduct', 'getProduct'])
             ->where('is_active', true)
@@ -55,8 +50,8 @@ class HomeController extends Controller
                 $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
             });
 
-        if ($vendor_id) {
-            $promotionsQuery->where('vendor_id', $vendor_id);
+        if ($vendorId) {
+            $promotionsQuery->where('vendor_id', $vendorId);
         } else {
             $promotionsQuery->whereNull('vendor_id');
         }
@@ -76,7 +71,7 @@ class HomeController extends Controller
             ->latest()
             ->get();
 
-        return view('web::index', compact('categories', 'featuredProducts', 'vendor', 'promotions', 'coupons'));
+        return view('web::index', compact('categories', 'featuredProducts', 'promotions', 'coupons'));
     }
 
     public function about()

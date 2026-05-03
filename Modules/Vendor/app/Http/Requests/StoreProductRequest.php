@@ -35,6 +35,7 @@ class StoreProductRequest extends FormRequest
             'variants.*.price' => 'nullable|numeric|min:0',
             'variants.*.stock' => 'nullable|integer|min:0',
             'variants.*.sku' => 'nullable|string|max:100',
+            'variants.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 

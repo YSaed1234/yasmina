@@ -68,7 +68,7 @@ class CartService
                 $cart[$key]['original_price'] = (float) ($variant && $variant->price ? $variant->price : $product->price);
                 $cart[$key]['is_flash_sale'] = (bool) $product->hasActiveFlashSale();
                 $cart[$key]['vendor_id'] = $product->vendor_id;
-                $cart[$key]['image'] = $product->image;
+                $cart[$key]['image'] = ($variant && $variant->image) ? $variant->image : $product->image;
                 $cart[$key]['currency'] = $product->currency->symbol ?? '$';
                 $cart[$key]['is_gift'] = (bool) $product->is_gift;
 

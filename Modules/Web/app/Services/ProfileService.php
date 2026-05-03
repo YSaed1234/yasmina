@@ -15,7 +15,7 @@ class ProfileService
     {
         return Order::where('vendor_id', $vendorId)
             ->where('user_id', Auth::id())
-            ->with(['items.product', 'driver'])
+            ->with(['items.product', 'items.variant', 'driver'])
             ->latest()
             ->paginate($perPage);
     }

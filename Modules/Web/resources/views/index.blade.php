@@ -311,7 +311,7 @@
                             </div>
 
                                 <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-8">
-                                    @foreach($category->products->where('vendor_id', $vendor?->id)->sortBy('rank')->take(4) as $product)
+                                    @foreach($category->products->where('vendor_id', $vendor?->id??null)->sortBy('rank')->take(4) as $product)
                                         <div class="group relative flex flex-col h-full bg-white rounded-xl lg:rounded-2xl border border-yasmina-50 soft-shadow overflow-hidden">
                                             <div class="aspect-square w-full overflow-hidden bg-yasmina-50 relative">
                                                 <a href="{{ route('web.products.show', [$product->id, 'vendor_id' => $product->vendor_id]) }}" class="block w-full h-full">

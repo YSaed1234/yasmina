@@ -32,6 +32,8 @@ Route::prefix('admin-dashboard-2026')->group(function () {
         Route::get('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'show'])->name('orders.show')->middleware('permission:manage orders');
         Route::put('orders/{order}/status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.update-status')->middleware('permission:manage orders');
         Route::put('orders/{order}/payment-status', [\Modules\Admin\Http\Controllers\OrderController::class, 'updatePaymentStatus'])->name('orders.update-payment-status')->middleware('permission:manage orders');
+        Route::post('orders/{order}/record-payment', [\Modules\Admin\Http\Controllers\OrderController::class, 'recordPayment'])->name('orders.record-payment')->middleware('permission:manage orders');
+        Route::delete('orders/{order}/payments/{paymentId}', [\Modules\Admin\Http\Controllers\OrderController::class, 'deletePayment'])->name('orders.delete-payment')->middleware('permission:manage orders');
         Route::put('orders/{order}/assign-driver', [\Modules\Admin\Http\Controllers\OrderController::class, 'assignDriver'])->name('orders.assign-driver')->middleware('permission:manage orders');
         Route::delete('orders/{order}', [\Modules\Admin\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy')->middleware('permission:manage orders');
         
